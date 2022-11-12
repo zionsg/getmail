@@ -1,0 +1,17 @@
+dist/
+node_modules/
+tmp/
+vendor/
+*.log
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+tmp.*
+.DS_Store
+.env
+.npmrc
+Thumbs.db
+VERSION.txt
+desktop.ini
+docker-compose.override.yml

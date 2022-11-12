@@ -1,0 +1,23 @@
+##
+# Docker Compose config file
+##
+
+version: "3.7" # this is the version for the compose file config, not the app
+
+# All services should be prefixed with "getmail-" to prevent conflict with Docker Compose files from other repos
+# See https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on for depends_on conditions
+services:
+  getmail-app: # application
+    # On localhost, build the image first before running docker-compose
+    image: getmail:prod
+    container_name: getmail-app
+    ports:
+      # Publish ports - external:internal
+      # The base image in Dockerfile exposes ports 80, 443, 9000
+      - ${GETMAIL_PORT_EXTERNAL_NONSSL}:80
+      - ${GETMAIL_PORT_EXTERNAL_SSL}:443
+    env_file:
+      # This imports all env vars from .env into the Docker container, avoiding the need to copy
+      # .env in Dockerfile. No need to duplicate the list of env vars manually also, unless the
+      # Docker container uses a different name, e.g. MYSQL_USER=${GETMAIL_DB_USER}
+      - .env
