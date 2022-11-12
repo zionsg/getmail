@@ -1,6 +1,12 @@
 # Get Mail
 
-Simple Dockerized PHP application that uses [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol)
+**Disclaimer** This is just a personal hobbyist project to experiment with
+creating a PHP application with a simple structure without the use of bloated
+frameworks and Dockerizing it. It will likely always be Work-In-Progress, so
+don't expect too much from it :P
+
+Simple Dockerized PHP application that uses
+[IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol)
 to retrieve body of the most recent email in inbox matching a subject pattern.
 
 Paths in all documentation, even those in subfolders, are relative to the root
