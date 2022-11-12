@@ -52,7 +52,7 @@ of the repository. Shell commands are all run from the root of the repository.
               image: getmail:dev
               volumes:
                 # Cannot use the shortform "- ./src/:/var/www/html/src" else Windows permission error
-                # Use the node_modules & public/vendor folders inside container not host
+                # Use the vendor folder inside the container and not the host
                 # cos packages may use Linux native libraries and not work on host platform
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/public/index.php # entrypoint for application
