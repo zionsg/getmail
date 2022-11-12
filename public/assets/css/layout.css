@@ -1,0 +1,67 @@
+/**
+ * CSS for layout in entire application
+ *
+ * Prescribed format/ordering of CSS:
+ *   - CSS custom properties (variables) placed first.
+ *   - "Containers" section placed second. Remaining sections should be ordered
+ *     alphabetically for easier searching.
+ *   - Begin and close each section with comments containing the section name,
+ *     e.g. Containers, Forms, Navigation, etc.
+ *   - Within each section, the rules (selector + declaration group) should be
+ *     ordered according to CSS specificity with type selectors (e.g. div)
+ *     first, followed by class selectors (e.g. .example), and lastly ID
+ *     selectors (e.g. #test).
+ *   - Within each rule, order the properties alphabetically, e.g. font-family
+ *     before font-size, height before width, etc.
+ *   - Use rem instead of em for easier resolving of final sizes.
+ *   - In view of accessiblity and zooming, try to use em or rem instead of px,
+ *     especially for typography. See
+ *     https://chiamakaikeanyi.dev/sizing-in-css-px-vs-em-vs-rem/ for more info.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax
+ * @link https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
+ * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
+ */
+
+/* BEGIN: CSS custom properties (variables) */
+:root {
+  --getmail-background-body: lightyellow;
+  --getmail-body: black;
+}
+/* CLOSE: CSS custom properties (variables) */
+
+
+/* BEGIN: Containers */
+html,
+body {
+  /* when using rem units, note that Bootstrap 5 default font-size is 16px */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--getmail-background-body);
+  color: var(--getmail-body);
+}
+
+.getmail-container {
+  padding: 1rem;
+}
+/* CLOSE: Containers */
+
+
+/* BEGIN: Navigation */
+a {
+  color: blue;
+}
+a:hover {
+  color: magenta;
+}
+/* CLOSE: Navigation */
+
+
+/* BEGIN: Text */
+.text-center {
+  text-align: center;
+}
+/* CLOSE: Text */
