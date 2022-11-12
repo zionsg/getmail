@@ -77,8 +77,8 @@ of the repository. Shell commands are all run from the root of the repository.
     + Run `composer build` first to build the Docker image with "dev" tag.
         * `docker` is used instead of `docker-compose` to build the image to
           cater for use of SSH agent forwarding in the future (if there is a
-          need to install private NPM packages from a private GitHub
-          repository), i.e. `docker build --ssh default`, which `docker-compose`
+          need to install packages from a private GitHub repository),
+          i.e. `docker build --ssh default`, which `docker-compose`
           does not support yet.
     + Run `composer start` to start the Docker container.
     + Run `composer stop` to stop the Docker container or just press `Ctrl+C`.
