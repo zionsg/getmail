@@ -17,6 +17,17 @@ putenv('GETMAIL_VERSION=' . trim(file_get_contents('VERSION.txt') ?: 'no-version
 // Composer autoloading
 require 'vendor/autoload.php';
 
+// Handle fatal errors - should not depend on any dependencies as much as possible
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if (!$error || $error['type'] !== E_ERROR) { // skip if no error or not fatal error
+        return;
+    }
+
+    $response = new ApiResponse(500, $error['message']);
+    $response->send();
+});
+
 try {
     // Init config and logger
     Config::init();
