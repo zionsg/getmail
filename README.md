@@ -38,6 +38,12 @@ of the repository. Shell commands are all run from the root of the repository.
     + For consistency with production environment, the application should be run
       using Docker during local development (which settles all dependencies)
       and not directly using `php -S localhost:8080 public/index.php`.
+        * May need to run Docker commands as `sudo` depending on machine
+          (see https://docs.docker.com/engine/install/linux-postinstall/).
+        * If you see a stacktrace error when running a Docker command in
+          Windows Subsystem for Linux (WSL),
+          e.g. `The provided cwd "" does not exist.`,
+          try running `cd .` and run the Docker command again.
     + Create a `docker-compose.override.yml` which will be automatically used by
       Docker Compose to override specified settings in `docker-compose.yml`.
       This is used to temporarily tweak the Docker Compose configuration on the
