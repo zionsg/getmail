@@ -28,6 +28,6 @@ try {
 } catch (Throwable $t) {
     Logger::errorLog($t);
 
-    $response = new ApiResponse(500, $t->getMessage());
+    $response = new ApiResponse($appConfig->getVersion(), 500, $t->getMessage());
     $response->send();
 }

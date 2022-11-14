@@ -10,6 +10,11 @@ namespace App;
 class ApiResponse
 {
     /**
+     * @var string
+     */
+    public $version = '';
+
+    /**
      * @var int
      */
     public $statusCode = 0;
@@ -34,14 +39,16 @@ class ApiResponse
     /**
      * Constructor
      *
+     * @param string $version Application version.
      * @param int $statusCode HTTP status code.
      * @param string $errorMessage="" Error message if error response.
      * @param array $data=[] Key-value pairs to return if success response.
      */
-    public function __construct($statusCode, $errorMessage = '', $data = [])
+    public function __construct($version, $statusCode, $errorMessage = '', $data = [])
     {
+        $this->version = strval($version);
         $this->statusCode = intval($statusCode);
-        $this->errorMessage = $errorMessage;
+        $this->errorMessage = strval($errorMessage);
         $this->data = $data;
         $this->isError = ($this->statusCode >= 400);
     }
@@ -61,7 +68,7 @@ class ApiResponse
                 ],
                 'meta' => [
                     'status_code' => $this->statusCode,
-                    'version' => getenv('GETMAIL_VERSION'),
+                    'version' => $this->version,
                 ],
             ],
             JSON_PRETTY_PRINT

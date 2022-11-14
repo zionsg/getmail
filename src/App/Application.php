@@ -37,10 +37,10 @@ class Application
      */
     public function run()
     {
-        $host = getenv('GETMAIL_MAIL_IMAP_HOST');
-        $port = getenv('GETMAIL_MAIL_IMAP_PORT');
-        $user = getenv('GETMAIL_MAIL_USERNAME');
-        $pass = getenv('GETMAIL_MAIL_PASSWORD');
+        $host = $this->config->get('mail_imap_host');
+        $port = $this->config->get('mail_imap_port');
+        $user = $this->config->get('mail_username');
+        $pass = $this->config->get('mail_password');
         $mailbox = 'INBOX';
 
         // Open connection to specific mailbox
@@ -75,7 +75,7 @@ class Application
         imap_close($conn);
 
         // Return response
-        $response = new ApiResponse(200, '', [
+        $response = new ApiResponse($this->config->getVersion(), 200, '', [
             'email' => $email,
             'body' => $body,
         ]);
