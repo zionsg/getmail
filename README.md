@@ -12,6 +12,10 @@ to retrieve body of the most recent email in inbox matching a subject pattern.
 Paths in all documentation, even those in subfolders, are relative to the root
 of the repository. Shell commands are all run from the root of the repository.
 
+## Sections
+- [Requirements](#requirements)
+- [Installation](#installation)
+
 ## Requirements
 - [PHP](https://www.php.net/) >= 8.1
 - [Composer](https://getcomposer.org/) >= 2.4.4
