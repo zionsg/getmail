@@ -44,8 +44,12 @@ class Config
      */
     public static function init()
     {
+        // Set version from file. Saved as environment variable so that it appears when `printenv` is run in terminal.
+        $versionEnvVar = self::resolveEnvVar('version');
+        putenv("{$versionEnvVar}=" . trim(file_get_contents('VERSION.txt') ?: 'no-version')); // e.g. APP_VERSION=0.1.0
+
         self::$deploymentEnvironment = getenv(self::resolveEnvVar('env')) ?: 'none'; // e.g. from APP_ENV env var
-        self::$version = getenv(self::resolveEnvVar('version')) ?: 'none'; // e.g. from APP_VERSION env var
+        self::$version = getenv($versionEnvVar) ?: 'none'; // e.g. from APP_VERSION env var
     }
 
     /**

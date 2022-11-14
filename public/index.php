@@ -11,9 +11,6 @@ use App\Logger;
 // Make our life easier when dealing with paths. Everything is relative to the application root now.
 chdir(dirname(__DIR__));
 
-// Set additional environment variables before loading PHP files
-putenv('GETMAIL_VERSION=' . trim(file_get_contents('VERSION.txt') ?: 'no-version'));
-
 // Set handler for fatal errors before loading PHP files - should not depend on any dependencies as much as possible
 register_shutdown_function(function () {
     $error = error_get_last();

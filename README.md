@@ -59,7 +59,10 @@ of the repository. Shell commands are all run from the root of the repository.
                 # Use the vendor folder inside the container and not the host
                 # cos packages may use Linux native libraries and not work on host platform
                 - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/public/index.php # entrypoint for application
+                  source: /mnt/c/Users/Zion/localhost/www/getmail/VERSION.txt # application version
+                  target: /var/www/html/VERSION.txt
+                - type: bind
+                  source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # application entrypoint
                   target: /var/www/html/public/index.php
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/src

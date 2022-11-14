@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ##
-# Get descriptive version for application and save in VERSION.txt
+# Compute application version and save in VERSION.txt to be used by Dockerfile
 #
 # @example Run from root of this repo: scripts/version.sh
 ##
