@@ -18,16 +18,16 @@ putenv('GETMAIL_VERSION=' . trim(file_get_contents('VERSION.txt') ?: 'no-version
 require 'vendor/autoload.php';
 
 try {
-    // Get config and init logger
-    $appConfig = new Config();
-    Logger::init($appConfig);
+    // Init config and logger
+    Config::init();
+    Logger::init();
 
     // Run the application
-    $app = new Application($appConfig);
+    $app = new Application();
     $app->run();
 } catch (Throwable $t) {
     Logger::errorLog($t);
 
-    $response = new ApiResponse($appConfig->getVersion(), 500, $t->getMessage());
+    $response = new ApiResponse(500, $t->getMessage());
     $response->send();
 }

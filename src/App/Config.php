@@ -15,13 +15,38 @@ class Config
      *
      * @var array
      */
-    protected $config = [
+    protected static $config = [
         /** @property string env_var_prefix Application-specific prefix for names of environment variables. */
         'env_var_prefix' => 'GETMAIL_',
 
         /** @property string log_tag Log tag used in application logs. */
         'log_tag' => 'GETMAIL',
     ];
+
+    /**
+     * Deployment environment
+     *
+     * @var string
+     */
+    protected static $deploymentEnvironment = '';
+
+    /**
+     * Application version
+     *
+     * @var string
+     */
+    protected static $version = '';
+
+    /**
+     * Initialize static class - this must be called right at the start
+     *
+     * @return void
+     */
+    public static function init()
+    {
+        self::$deploymentEnvironment = getenv(self::resolveEnvVar('env')) ?: 'none'; // e.g. from APP_ENV env var
+        self::$version = getenv(self::resolveEnvVar('version')) ?: 'none'; // e.g. from APP_VERSION env var
+    }
 
     /**
      * Get value of configuration key
@@ -32,7 +57,7 @@ class Config
      * @param mixed $default=null Default value to return if key is not found.
      * @return mixed
      */
-    public function get($configKey, $default = null)
+    public static function get($configKey, $default = null)
     {
         $key = trim(strval($configKey));
         if (!$key) {
@@ -40,11 +65,11 @@ class Config
         }
 
         // Cannot use ?? with $default cos key may exist with value of null
-        if (array_key_exists($key, $this->config)) {
-            return $this->config[$key];
+        if (array_key_exists($key, self::$config)) {
+            return self::$config[$key];
         }
 
-        $value = getenv($this->resolveEnvVar($key));
+        $value = getenv(self::resolveEnvVar($key));
         if (false === $value) { // env var not found
             return $default;
         }
@@ -60,7 +85,7 @@ class Config
      *     If true, timestamp is returned in ISO 8601 format with microseconds.
      * @return DateTime|string Timestamp will always be in UTC timezone.
      */
-    public function getCurrentTimestamp($returnAsString = false)
+    public static function getCurrentTimestamp($returnAsString = false)
     {
         $utcDate = new DateTime('now', new DateTimeZone('UTC')); // always in UTC timezone
 
@@ -72,9 +97,9 @@ class Config
      *
      * @return string
      */
-    public function getDeploymentEnvironment()
+    public static function getDeploymentEnvironment()
     {
-        return (getenv($this->resolveEnvVar('env')) ?: 'none'); // e.g. from APP_ENV env var
+        return self::$deploymentEnvironment;
     }
 
     /**
@@ -82,9 +107,9 @@ class Config
      *
      * @return string
      */
-    public function getVersion()
+    public static function getVersion()
     {
-        return (getenv($this->resolveEnvVar('version')) ?: 'none'); // e.g. from APP_VERSION env var
+        return self::$version;
     }
 
     /**
@@ -93,9 +118,9 @@ class Config
      * @param string $name
      * @return string
      */
-    protected function resolveEnvVar($name)
+    protected static function resolveEnvVar($name)
     {
         // Name of env var is always in uppercase
-        return ($this->config['env_var_prefix'] ?? '') . strtoupper($name);
+        return (self::$config['env_var_prefix'] ?? '') . strtoupper($name);
     }
 }

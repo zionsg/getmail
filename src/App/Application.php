@@ -12,21 +12,10 @@ use App\Logger;
 class Application
 {
     /**
-     * Application configuration
-     *
-     * @var Config
-     */
-    protected $config = null;
-
-    /**
      * Constructor
-     *
-     * @param Config $config Application configuration.
      */
-    public function __construct(Config $config)
+    public function __construct()
     {
-        $this->config = $config;
-
         Logger::infoLog('Application started.');
     }
 
@@ -37,10 +26,10 @@ class Application
      */
     public function run()
     {
-        $host = $this->config->get('mail_imap_host');
-        $port = $this->config->get('mail_imap_port');
-        $user = $this->config->get('mail_username');
-        $pass = $this->config->get('mail_password');
+        $host = Config::get('mail_imap_host');
+        $port = Config::get('mail_imap_port');
+        $user = Config::get('mail_username');
+        $pass = Config::get('mail_password');
         $mailbox = 'INBOX';
 
         // Open connection to specific mailbox
@@ -75,7 +64,7 @@ class Application
         imap_close($conn);
 
         // Return response
-        $response = new ApiResponse($this->config->getVersion(), 200, '', [
+        $response = new ApiResponse(200, '', [
             'email' => $email,
             'body' => $body,
         ]);

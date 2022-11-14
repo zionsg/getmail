@@ -42,13 +42,6 @@ class Logger
     protected static $instance = null;
 
     /**
-     * Application configuration
-     *
-     * @var Config
-     */
-    protected $config = null;
-
-    /**
      * Deployment environment
      *
      * @var string
@@ -77,14 +70,13 @@ class Logger
     protected $fileHandle = null;
 
     /**
-     * Initialize static class - this must be called right at the start so as to pass in the config
+     * Initialize static class - this must be called right at the start
      *
-     * @param Config $config Application configuration.
      * @return void
      */
-    public static function init(Config $config)
+    public static function init()
     {
-        self::$instance = new Logger($config);
+        self::$instance = new Logger();
     }
 
     /**
@@ -109,15 +101,13 @@ class Logger
 
     /**
      * Constructor
-     *
-     * @param Config $config Application configuration.
      */
-    public function __construct(Config $config)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->env = $config->getDeploymentEnvironment();
-        $this->version = $config->getVersion();
-        $this->logTag = $config->get('log_tag');
+        $this->env = Config::getDeploymentEnvironment();
+        $this->version = Config::getVersion();
+        $this->logTag = Config::get('log_tag');
+
         $this->fileHandle = fopen('php://stdout', 'w');
     }
 
@@ -247,7 +237,7 @@ class Logger
     public function log($level, $message, array $context = [])
     {
         // Newlines should be removed else log parsers such as AWS CloudWatch may interpret as multiple logs
-        $text = '[' . $this->config->getCurrentTimestamp(true) . ']'
+        $text = '[' . Config::getCurrentTimestamp(true) . ']'
             . ' [' . strtoupper($level) . ']'
             . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"
             . ' ' . str_replace(["\n", "\r", "\t"], ' ', $message)

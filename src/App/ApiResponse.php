@@ -39,14 +39,13 @@ class ApiResponse
     /**
      * Constructor
      *
-     * @param string $version Application version.
      * @param int $statusCode HTTP status code.
      * @param string $errorMessage="" Error message if error response.
      * @param array $data=[] Key-value pairs to return if success response.
      */
-    public function __construct($version, $statusCode, $errorMessage = '', $data = [])
+    public function __construct($statusCode, $errorMessage = '', $data = [])
     {
-        $this->version = strval($version);
+        $this->version = Config::getVersion();
         $this->statusCode = intval($statusCode);
         $this->errorMessage = strval($errorMessage);
         $this->data = $data;
