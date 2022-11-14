@@ -2,8 +2,7 @@
 
 namespace App;
 
-use DateTime;
-use DateTimeZone;
+use App\Config;
 
 /**
  * Logger class
@@ -17,7 +16,7 @@ use DateTimeZone;
  * Logs are written to php://stdout so that they can appear in Docker container
  * logs.
  *
- * @link https://www.php-fig.org/psr/psr-3/
+ * @link See https://www.php-fig.org/psr/psr-3/ on signature of logging methods.
  */
 class Logger
 {
@@ -43,18 +42,32 @@ class Logger
     protected static $instance = null;
 
     /**
-     * Current deployment environment
+     * Application configuration
+     *
+     * @var Config
+     */
+    protected $config = null;
+
+    /**
+     * Deployment environment
      *
      * @var string
      */
     protected $env = '';
 
     /**
-     * Current application version
+     * Application version
      *
      * @var string
      */
     protected $version = '';
+
+    /**
+     * Log tag
+     *
+     * @var string
+     */
+    protected $logTag = '';
 
     /**
      * File handle for writing to stdout
@@ -64,9 +77,15 @@ class Logger
     protected $fileHandle = null;
 
     /**
-     * @var string
+     * Initialize static class - this must be called right at the start so as to pass in the config
+     *
+     * @param Config $config Application configuration.
+     * @return void
      */
-    protected $logTag = 'GETMAIL';
+    public static function init(Config $config)
+    {
+        self::$instance = new Logger($config);
+    }
 
     /**
      * Magic method for calling logging methods statically
@@ -90,11 +109,15 @@ class Logger
 
     /**
      * Constructor
+     *
+     * @param Config $config Application configuration.
      */
-    public function __construct()
+    public function __construct(Config $config)
     {
-        $this->env = getenv('GETMAIL_ENV');
-        $this->version = getenv('GETMAIL_VERSION');
+        $this->config = $config;
+        $this->env = $config->getDeploymentEnvironment();
+        $this->version = $config->getVersion();
+        $this->logTag = $config->get('log_tag');
         $this->fileHandle = fopen('php://stdout', 'w');
     }
 
@@ -224,8 +247,7 @@ class Logger
     public function log($level, $message, array $context = [])
     {
         // Newlines should be removed else log parsers such as AWS CloudWatch may interpret as multiple logs
-        $utcDate = new DateTime('now', new DateTimeZone('UTC'));
-        $text = '[' . $utcDate->format('Y-m-d\TH:i:s.up') . ']'
+        $text = '[' . $this->config->getCurrentTimestamp(true) . ']'
             . ' [' . strtoupper($level) . ']'
             . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"
             . ' ' . str_replace(["\n", "\r", "\t"], ' ', $message)
@@ -247,10 +269,6 @@ class Logger
      */
     protected static function getInstance()
     {
-        if (null === self::$instance) {
-            self::$instance = new Logger();
-        }
-
         return self::$instance;
     }
 }

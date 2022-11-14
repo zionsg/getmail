@@ -3,9 +3,9 @@
  * Entrypoint for application
  */
 
-use Throwable;
 use App\ApiResponse;
 use App\Application;
+use App\Config;
 use App\Logger;
 
 // Make our life easier when dealing with paths. Everything is relative to the application root now.
@@ -17,9 +17,12 @@ putenv('GETMAIL_VERSION=' . trim(file_get_contents('VERSION.txt') ?: 'no-version
 // Composer autoloading
 require 'vendor/autoload.php';
 
-// Run the application
 try {
-    $appConfig = [];
+    // Get config and init logger
+    $appConfig = new Config();
+    Logger::init($appConfig);
+
+    // Run the application
     $app = new Application($appConfig);
     $app->run();
 } catch (Throwable $t) {

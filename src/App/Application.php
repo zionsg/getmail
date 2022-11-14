@@ -3,6 +3,7 @@
 namespace App;
 
 use App\ApiResponse;
+use App\Config;
 use App\Logger;
 
 /**
@@ -13,16 +14,16 @@ class Application
     /**
      * Application configuration
      *
-     * @var array
+     * @var Config
      */
-    protected $config = [];
+    protected $config = null;
 
     /**
      * Constructor
      *
-     * @param array $config Application configuration.
+     * @param Config $config Application configuration.
      */
-    public function __construct(array $config = [])
+    public function __construct(Config $config)
     {
         $this->config = $config;
 
