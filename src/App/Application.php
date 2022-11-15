@@ -51,7 +51,7 @@ class Application
         $email = null;
         $body = '';
         foreach ($emailOverviews as $emailOverview) {
-            if (!preg_match($subjectPattern, $emailOverview->subject)) {
+            if (! preg_match($subjectPattern, $emailOverview->subject)) {
                 continue;
             }
 

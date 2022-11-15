@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Entrypoint for entire application
  */
@@ -14,7 +15,7 @@ chdir(dirname(__DIR__));
 // Set handler for fatal errors before loading PHP files - should not depend on any dependencies as much as possible
 register_shutdown_function(function () {
     $error = error_get_last();
-    if (!$error || $error['type'] !== E_ERROR) { // skip if no error or not fatal error
+    if (! $error || $error['type'] !== E_ERROR) { // skip if no error or not fatal error
         return;
     }
 

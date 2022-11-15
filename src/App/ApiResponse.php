@@ -62,7 +62,7 @@ class ApiResponse
         return json_encode(
             [
                 'data' => $this->isError ? null : $this->data,
-                'error' => (!$this->isError) ? null : [
+                'error' => (! $this->isError) ? null : [
                     'message' => $this->errorMessage,
                 ],
                 'meta' => [

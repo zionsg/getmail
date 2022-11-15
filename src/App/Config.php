@@ -64,7 +64,7 @@ class Config
     public static function get($configKey, $default = null)
     {
         $key = trim(strval($configKey));
-        if (!$key) {
+        if (! $key) {
             return $default;
         }
 
