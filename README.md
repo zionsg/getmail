@@ -99,3 +99,5 @@ of the repository. Shell commands are all run from the root of the repository.
       container, else it may have problems restarting later.
     + The application can be accessed via `http://localhost:8080`.
         * See `GETMAIL_PORT_*` env vars for port settings.
+- Additional stuff:
+    + Run `composer lint` to do linting checks.
