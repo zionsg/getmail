@@ -1,8 +1,12 @@
+.idea/
+__pycache__/
 dist/
 node_modules/
 tmp/
 vendor/
+*.local.php
 *.log
+*.pyc
 *.tar
 *.tar.gz
 *.tgz
@@ -11,6 +15,8 @@ tmp.*
 .DS_Store
 .env
 .npmrc
+.venv
+local.php
 Thumbs.db
 VERSION.txt
 desktop.ini

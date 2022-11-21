@@ -3,6 +3,9 @@
 ##
 # Compute application version and save in VERSION.txt to be used by Dockerfile
 #
+# Format: v<project version>-<repo branch>-<git commit>-<UTC timestamp in ISO 8601 format>,
+# e.g. v0.1.0-develop-1234abc-20221121T0230Z.
+#
 # @example Run from root of this repo: scripts/version.sh
 ##
 

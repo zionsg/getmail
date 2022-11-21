@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Local configuration override
+ *
+ * To use, rename to local.php and override config keys accordingly. The
+ * file local.php will be not be committed to the repository.
+ *
+ * @return array
+ */
+
+return [
+];

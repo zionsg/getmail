@@ -9,7 +9,7 @@ use App\Application;
 use App\Config;
 use App\Logger;
 
-// Make our life easier when dealing with paths. Everything is relative to the application root now.
+// Make our life easier when dealing with paths. Everything, i.e. getcwd(), is relative to the application root now.
 chdir(dirname(__DIR__));
 
 // Set handler for fatal errors before loading PHP files - should not depend on any dependencies as much as possible
@@ -42,7 +42,7 @@ try {
     require 'vendor/autoload.php';
 
     // Init config and logger
-    Config::init();
+    Config::init(getcwd() . DIRECTORY_SEPARATOR . 'config');
     Logger::init();
 
     // Run the application

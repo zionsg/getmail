@@ -236,7 +236,7 @@ class Logger
      */
     public function log($level, $message, array $context = [])
     {
-        // Newlines should be removed else log parsers such as AWS CloudWatch may interpret as multiple logs
+        // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs
         $text = '[' . Config::getCurrentTimestamp(true) . ']'
             . ' [' . strtoupper($level) . ']'
             . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"

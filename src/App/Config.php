@@ -15,13 +15,7 @@ class Config
      *
      * @var array
      */
-    protected static $config = [
-        /** @property string env_var_prefix Application-specific prefix for names of environment variables. */
-        'env_var_prefix' => 'GETMAIL_',
-
-        /** @property string log_tag Log tag used in application logs. */
-        'log_tag' => 'GETMAIL',
-    ];
+    protected static $config = [];
 
     /**
      * Deployment environment
@@ -29,6 +23,13 @@ class Config
      * @var string
      */
     protected static $deploymentEnvironment = '';
+
+    /**
+     * Environment variable prefix
+     *
+     * @var string
+     */
+    protected static $envVarPrefix = '';
 
     /**
      * Application version
@@ -40,16 +41,28 @@ class Config
     /**
      * Initialize static class - this must be called right at the start
      *
+     * This looks specifically for application.config.php and local.php if it
+     * exists. Any other config files should be loaded by these 2 files.
+     *
+     * @param string $configPath="config" Absolute path to directory containing
+     *     configuration files.
      * @return void
      */
-    public static function init()
+    public static function init($configPath)
     {
-        // Set version from file. Saved as environment variable so that it appears when `printenv` is run in terminal.
-        $versionEnvVar = self::resolveEnvVar('version');
-        putenv("{$versionEnvVar}=" . trim(file_get_contents('VERSION.txt') ?: 'no-version')); // e.g. APP_VERSION=0.1.0
+        self::$config = array_merge(
+            self::$config ?: [],
+            include "{$configPath}/application.config.php" ?: [],
+            file_exists("{$configPath}/local.php") ? (include "{$configPath}/local.php" ?: []) : []
+        );
 
-        self::$deploymentEnvironment = getenv(self::resolveEnvVar('env')) ?: 'none'; // e.g. from APP_ENV env var
-        self::$version = getenv($versionEnvVar) ?: 'none'; // e.g. from APP_VERSION env var
+        // Save commonly used config vars
+        self::$deploymentEnvironment = self::get('env');
+        self::$envVarPrefix = self::get('env_var_prefix');
+        self::$version = self::get('version');
+
+        // Save version as environment variable so that it appears when `printenv` is run in terminal
+        putenv(self::resolveEnvVar('version') . '=' . self::$version);
     }
 
     /**
@@ -125,6 +138,6 @@ class Config
     protected static function resolveEnvVar($name)
     {
         // Name of env var is always in uppercase
-        return (self::$config['env_var_prefix'] ?? '') . strtoupper($name);
+        return (self::$envVarPrefix . strtoupper($name));
     }
 }
