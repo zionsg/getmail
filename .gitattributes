@@ -1,0 +1,25 @@
+# Force UNIX line endings for all files
+# See https://www.scivision.dev/git-line-endings-windows-cygwin-wsl/
+# Do NOT just use * as that can goof up binary files in your repo.
+# Also, run `git config --global core.autocrlf input` and
+# `git config --global core.eol lf` to force \n line endings on committed files.
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.dockerignore text eol=lf
+Dockerfile text eol=lf
+*.css text eol=lf
+*.dist text eol=lf
+*.example text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.lock text eol=lf
+*.md text eol=lf
+*.phtml text eol=lf
+*.php text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.sql text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
