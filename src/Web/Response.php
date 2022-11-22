@@ -39,7 +39,7 @@ class Response
      *     rendering HTML response, relative to src/Web/view. E.g. layout.phtml.
      * @param array $viewData=[] Key-value pairs to pass to view template file.
      */
-    public function __construct($statusCode, $viewPath = '', $viewData = [])
+    public function __construct(int $statusCode, string $viewPath = '', array $viewData = [])
     {
         $this->statusCode = intval($statusCode);
         $this->viewPath = getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath;

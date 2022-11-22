@@ -48,7 +48,7 @@ class Config
      *     configuration files.
      * @return void
      */
-    public static function init($configPath)
+    public static function init(string $configPath)
     {
         self::$config = array_merge(
             self::$config ?: [],
@@ -74,7 +74,7 @@ class Config
      * @param mixed $default=null Default value to return if key is not found.
      * @return mixed
      */
-    public static function get($configKey, $default = null)
+    public static function get(string $configKey, mixed $default = null)
     {
         $key = trim(strval($configKey));
         if (! $key) {
@@ -102,7 +102,7 @@ class Config
      *     If true, timestamp is returned in ISO 8601 format with microseconds.
      * @return DateTime|string Timestamp will always be in UTC timezone.
      */
-    public static function getCurrentTimestamp($returnAsString = false)
+    public static function getCurrentTimestamp(bool $returnAsString = false)
     {
         $utcDate = new DateTime('now', new DateTimeZone('UTC')); // always in UTC timezone
 
@@ -135,7 +135,7 @@ class Config
      * @param string $name
      * @return string
      */
-    protected static function resolveEnvVar($name)
+    protected static function resolveEnvVar(string $name)
     {
         // Name of env var is always in uppercase
         return (self::$envVarPrefix . strtoupper($name));

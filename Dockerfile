@@ -34,8 +34,8 @@ COPY public/ /var/www/html/public/
 COPY src/ /var/www/html/src/
 COPY composer.* /var/www/html/
 
-# Install application dependencies
-RUN composer install
+# Install production dependencies for application
+RUN composer install --no-dev
 
 # Command for VERSION.txt placed last as it always changes, making Docker always rebuild this layer and subsequent ones
 COPY VERSION.txt /var/www/html/

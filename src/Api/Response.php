@@ -40,7 +40,7 @@ class Response
      * @param string $errorMessage="" Error message if error response.
      * @param array $data=[] Key-value pairs to return if success response.
      */
-    public function __construct($statusCode, $errorMessage = '', $data = [])
+    public function __construct(int $statusCode, string $errorMessage = '', array $data = [])
     {
         $this->statusCode = intval($statusCode);
         $this->errorMessage = strval($errorMessage);
