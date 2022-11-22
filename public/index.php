@@ -4,12 +4,14 @@
  * Entrypoint for entire application
  */
 
+// The 5 most important classes are listed here
 use Api\Response as ApiResponse;
 use App\Application;
 use App\Config;
 use App\Logger;
+use Web\Response as WebResponse;
 
-// Make our life easier when dealing with paths. Everything, i.e. getcwd(), is relative to the application root now.
+// Make our life easier when dealing with paths. Everything is relative to the application root via getcwd() now.
 chdir(dirname(__DIR__));
 
 // Set handler for fatal errors before loading PHP files - should not depend on any dependencies as much as possible
@@ -19,7 +21,7 @@ register_shutdown_function(function () {
         return;
     }
 
-    // Output error details to console only
+    // Output error details to console
     // Logger class not used to format message/timestamp as fatal error may have been due to it
     $fileHandle = fopen('php://stdout', 'w');
     $utcDate = new DateTime('now', new DateTimeZone('UTC'));
@@ -29,7 +31,7 @@ register_shutdown_function(function () {
     );
     fclose($fileHandle);
 
-    // Do not show error details to client - ApiResponse class not used as fatal error may have been due to it
+    // Do not show error details to client - WebResponse class not used as fatal error may have been due to it
     http_response_code(500);
     header('Content-Type: text/html');
     echo 'Fatal error occurred.';
