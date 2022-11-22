@@ -28,7 +28,7 @@
   "scripts": {
     "//": [
       "This // key is used for comments.",
-      "The ext-* in require-dev are needed for php_codesniffer to work. See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Requirements for more.",
+      "The ext-* in require-dev are needed for php_codesniffer to work. See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Requirements for details.",
       "To install SimpleXML PHP extension for PHP 8.1 on Ubuntu, run `sudo apt-get install php8.1-simplexml`.",
       "The start script uses & to start up Docker container in background else Composer will timeout while waiting for it to complete."
     ],

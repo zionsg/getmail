@@ -24,7 +24,7 @@ of the repository. Shell commands are all run from the root of the repository.
     + `depends_on` condition in Docker Compose file to wait for successful
       service completion added in Docker Compose v1.29.0 onwards. See
       https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on
-      for more info.
+      for details.
     + Version 3.7 is currently used for the Compose file format.
 
 ## Installation
@@ -51,7 +51,7 @@ of the repository. Shell commands are all run from the root of the repository.
       Docker Compose to override specified settings in `docker-compose.yml`.
       This is used to temporarily tweak the Docker Compose configuration on the
       local machine and will not be committed to the repository. See
-      https://docs.docker.com/compose/extends for more info.
+      https://docs.docker.com/compose/extends for details.
         * A common use case during local development would be to use the `dev`
           tag for the Docker image and enabling live reload inside the Docker
           container when changes are made to the source code on a Windows host
