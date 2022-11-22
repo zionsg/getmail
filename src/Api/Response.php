@@ -5,7 +5,7 @@ namespace Api;
 use App\Config;
 
 /**
- * Standardized format for API responses from API endpoints
+ * Standardized format for JSON responses from API endpoints
  *
  * @link https://blog.intzone.com/designing-developer-friendly-json-for-api-responses/
  */
