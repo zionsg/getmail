@@ -1,19 +1,16 @@
 <?php
 
-namespace App;
+namespace Api;
+
+use App\Config;
 
 /**
  * Standardized format for API responses from API endpoints
  *
  * @link https://blog.intzone.com/designing-developer-friendly-json-for-api-responses/
  */
-class ApiResponse
+class Response
 {
-    /**
-     * @var string
-     */
-    public $version = '';
-
     /**
      * @var int
      */
@@ -45,7 +42,6 @@ class ApiResponse
      */
     public function __construct($statusCode, $errorMessage = '', $data = [])
     {
-        $this->version = Config::getVersion();
         $this->statusCode = intval($statusCode);
         $this->errorMessage = strval($errorMessage);
         $this->data = $data;
@@ -67,10 +63,9 @@ class ApiResponse
                 ],
                 'meta' => [
                     'status_code' => $this->statusCode,
-                    'version' => $this->version,
+                    'version' => Config::getVersion(),
                 ],
-            ],
-            JSON_PRETTY_PRINT
+            ]
         );
     }
 

@@ -81,13 +81,13 @@ of the repository. Shell commands are all run from the root of the repository.
                   target: /var/www/html/src
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/css
-                  target: /var/www/html/public/css
+                  target: /var/www/html/public/assets/css
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/images
-                  target: /var/www/html/public/images
+                  target: /var/www/html/public/assets/images
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/js
-                  target: /var/www/html/public/js
+                  target: /var/www/html/public/assets/js
                 - type: bind
                   source: /mnt/c/Users/Me/localhost/www/getmail/tmp
                   target: /var/www/html/tmp

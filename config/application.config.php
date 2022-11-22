@@ -19,4 +19,7 @@ return [
 
     /** @property string log_tag Log tag used in application logs. */
     'log_tag' => 'GETMAIL',
+
+    /** @property string layout_path Absolute path to layout template for Web responses. */
+    'web_layout_path' => getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . 'layout.phtml',
 ];

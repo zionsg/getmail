@@ -4,7 +4,7 @@
  * Entrypoint for entire application
  */
 
-use App\ApiResponse;
+use Api\Response as ApiResponse;
 use App\Application;
 use App\Config;
 use App\Logger;

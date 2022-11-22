@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\ApiResponse;
 use App\Config;
 use App\Logger;
+use Web\Response as WebResponse;
 
 /**
  * Main application class
@@ -48,15 +48,15 @@ class Application
         // Get the most recent email matching a subject and retrieve its body
         $subject = 'password';
         $subjectPattern = '/' . $subject . '/i';
-        $email = null;
-        $body = '';
+        $mailOverview = null;
+        $mailBody = '';
         foreach ($emailOverviews as $emailOverview) {
             if (! preg_match($subjectPattern, $emailOverview->subject)) {
                 continue;
             }
 
-            $email = $emailOverview;
-            $body = imap_body($conn, $emailOverview->uid, FT_UID | FT_PEEK); // do not mark email as Seen
+            $mailOverview = $emailOverview;
+            $mailBody = imap_body($conn, $emailOverview->uid, FT_UID | FT_PEEK); // do not mark email as Seen
             break;
         }
 
@@ -64,9 +64,9 @@ class Application
         imap_close($conn);
 
         // Return response
-        $response = new ApiResponse(200, '', [
-            'email' => $email,
-            'body' => $body,
+        $response = new WebResponse(200, 'index.phtml', [
+            'mailOverview' => json_encode($mailOverview, JSON_PRETTY_PRINT),
+            'mailBody' => $mailBody,
         ]);
         $response->send();
     }
