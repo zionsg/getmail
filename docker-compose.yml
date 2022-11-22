@@ -4,6 +4,12 @@
 
 version: "3.7" # this is the version for the compose file config, not the app
 
+# Rename default network so that it can referenced by Docker containers started
+# by other docker-compose.yml files (if any) by using `docker connect`
+networks:
+  default:
+      name: getmail-network
+
 # All services should be prefixed with "getmail-" to prevent conflict with Docker Compose files from other repos
 # See https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on for depends_on conditions
 services:
