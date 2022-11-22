@@ -44,7 +44,7 @@ class Config
      * This looks specifically for application.config.php and local.php if it
      * exists. Any other config files should be loaded by these 2 files.
      *
-     * @param string $configPath="config" Absolute path to directory containing
+     * @param string $configPath Absolute path to directory containing
      *     configuration files.
      * @return void
      */
