@@ -7,6 +7,9 @@ use DateTimeZone;
 
 /**
  * Centralized configuration class
+ *
+ * This is the 1st class to be loaded, hence it should not depend on any other
+ * classes, e.g. it should not use App\Logger to log messages.
  */
 class Config
 {
@@ -18,18 +21,18 @@ class Config
     protected static $config = [];
 
     /**
-     * Deployment environment
-     *
-     * @var string
-     */
-    protected static $deploymentEnvironment = '';
-
-    /**
      * Environment variable prefix
      *
      * @var string
      */
     protected static $envVarPrefix = '';
+
+    /**
+     * Deployment environment
+     *
+     * @var string
+     */
+    protected static $deploymentEnvironment = '';
 
     /**
      * Application version
@@ -41,8 +44,9 @@ class Config
     /**
      * Initialize static class - this must be called right at the start
      *
-     * This looks specifically for application.config.php and local.php if it
-     * exists. Any other config files should be loaded by these 2 files.
+     * This merges all the PHP files in $configPath in alphabetical order,
+     * ideally with application.config.php being the first and zenith.local.php
+     * being the last (if it exists).
      *
      * @param string $configPath Absolute path to directory containing
      *     configuration files.
@@ -57,8 +61,8 @@ class Config
         );
 
         // Save commonly used config vars
+        self::$envVarPrefix = self::get('env_var_prefix'); // this must be first as resolveEnvVar() depends on it
         self::$deploymentEnvironment = self::get('env');
-        self::$envVarPrefix = self::get('env_var_prefix');
         self::$version = self::get('version');
 
         // Save version as environment variable so that it appears when `printenv` is run in terminal
@@ -68,7 +72,7 @@ class Config
     /**
      * Get value of configuration key
      *
-     * $config is checked first, followed by environment variables.
+     * Application config is checked first, followed by environment variables.
      *
      * @param string $configKey Configuration key, typically in snake_case.
      * @param mixed $default=null Default value to return if key is not found.

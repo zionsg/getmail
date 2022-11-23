@@ -82,6 +82,9 @@ class Logger
     /**
      * Magic method for calling logging methods statically
      *
+     * Static methods cannot have the same names as instance methods, hence
+     * the "Log" suffix.
+     *
      * @param string $name Name of method being called.
      * @param array $arguments Arguments to be passed to method.
      * @return void
@@ -92,10 +95,9 @@ class Logger
             return;
         }
 
-        $instance = self::getInstance();
         $methodName = substr($name, 0, strlen($name) - 3);
-        if (method_exists($instance, $methodName)) {
-            call_user_func_array([$instance, $methodName], $arguments);
+        if (method_exists(self::$instance, $methodName)) {
+            call_user_func_array([self::$instance, $methodName], $arguments);
         }
     }
 
@@ -250,15 +252,5 @@ class Logger
         // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for
         // security reasons, hence the use of a file handle
         fwrite($this->fileHandle, $text);
-    }
-
-    /**
-     * Get singleton instance
-     *
-     * @return Logger
-     */
-    protected static function getInstance()
-    {
-        return self::$instance;
     }
 }

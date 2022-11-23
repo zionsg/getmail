@@ -1,3 +1,5 @@
+# This .gitignore caters for Docker, Linux/macOS/Windows operating systems
+# and Node.js/PHP/Python programming languages.
 .idea/
 __pycache__/
 dist/
