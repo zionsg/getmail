@@ -86,11 +86,13 @@ class Config
             return $default;
         }
 
+        // Check application config
         // Cannot use ?? with $default cos key may exist with value of null
         if (array_key_exists($key, self::$config)) {
             return self::$config[$key];
         }
 
+        // Check environment variables
         $value = getenv(self::resolveEnvVar($key));
         if (false === $value) { // env var not found
             return $default;
