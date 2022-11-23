@@ -1,11 +1,16 @@
 # This .gitignore caters for Docker, Linux/macOS/Windows operating systems
 # and Node.js/PHP/Python programming languages.
+
+# Directories
 .idea/
 __pycache__/
 dist/
 node_modules/
 tmp/
 vendor/
+venv/
+
+# Wildcard files
 *.local.php
 *.log
 *.pyc
@@ -14,6 +19,8 @@ vendor/
 *.tgz
 *.zip
 tmp.*
+
+# Files
 .DS_Store
 .env
 .npmrc
