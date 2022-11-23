@@ -239,6 +239,9 @@ class Logger
     public function log($level, $message, array $context = [])
     {
         // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs
+        // Sample log entry (split into 2 lines here for easier reading but will be output as 1 line when logged):
+        //   [2022-11-23T06:49:24.257227Z] [INFO] [GETMAIL production 172.18.0.2:80] Application started. [CONTEXT []]
+        //     [REQUEST 172.18.0.1 GET application/json /healthcheck "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"]
         $text = '[' . Config::getCurrentTimestamp(true) . ']'
             . ' [' . strtoupper($level) . ']'
             . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"
