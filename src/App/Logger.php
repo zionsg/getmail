@@ -244,9 +244,9 @@ class Logger
             . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"
             . ' ' . str_replace(["\n", "\r", "\t"], ' ', $message)
             . ' [CONTEXT ' . json_encode($context) . ']'
-            . ' [REQUEST ' . "{$_SERVER['SERVER_ADDR']} {$_SERVER['REMOTE_ADDR']} {$_SERVER['REQUEST_METHOD']}"
-            . ' ' . ($_SERVER['CONTENT_TYPE'] ?: '-')
-            . " {$_SERVER['REQUEST_URI']} \"{$_SERVER['HTTP_USER_AGENT']}\"" . ']'
+            . ' [REQUEST ' . "{$_SERVER['REMOTE_ADDR']} {$_SERVER['REQUEST_METHOD']}"
+            . ' ' . ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type')
+            . " {$_SERVER['REQUEST_URI']} \"" . ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent') . '"]'
             . PHP_EOL;
 
         // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for
