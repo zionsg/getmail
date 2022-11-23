@@ -20,6 +20,10 @@ of the repository. Shell commands are all run from the root of the repository.
 - [PHP](https://www.php.net/) >= 8.1
 - [Composer](https://getcomposer.org/) >= 2.4.4
 - [Docker Engine](https://docs.docker.com/engine/release-notes/) >= 20.10.7
+    + Using Ubuntu together with Docker on a Windows machine via
+      Windows Subsystem for Linux (WSL), without requiring dual boot.
+        * [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
+        * [Install Docker in WSL 2 without Docker Desktop](https://nickjanetakis.com/blog/install-docker-in-wsl-2-without-docker-desktop)
 - [Docker Compose](https://docs.docker.com/compose/release-notes/) >= 1.29.0
     + `depends_on` condition in Docker Compose file to wait for successful
       service completion added in Docker Compose v1.29.0 onwards. See
