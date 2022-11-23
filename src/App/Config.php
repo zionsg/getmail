@@ -45,8 +45,8 @@ class Config
      * Initialize static class - this must be called right at the start
      *
      * This merges all the PHP files in $configPath in alphabetical order,
-     * ideally with application.config.php being the first and zenith.local.php
-     * being the last (if it exists).
+     * ignoring subdirectories, ideally with application.config.php being the
+     * first and zenith.local.php being the last (if it exists).
      *
      * @param string $configPath Absolute path to directory containing
      *     configuration files.
@@ -54,11 +54,12 @@ class Config
      */
     public static function init(string $configPath)
     {
-        self::$config = array_merge(
-            self::$config ?: [],
-            include "{$configPath}/application.config.php" ?: [],
-            file_exists("{$configPath}/local.php") ? (include "{$configPath}/local.php" ?: []) : []
-        );
+        foreach (glob("{$configPath}/*.php") as $configFile) {
+            self::$config = array_merge(
+                self::$config,
+                (include $configFile) ?: []
+            );
+        }
 
         // Save commonly used config vars
         self::$envVarPrefix = self::get('env_var_prefix'); // this must be first as resolveEnvVar() depends on it

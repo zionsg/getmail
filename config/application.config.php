@@ -3,9 +3,10 @@
 /**
  * Application configuration
  *
- * Not named config.php so as to explicitly indicate that this applies to the
- * entire application, and also that this file will be shown first when listing
- * the files in the config directory in alphabetical order.
+ * Named application.config.php and not config.php so as to explicitly indicate
+ * that this applies to the entire application, and that it will ideally be the
+ * first file to be read when merging the files in the config directory in
+ * alphabetical order.
  *
  * @return array
  */
@@ -21,5 +22,5 @@ return [
     'log_tag' => 'GETMAIL',
 
     /** @property string layout_path Absolute path to layout template for Web responses. */
-    'web_layout_path' => getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . 'layout.phtml',
+    'web_layout_path' => getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view/layout.phtml',
 ];

@@ -33,9 +33,9 @@ of the repository. Shell commands are all run from the root of the repository.
 - Copy `.env.example` to `.env` and update the values accordingly. This will be
   read by Docker Compose and the application. The file `.env` will not be
   committed to the repository.
-- Copy `config/local.php.dist` to `config/local.php` to override the application
-  configuration locally. The file `config/local.php` will not be committed to
-  the repository.
+- Copy `config/zenith.local.php.dist` to `zenith.config/local.php` to override
+  the application configuration locally. The file `config/zenith.local.php`
+  will not be committed to the repository.
 - Run `composer install`.
 - To run the application locally:
     + For consistency with production environment, the application should be run
