@@ -8,7 +8,7 @@ use App\Config;
  * Logger class
  *
  * Logging methods can also be called statically via "<log level>Log" methods,
- * e.g. Logger::infoLog() which calls (new Logger())->info(), so that no
+ * e.g. Logger::infoLog() which calls (new Logger())->log('info'), so that no
  * instantiation is needed to use them. A singleton instance is used internally
  * for these static methods so that its destructor can be used to close the
  * file handle.
@@ -95,9 +95,14 @@ class Logger
             return;
         }
 
-        $methodName = substr($name, 0, strlen($name) - 3);
-        if (method_exists(self::$instance, $methodName)) {
-            call_user_func_array([self::$instance, $methodName], $arguments);
+        $logLevel = substr($name, 0, strlen($name) - 3);
+        if (defined(__CLASS__ . '::' . strtoupper($logLevel))) { // check if log level exists
+            // Calling log() instead of the instance method associated with the log level,
+            // e.g. info(), so that same stack frame in debug_backtrace() can be used to
+            // retrieve the caller, i.e. check debug_backtrace()[2] to get caller for
+            // Logger::infoLog() or (new Logger())->info().
+            array_unshift($arguments, $logLevel);
+            call_user_func_array([self::$instance, 'log'], $arguments);
         }
     }
 
@@ -238,22 +243,41 @@ class Logger
      */
     public function log($level, $message, array $context = [])
     {
+        // The caller typically calls a static method or instance method in this
+        // class, e.g. Logger::infoLog() or (new Logger())->info(), which then
+        // calls this method, hence checking 3rd stack frame in the backtrace.
+        $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
+        $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
+
         // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs
-        // Sample log entry (split into 2 lines here for easier reading but will be output as 1 line when logged):
-        //   [2022-11-23T06:49:24.257227Z] [INFO] [GETMAIL production 172.18.0.2:80] Application started. [CONTEXT []]
-        //     [REQUEST 172.18.0.1 GET application/json /healthcheck "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"]
-        $text = '[' . Config::getCurrentTimestamp(true) . ']'
-            . ' [' . strtoupper($level) . ']'
-            . " [{$this->logTag} {$this->env} {$_SERVER['SERVER_ADDR']}:{$_SERVER['SERVER_PORT']}]"
-            . ' ' . str_replace(["\n", "\r", "\t"], ' ', $message)
-            . ' [CONTEXT ' . json_encode($context) . ']'
-            . ' [REQUEST ' . "{$_SERVER['REMOTE_ADDR']} {$_SERVER['REQUEST_METHOD']}"
-            . ' ' . ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type')
-            . " {$_SERVER['REQUEST_URI']} \"" . ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent') . '"]'
-            . PHP_EOL;
+        // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
+        //    [2022-11-24T01:57:32.095364Z] [INFO] [LOGTAG] [/var/www/html/src/App/Application.php:19]
+        //        [MSG Application started.] [CTX []]
+        //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"]
+        //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
+        $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
+            '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s"] [SVR %s:%s %s %s]',
+            Config::getCurrentTimestamp(true),
+            strtoupper($level),
+            $this->logTag ?: 'no-log-tag',
+            $caller['file'] ?? 'no-file',
+            $caller['line'] ?? 0,
+            $message,
+            json_encode($context),
+            $_SERVER['REMOTE_ADDR'],
+            $_SERVER['REMOTE_PORT'],
+            $_SERVER['REQUEST_METHOD'],
+            ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type'),
+            $_SERVER['REQUEST_URI'],
+            ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent'),
+            $_SERVER['SERVER_ADDR'],
+            $_SERVER['SERVER_PORT'],
+            $this->env ?: 'no-env',
+            $this->version ?: 'no-version'
+        ));
 
         // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for
         // security reasons, hence the use of a file handle
-        fwrite($this->fileHandle, $text);
+        fwrite($this->fileHandle, $text . PHP_EOL); // must end with newline as next fwrite() will append to this
     }
 }
