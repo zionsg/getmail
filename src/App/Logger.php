@@ -249,7 +249,8 @@ class Logger
         $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
-        // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs
+        // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs.
+        // Log tag is used in differentiating logs from different applications, especially when aggregated together.
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
         //    [2022-11-24T01:57:32.095364Z] [INFO] [LOGTAG] [/var/www/html/src/App/Application.php:19]
         //        [MSG Application started.] [CTX []]
