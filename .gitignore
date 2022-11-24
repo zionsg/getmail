@@ -1,7 +1,8 @@
-# This .gitignore caters for Docker, Linux/macOS/Windows operating systems
-# and Node.js/PHP/Python programming languages.
+# This .gitignore caters for Docker, SSH, Terraform, Linux/macOS/Windows
+# operating systems and Node.js/PHP/Python programming languages.
 
 # Directories
+**/.terraform/*
 .idea/
 __pycache__/
 dist/
@@ -11,22 +12,36 @@ vendor/
 venv/
 
 # Wildcard files
+*.id_rsa
+*.key
 *.local.php
 *.log
+*.pem
+*.ppk
+*.pub
 *.pyc
 *.tar
 *.tar.gz
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
 *.tgz
 *.zip
+*_override.tf
+*_override.tf.json
 tmp.*
 
 # Files
 .DS_Store
 .env
 .npmrc
+.terraformrc
 .venv
-local.php
 Thumbs.db
 VERSION.txt
 desktop.ini
 docker-compose.override.yml
+local.php
+override.tf
+override.tf.json
