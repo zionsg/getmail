@@ -1,10 +1,14 @@
 #!/bin/sh
 
 ##
-# Compute application version and save in VERSION.txt to be used by Dockerfile
+# Compute application version and save in VERSION.txt to be used by Dockerfile and application
 #
-# Format: v<project version>-<repo branch>-<git commit>-<UTC timestamp in ISO 8601 format>,
+# Format: v<project version>-<repository branch>-<git commit>-<UTC timestamp in ISO 8601 format with timezone>,
 # e.g. v0.1.0-develop-1234abc-20221121T0230Z.
+#
+# When adding shell scripts to a repo, run `git update-index --add --chmod=+x <filename>` to set
+# the file as executable. Running `git ls-files --stage` should show the file permission as 100755
+# and not 100644, e.g. `100755 bb7ddf8783bb33f9c893ac5390d5bfe97db2c759 0 version.sh`.
 #
 # @example Run from root of this repo: scripts/version.sh
 ##
