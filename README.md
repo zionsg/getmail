@@ -25,6 +25,11 @@ of the repository. Shell commands are all run from the root of the repository.
         * [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
         * [Install Docker in WSL 2 without Docker Desktop](https://nickjanetakis.com/blog/install-docker-in-wsl-2-without-docker-desktop)
 - [Docker Compose](https://docs.docker.com/compose/release-notes/) >= 1.29.0
+    + Note that Docker Compose v1 uses `docker-compose` command whereas
+      Docker Compose v2 uses `docker compose` command (without hyphen) via
+      the Compose plugin for Docker.
+        * [Install Docker-Compose v1 on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
+        * [Install Docker Compose v2 plugin on Ubuntu 22.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-22-04)
     + `depends_on` condition in Docker Compose file to wait for successful
       service completion added in Docker Compose v1.29.0 onwards. See
       https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on
