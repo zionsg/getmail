@@ -28,7 +28,7 @@ of the repository. Shell commands are all run from the root of the repository.
     + Note that Docker Compose v1 uses the `docker-compose` command whereas
       Docker Compose v2 uses the `docker compose` command (without hyphen) via
       the Compose plugin for Docker.
-        * [Install Docker-Compose v1 on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
+        * [Install Docker Compose v1 on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
         * [Install Docker Compose v2 plugin on Ubuntu 22.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-22-04)
     + `depends_on` condition in Docker Compose file to wait for successful
       service completion added in Docker Compose v1.29.0 onwards. See
