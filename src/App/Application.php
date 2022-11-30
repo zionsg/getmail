@@ -64,10 +64,15 @@ class Application
         imap_close($conn);
 
         // Return response
-        $response = new WebResponse(200, 'index.phtml', [
-            'mailOverview' => json_encode($mailOverview, JSON_PRETTY_PRINT),
-            'mailBody' => $mailBody,
-        ]);
+        $response = new WebResponse(
+            200,
+            'index.phtml',
+            [
+                'mailOverview' => json_encode($mailOverview, JSON_PRETTY_PRINT),
+                'mailBody' => $mailBody,
+            ],
+            true // wrap in layout
+        );
         $response->send();
     }
 }

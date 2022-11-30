@@ -25,6 +25,11 @@ class Response
     public $viewData = [];
 
     /**
+     * @var bool
+     */
+    public $wrapInLayout = true;
+
+    /**
      * Whether this is an error response
      *
      * @var bool
@@ -38,19 +43,22 @@ class Response
      * @param string $viewPath="" Path to view template file used for
      *     rendering HTML response, relative to src/Web/view. E.g. layout.phtml.
      * @param array $viewData=[] Key-value pairs to pass to view template file.
+     * @param bool $wrapInLayout=true Whether to wrap the rendered HTML for the
+     *     view in the layout template.
      */
-    public function __construct(int $statusCode, string $viewPath = '', array $viewData = [])
+    public function __construct(int $statusCode, string $viewPath = '', array $viewData = [], bool $wrapInLayout = true)
     {
         $this->statusCode = intval($statusCode);
         $this->viewPath = getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath;
         $this->viewData = $viewData;
+        $this->wrapInLayout = $wrapInLayout;
         $this->isError = ($this->statusCode >= 400);
     }
 
     /**
      * Output of instance as string
      *
-     * View will be rendered and wrapped in layout
+     * View will be rendered and wrapped in layout template.
      *
      * @link Adapted from render() in https://github.com/zionsg/simple-ui-templating/blob/master/src/functions.php
      * @return string
@@ -77,7 +85,11 @@ class Response
         include $this->viewPath;
         $viewHtml = ob_get_clean();
 
-        // Wrap rendered HTML for view in layout
+        if (! $this->wrapInLayout) {
+            return $viewHtml;
+        }
+
+        // Wrap rendered HTML for view in layout template
         $layoutViewData = array_merge(
             [
                 'body' => $viewHtml,
