@@ -1,21 +1,17 @@
 <form method="POST" action="">
-    <div class="field">
-        <label>Subject Pattern</label>
-        <input name="subject_pattern" type="text" placeholder="E.g. password"
-          value="<?= $formData['subject_pattern'] ?>">
-    </div>
-    <div class="field">
-        <label>API Key</label>
-        <input name="api_key" type="text" value="<?= $formData['api_key'] ?>">
-    </div>
-    <div class="field">
-        <label>API Token</label>
-        <input name="api_token" type="password">
-    </div>
-    <div class="field"><input type="submit" value="Submit"></div>
+    <?php foreach ($form->fields as $field => $info) : ?>
+        <div class="field">
+            <?php if ($info['label']) : ?>
+                <label><?= $info['label'] ?></label>
+            <?php endif; ?>
+
+            <input name="<?= $field ?>" type="<?= $info['type'] ?>" placeholder="<?= $info['placeholder'] ?>"
+                value="<?= ($info['value'] ?? '') ?>">
+        </div>
+    <?php endforeach; ?>
 </form>
 
-<?php if ($isFormValid) : ?>
+<?php if ($form->isValid) : ?>
     <b>Mail Overview:</b>
     <pre class="mail-overview"><?= $mailOverview ?></pre>
 

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Config;
 use App\Logger;
+use Web\Form\IndexForm;
 use Web\Response as WebResponse;
 
 /**
@@ -26,10 +27,13 @@ class Application
      */
     public function run()
     {
+        $form = new IndexForm();
         $response = new WebResponse(
             200,
             'index.phtml',
-            [],
+            [
+                'form' => $form,
+            ],
             true // wrap in layout
         );
 
@@ -40,39 +44,12 @@ class Application
         }
 
         // POST
-        $errorMessage = '';
-        $formFields = ['subject_pattern', 'api_key', 'api_token'];
-        $formData = [];
-        $formErrors = [];
-        $isFormValid = true;
-        foreach ($formFields as $field) {
-            $formData[$field] = trim($_POST[$field] ?? '');
-            if (! $formData[$field]) {
-                $isFormValid = false;
-                $errorMessage = "Field \"{$field}\" cannot be empty.";
-                $formErrors[$field] = $errorMessage;
-                break; // don't waste time checking the rest of the fields
-            }
-        }
-
-        // Check credentials
-        if ($isFormValid) {
-            foreach (['api_key', 'api_token'] as $field) {
-                if ($formData[$field] !== Config::get($field)) {
-                    // Do not set form error for field else hacker will know which is wrong
-                    $isFormValid = false;
-                    $errorMessage = 'Invalid API credentials';
-                    break;
-                }
-            }
-        }
+        $form->setData($_POST);
+        $form->validate();
 
         // Return invalid form
-        $response->viewData['isFormValid'] = $isFormValid;
-        if (! $isFormValid) {
-            $response->viewData['errorMessage'] = $errorMessage ?: 'Form has errors.';
-            $response->viewData['formErrors'] = $formErrors;
-            $response->viewData['formData'] = $formData;
+        if (! $form->isValid) {
+            $response->viewData['errorMessage'] = $form->errorMessage ?: 'Form has errors.';
             $response->send();
 
             return;
@@ -97,7 +74,7 @@ class Application
         $emailOverviews = array_reverse(imap_fetch_overview($conn, "1:{$emailCnt}", 0)); // save in descending order
 
         // Get the most recent email matching a subject and retrieve its body
-        $subjectRegex = '/' . $formData['subject_pattern'] . '/i';
+        $subjectRegex = '/' . $form->fields['subject_pattern']['value'] . '/i';
         $mailOverview = null;
         $mailBody = '';
         foreach ($emailOverviews as $emailOverview) {
@@ -114,6 +91,7 @@ class Application
         imap_close($conn);
 
         // Return response
+        $form->setData(); // clear form
         $response->viewData['mailOverview'] = json_encode($mailOverview, JSON_PRETTY_PRINT);
         $response->viewData['mailBody'] = $mailBody;
         $response->send();
