@@ -51,6 +51,28 @@ body {
 /* CLOSE: Containers */
 
 
+
+/* BEGIN: Forms */
+button,
+input,
+textarea {
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+label {
+  font-weight: bold;
+}
+label::after {
+  content: ':';
+}
+
+form .field {
+  margin-bottom: 0.5rem;
+}
+/* CLOSE: Forms */
+
+
 /* BEGIN: Navigation */
 a {
   color: blue;
@@ -62,10 +84,11 @@ a:hover {
 
 
 /* BEGIN: Text */
+.error {
+  color: var(--getmail-error);
+  margin-bottom: 1rem;
+}
 .text-center {
   text-align: center;
-}
-.text-error {
-  color: var(--getmail-error);
 }
 /* CLOSE: Text */

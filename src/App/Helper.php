@@ -54,7 +54,7 @@ class Helper
      * @return string Format: <UNIX timestamp in microseconds>-<UUID v4>,
      *     e.g. 1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69.
      */
-    public static function makeUniqueId($timestampInMicroseconds = 0)
+    public static function makeUniqueId(float $timestampInMicroseconds = 0.0)
     {
         // Adapted from UUID::v4() in https://www.php.net/manual/en/function.uniqid.php#94959
         // See also uuid_generate_random() in https://github.com/symfony/polyfill-uuid/blob/main/Uuid.php

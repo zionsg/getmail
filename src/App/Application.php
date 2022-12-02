@@ -51,6 +51,7 @@ class Application
                 $isFormValid = false;
                 $errorMessage = "Field \"{$field}\" cannot be empty.";
                 $formErrors[$field] = $errorMessage;
+                break; // don't waste time checking the rest of the fields
             }
         }
 

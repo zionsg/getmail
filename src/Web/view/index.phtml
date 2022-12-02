@@ -1,12 +1,18 @@
 <form method="POST" action="">
-    <p>
-        Subject Pattern:
+    <div class="field">
+        <label>Subject Pattern</label>
         <input name="subject_pattern" type="text" placeholder="E.g. password"
           value="<?= $formData['subject_pattern'] ?>">
-    </p>
-    <p>API Key: <input name="api_key" type="text" value="<?= $formData['api_key'] ?>"></p>
-    <p>API Token: <input name="api_token" type="password"></p>
-    <p><input type="submit" value="Submit"></p>
+    </div>
+    <div class="field">
+        <label>API Key</label>
+        <input name="api_key" type="text" value="<?= $formData['api_key'] ?>">
+    </div>
+    <div class="field">
+        <label>API Token</label>
+        <input name="api_token" type="password">
+    </div>
+    <div class="field"><input type="submit" value="Submit"></div>
 </form>
 
 <?php if ($isFormValid) : ?>
