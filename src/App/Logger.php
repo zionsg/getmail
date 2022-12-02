@@ -57,6 +57,13 @@ class Logger
     protected $version = '';
 
     /**
+     * Log level priority to cap at
+     *
+     * @var int
+     */
+    protected $logLevelPriority = 0;
+
+    /**
      * Log tag
      *
      * @var string
@@ -69,6 +76,23 @@ class Logger
      * @var resource
      */
     protected $fileHandle = null;
+
+    /**
+     * Priorities for log levels, where smaller numbers have higher priority.
+     *
+     * @link See https://www.rfc-editor.org/rfc/rfc5424 on the numerical codes for severity levels.
+     * @var array
+     */
+    protected $logLevelPriorities = [
+        self::EMERGENCY => 0,
+        self::ALERT => 1,
+        self::CRITICAL => 2,
+        self::ERROR => 3,
+        self::WARNING => 4,
+        self::NOTICE => 5,
+        self::INFO => 6,
+        self::DEBUG => 7,
+    ];
 
     /**
      * Initialize static class - this must be called right at the start
@@ -114,8 +138,8 @@ class Logger
     {
         $this->env = Config::getDeploymentEnvironment();
         $this->version = Config::getVersion();
+        $this->logLevelPriority = $this->logLevelPriorities[Config::get('log_level')] ?? 0;
         $this->logTag = Config::get('log_tag');
-
         $this->fileHandle = fopen('php://stdout', 'w');
     }
 
@@ -244,6 +268,12 @@ class Logger
      */
     public function log($level, $message, array $context = [])
     {
+        // Do not log if priority of this message's log level is lower than the priority of the configured log level
+        $priority = $this->logLevelPriorities[$level] ?? 0;
+        if ($priority > $this->logLevelPriority) {
+            return;
+        }
+
         // The caller typically calls a static method or instance method in this
         // class, e.g. Logger::infoLog() or (new Logger())->info(), which then
         // calls this method, hence checking 3rd stack frame in the backtrace.
