@@ -35,9 +35,10 @@
 /* BEGIN: Containers */
 html,
 body {
-  /* when using rem units, note that Bootstrap 5 default font-size is 16px */
+  /* When using rem units, note that Bootstrap 5 default font-size is 16px */
   margin: 0;
   padding: 0;
+  font-size: 1rem; /* not setting as 16px so as not to override user's browser settings */
 }
 
 body {
@@ -49,7 +50,6 @@ body {
   padding: 1rem;
 }
 /* CLOSE: Containers */
-
 
 
 /* BEGIN: Forms */
