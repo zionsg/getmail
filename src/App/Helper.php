@@ -11,6 +11,11 @@ use DateTimeZone;
 class Helper
 {
     /**
+     * @var string
+     */
+    protected static $requestId = '';
+
+    /**
      * Get current timestamp
      *
      * @param boolean $returnAsString=false Whether to return as string.
@@ -22,6 +27,20 @@ class Helper
         $utcDate = new DateTime('now', new DateTimeZone('UTC')); // always in UTC timezone
 
         return ($returnAsString ? $utcDate->format('Y-m-d\TH:i:s.up') : $utcDate);
+    }
+
+    /**
+     * Get request ID of current server request
+     *
+     * @return string
+     */
+    public static function getRequestId()
+    {
+        if (! self::$requestId) { // can't populate during declaration cos no request to refer to
+            self::$requestId = self::makeUniqueId($_SERVER['REQUEST_TIME_FLOAT']);
+        }
+
+        return self::$requestId;
     }
 
     /**

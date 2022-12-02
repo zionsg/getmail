@@ -26,15 +26,63 @@ class Application
      */
     public function run()
     {
-        $requestId = Helper::makeUniqueId($_SERVER['REQUEST_TIME_FLOAT']);
+        $response = new WebResponse(
+            200,
+            'index.phtml',
+            [],
+            true // wrap in layout
+        );
 
+        if ('GET' === $_SERVER['REQUEST_METHOD']) {
+            $response->send();
+
+            return;
+        }
+
+        // POST
+        $errorMessage = '';
+        $formFields = ['subject_pattern', 'api_key', 'api_token'];
+        $formData = [];
+        $formErrors = [];
+        $isFormValid = true;
+        foreach ($formFields as $field) {
+            $formData[$field] = trim($_POST[$field] ?? '');
+            if (! $formData[$field]) {
+                $isFormValid = false;
+                $errorMessage = "Field \"{$field}\" cannot be empty.";
+                $formErrors[$field] = $errorMessage;
+            }
+        }
+
+        // Check credentials
+        if ($isFormValid) {
+            foreach (['api_key', 'api_token'] as $field) {
+                if ($formData[$field] !== Config::get($field)) {
+                    // Do not set form error for field else hacker will know which is wrong
+                    $isFormValid = false;
+                    $errorMessage = 'Invalid API credentials';
+                    break;
+                }
+            }
+        }
+
+        // Return invalid form
+        $response->viewData['isFormValid'] = $isFormValid;
+        if (! $isFormValid) {
+            $response->viewData['errorMessage'] = $errorMessage ?: 'Form has errors.';
+            $response->viewData['formErrors'] = $formErrors;
+            $response->viewData['formData'] = $formData;
+            $response->send();
+
+            return;
+        }
+
+        // Open connection to specific mailbox
         $host = Config::get('mail_imap_host');
         $port = Config::get('mail_imap_port');
         $user = Config::get('mail_username');
         $pass = Config::get('mail_password');
         $mailbox = 'INBOX';
-
-        // Open connection to specific mailbox
         $conn = imap_open(
             "{{$host}:{$port}/imap/ssl}{$mailbox}", // e.g. {imap.gmail.com:993/imap/ssl}INBOX
             $user,
@@ -48,12 +96,11 @@ class Application
         $emailOverviews = array_reverse(imap_fetch_overview($conn, "1:{$emailCnt}", 0)); // save in descending order
 
         // Get the most recent email matching a subject and retrieve its body
-        $subject = 'password';
-        $subjectPattern = '/' . $subject . '/i';
+        $subjectRegex = '/' . $formData['subject_pattern'] . '/i';
         $mailOverview = null;
         $mailBody = '';
         foreach ($emailOverviews as $emailOverview) {
-            if (! preg_match($subjectPattern, $emailOverview->subject)) {
+            if (! preg_match($subjectRegex, $emailOverview->subject)) {
                 continue;
             }
 
@@ -66,15 +113,8 @@ class Application
         imap_close($conn);
 
         // Return response
-        $response = new WebResponse(
-            200,
-            'index.phtml',
-            [
-                'mailOverview' => json_encode($mailOverview, JSON_PRETTY_PRINT),
-                'mailBody' => $mailBody,
-            ],
-            true // wrap in layout
-        );
+        $response->viewData['mailOverview'] = json_encode($mailOverview, JSON_PRETTY_PRINT);
+        $response->viewData['mailBody'] = $mailBody;
         $response->send();
     }
 }

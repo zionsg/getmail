@@ -7,7 +7,8 @@ don't expect too much from it :P
 
 Simple Dockerized PHP application that uses
 [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol)
-to retrieve body of the most recent email in inbox matching a subject pattern.
+to retrieve body of the most recent email in an inbox matching a subject
+pattern.
 
 Paths in all documentation, even those in subfolders, are relative to the root
 of the repository. Shell commands are all run from the root of the repository.

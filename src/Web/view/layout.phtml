@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="<?= $version ?>">
-    <title>Get Mail</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="version" content="<?= $version ?>">
+        <title>Get Mail</title>
 
-    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.png?ver=<?= $version ?>">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?ver=<?= $version ?>">
-  </head>
+        <link rel="icon" type="image/x-icon" href="/assets/images/favicon.png?ver=<?= $version ?>">
+        <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?ver=<?= $version ?>">
+    </head>
 
-  <body>
-    <div class="getmail-container" data-render-id="<?= $renderId ?>">
-      <?= $body ?>
-    </div>
+    <body>
+        <div class="getmail-container" data-render-id="<?= $renderId ?>">
+            <?php if ($errorMessage) : ?>
+                <div class="text-error"><?= $errorMessage?></div>
+            <?php endif; ?>
 
-    <script src="/assets/js/layout.js?ver=<?= $version ?>"></script>
-  </body>
+            <?= $body ?>
+        </div>
+
+        <script src="/assets/js/layout.js?ver=<?= $version ?>"></script>
+    </body>
 </html>

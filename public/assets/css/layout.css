@@ -27,6 +27,7 @@
 :root {
   --getmail-background-body: lightyellow;
   --getmail-body: black;
+  --getmail-error: red;
 }
 /* CLOSE: CSS custom properties (variables) */
 
@@ -63,5 +64,8 @@ a:hover {
 /* BEGIN: Text */
 .text-center {
   text-align: center;
+}
+.text-error {
+  color: var(--getmail-error);
 }
 /* CLOSE: Text */

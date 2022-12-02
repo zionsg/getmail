@@ -1,5 +1,18 @@
-<b>Mail Overview:</b>
-<pre><?= $mailOverview ?></pre>
+<form method="POST" action="">
+    <p>
+        Subject Pattern:
+        <input name="subject_pattern" type="text" placeholder="E.g. password"
+          value="<?= $formData['subject_pattern'] ?>">
+    </p>
+    <p>API Key: <input name="api_key" type="text" value="<?= $formData['api_key'] ?>"></p>
+    <p>API Token: <input name="api_token" type="password"></p>
+    <p><input type="submit" value="Submit"></p>
+</form>
 
-<b>Mail Body:</b>
-<pre><?= $mailBody ?></pre>
+<?php if ($isFormValid) : ?>
+    <b>Mail Overview:</b>
+    <pre class="mail-overview"><?= $mailOverview ?></pre>
+
+    <b>Mail Body:</b>
+    <pre class="mail-body"><?= $mailBody ?></pre>
+<?php endif; ?>
