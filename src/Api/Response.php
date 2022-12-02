@@ -3,6 +3,7 @@
 namespace Api;
 
 use App\Config;
+use App\Helper;
 
 /**
  * Standardized format for JSON responses from API endpoints
@@ -62,6 +63,7 @@ class Response
                     'message' => $this->errorMessage,
                 ],
                 'meta' => [
+                    'request_id' => Helper::getRequestId(),
                     'status_code' => $this->statusCode,
                     'version' => Config::getVersion(),
                 ],

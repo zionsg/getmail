@@ -32,7 +32,7 @@ class Helper
     /**
      * Get request ID of current server request
      *
-     * @return string
+     * @return string See makeUniqueId() on format.
      */
     public static function getRequestId()
     {

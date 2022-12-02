@@ -255,10 +255,11 @@ class Logger
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
         //    [2022-11-24T01:57:32.095364Z] [INFO] [LOGTAG] [/var/www/html/src/App/Application.php:19]
         //        [MSG Application started.] [CTX []]
-        //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"]
+        //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        //             1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69]
         //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
-            '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s"] [SVR %s:%s %s %s]',
+            '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
             Helper::getCurrentTimestamp(true),
             strtoupper($level),
             $this->logTag ?: 'no-log-tag',
@@ -272,6 +273,7 @@ class Logger
             ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type'),
             $_SERVER['REQUEST_URI'],
             ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent'),
+            Helper::getRequestId(),
             $_SERVER['SERVER_ADDR'],
             $_SERVER['SERVER_PORT'],
             $this->env ?: 'no-env',
