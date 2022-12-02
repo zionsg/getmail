@@ -103,21 +103,9 @@ class Config
     }
 
     /**
-     * Get current timestamp
-     *
-     * @param boolean $returnAsString=false Whether to return as string.
-     *     If true, timestamp is returned in ISO 8601 format with microseconds.
-     * @return DateTime|string Timestamp will always be in UTC timezone.
-     */
-    public static function getCurrentTimestamp(bool $returnAsString = false)
-    {
-        $utcDate = new DateTime('now', new DateTimeZone('UTC')); // always in UTC timezone
-
-        return ($returnAsString ? $utcDate->format('Y-m-d\TH:i:s.up') : $utcDate);
-    }
-
-    /**
      * Get deployment environment
+     *
+     * Not named getEnvironment() to avoid confusion with environment variables.
      *
      * @return string
      */

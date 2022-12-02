@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Config;
+use App\Helper;
 
 /**
  * Logger class
@@ -258,7 +259,7 @@ class Logger
         //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
             '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s"] [SVR %s:%s %s %s]',
-            Config::getCurrentTimestamp(true),
+            Helper::getCurrentTimestamp(true),
             strtoupper($level),
             $this->logTag ?: 'no-log-tag',
             $caller['file'] ?? 'no-file',

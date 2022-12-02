@@ -26,6 +26,8 @@ class Application
      */
     public function run()
     {
+        $requestId = Helper::makeUniqueId($_SERVER['REQUEST_TIME_FLOAT']);
+
         $host = Config::get('mail_imap_host');
         $port = Config::get('mail_imap_port');
         $user = Config::get('mail_username');

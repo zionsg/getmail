@@ -3,6 +3,7 @@
 namespace Web;
 
 use App\Config;
+use App\Helper;
 
 /**
  * Standardized format for HTML responses from Web endpoints
@@ -69,8 +70,8 @@ class Response
             /** @var string Application version. */
             'version' => Config::getVersion(),
 
-            /** @var string 20-char random identifier for HTML "data-render-id" attribute. */
-            'renderId' => strval(round(microtime(true) * 1000) . '-' . rand(100000, 999999)),
+            /** @var string Unique identifier for HTML "data-render-id" attribute. */
+            'renderId' => Helper::makeUniqueId(),
         ];
 
         // Import template variables as PHP variables so that they can be
