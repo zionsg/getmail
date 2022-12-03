@@ -13,6 +13,13 @@ use App\Helper;
 class Response
 {
     /**
+     * @var string[]
+     */
+    public $headers = [
+        'Content-Type: application/json; charset=utf-8',
+    ];
+
+    /**
      * @var int
      */
     public $statusCode = 0;
@@ -79,7 +86,9 @@ class Response
     public function send()
     {
         http_response_code($this->statusCode);
-        header('Content-Type: application/json; charset=utf-8');
+        foreach ($this->headers as $header) {
+            header($header);
+        }
         echo $this->__toString();
 
         // Must exit for response to be written properly

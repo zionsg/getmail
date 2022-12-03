@@ -11,6 +11,13 @@ use App\Helper;
 class Response
 {
     /**
+     * @var string[]
+     */
+    public $headers = [
+        'Content-Type: text/html; charset=utf-8',
+    ];
+
+    /**
      * @var int
      */
     public $statusCode = 0;
@@ -82,10 +89,16 @@ class Response
             $sharedViewData
         );
         extract($resolvedViewData);
-        ob_start();
-        include $this->viewPath;
-        $viewHtml = ob_get_clean();
 
+        // Render HTML for view
+        $viewHtml = '';
+        if ($this->viewPath) {
+            ob_start();
+            include $this->viewPath;
+            $viewHtml = ob_get_clean();
+        }
+
+        // Return if no need to wrap in layout template
         if (! $this->wrapInLayout) {
             return $viewHtml;
         }
@@ -113,7 +126,9 @@ class Response
     public function send()
     {
         http_response_code($this->statusCode);
-        header('Content-Type: text/html; charset=utf-8');
+        foreach ($this->headers as $header) {
+            header($header);
+        }
         echo $this->__toString();
 
         // Must exit for response to be written properly

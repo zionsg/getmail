@@ -43,6 +43,13 @@ class Logger
     protected static $instance = null;
 
     /**
+     * Application name
+     *
+     * @var string
+     */
+    protected $appName = '';
+
+    /**
      * Deployment environment
      *
      * @var string
@@ -62,13 +69,6 @@ class Logger
      * @var int
      */
     protected $logLevelPriority = 0;
-
-    /**
-     * Log tag
-     *
-     * @var string
-     */
-    protected $logTag = '';
 
     /**
      * File handle for writing to stdout
@@ -136,10 +136,10 @@ class Logger
      */
     public function __construct()
     {
+        $this->appName = Config::getApplicationName();
         $this->env = Config::getDeploymentEnvironment();
         $this->version = Config::getVersion();
         $this->logLevelPriority = $this->logLevelPriorities[Config::get('log_level')] ?? 0;
-        $this->logTag = Config::get('log_tag');
         $this->fileHandle = fopen('php://stdout', 'w');
     }
 
@@ -281,9 +281,9 @@ class Logger
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
         // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs.
-        // Log tag is used in differentiating logs from different applications, especially when aggregated together.
+        // Application name is used to differentiate logs from different apps, especially when aggregated together.
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
-        //    [2022-11-24T01:57:32.095364Z] [INFO] [LOGTAG] [/var/www/html/src/App/Application.php:19]
+        //    [2022-11-24T01:57:32.095364Z] [INFO] [APP NAME] [/var/www/html/src/App/Application.php:19]
         //        [MSG Application started.] [CTX []]
         //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         //             1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69]
@@ -292,7 +292,7 @@ class Logger
             '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
             Helper::getCurrentTimestamp(true),
             strtoupper($level),
-            $this->logTag ?: 'no-log-tag',
+            $this->appName ?: 'no-app-name',
             $caller['file'] ?? 'no-file',
             $caller['line'] ?? 0,
             $message,
