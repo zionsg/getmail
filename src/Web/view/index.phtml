@@ -1,4 +1,8 @@
 <form method="POST" action="">
+    <?php if ($form->errorMessage) : ?>
+        <div class="error"><?= $form->errorMessage ?></div>
+    <?php endif; ?>
+
     <?php foreach ($form->fields as $field => $info) : ?>
         <div class="field">
             <?php if ($info['label']) : ?>
@@ -7,6 +11,10 @@
 
             <input name="<?= $field ?>" type="<?= $info['type'] ?>" placeholder="<?= $info['placeholder'] ?>"
                 value="<?= ($info['value'] ?? '') ?>">
+
+            <?php if ($info['error']) : ?>
+                <div class="error"><?= $info['error'] ?></div>
+            <?php endif; ?>
         </div>
     <?php endforeach; ?>
 </form>

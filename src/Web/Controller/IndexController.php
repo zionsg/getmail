@@ -40,7 +40,6 @@ class IndexController
 
         // Return invalid form
         if (! $form->isValid) {
-            $response->viewData['errorMessage'] = $form->errorMessage ?: 'Form has errors.';
             $response->send();
 
             return;
