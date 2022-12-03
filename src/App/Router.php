@@ -105,6 +105,10 @@ class Router
                 if (0 === strpos($path, $route)) {
                     $childRoutes = $routeOptions['child_routes'];
                     if (! $childRoutes) {
+                        if ($path !== $route) { // e.g. path is /web/abc, route is /web with no child routes, so invalid
+                            return [];
+                        }
+
                         return $routeOptions;
                     }
 
