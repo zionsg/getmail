@@ -6,9 +6,17 @@ use Api\Response;
 
 class IndexController
 {
+    public function error()
+    {
+        $response = new Response(404, 'Endpoint not found.');
+        $response->send();
+    }
+
     public function index()
     {
-        $response = new Response(404, 'Route not found.');
+        $response = new Response(200, '', [
+            'message' => 'Hello World!',
+        ]);
         $response->send();
     }
 }

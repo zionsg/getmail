@@ -8,6 +8,14 @@ use Web\Form\IndexForm;
 
 class IndexController
 {
+    public function error()
+    {
+        $response = new Response(404, 'error.phtml', [
+            'message' => 'Page not found.',
+        ]);
+        $response->send();
+    }
+
     public function index()
     {
         $form = new IndexForm();
