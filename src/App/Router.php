@@ -119,6 +119,11 @@ class Router
 
                 if (0 === strpos($path, $route)) {
                     $childPath = substr($path, strlen($route));
+                    if (! $childPath || substr($childPath, 0, 1) !== '/') {
+                        // only check child routes of /api if path is /api/something, not /apix or /api.0
+                        continue;
+                    }
+
                     $function = __FUNCTION__;
                     $childResult = $this->$function($childPath, $childRoutes);
 
