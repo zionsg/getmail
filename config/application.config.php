@@ -23,9 +23,6 @@ return [
     /** @property string log_level Log level to cap logs at, e.g. INFO logs will not be output if ERROR is set here. */
     'log_level' => Logger::DEBUG,
 
-    /** @property string log_tag Log tag used in application logs. */
-    'log_tag' => 'GETMAIL',
-
     /** @property string layout_path Absolute path to layout template for Web responses. */
     'web_layout_path' => getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view/layout.phtml',
 ];

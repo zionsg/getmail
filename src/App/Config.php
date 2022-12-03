@@ -28,6 +28,13 @@ class Config
     protected static $envVarPrefix = '';
 
     /**
+     * Application name
+     *
+     * @var string
+     */
+    protected static $applicationName = '';
+
+    /**
      * Deployment environment
      *
      * @var string
@@ -63,11 +70,9 @@ class Config
 
         // Save commonly used config vars
         self::$envVarPrefix = self::get('env_var_prefix'); // this must be first as resolveEnvVar() depends on it
+        self::$applicationName = self::get('app_name');
         self::$deploymentEnvironment = self::get('env');
         self::$version = self::get('version');
-
-        // Save version as environment variable so that it appears when `printenv` is run in terminal
-        putenv(self::resolveEnvVar('version') . '=' . self::$version);
     }
 
     /**
@@ -100,6 +105,16 @@ class Config
 
         // Note that values of env vars are always strings
         return $value;
+    }
+
+    /**
+     * Get application name
+     *
+     * @return string
+     */
+    public static function getApplicationName()
+    {
+        return self::$applicationName;
     }
 
     /**
