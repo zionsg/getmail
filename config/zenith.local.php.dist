@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Local configuration override
+ * Local configuration override during development
  *
  * To use, rename to zenith.local.php and override config keys accordingly. The
  * file zenith.local.php will be not be committed to the repository.
@@ -10,6 +10,10 @@
  * that this overrides all previous configurations locally, and that it will
  * ideally be the last file to be read when merging the files in the config
  * directory in alphabetical order.
+ *
+ * This should not be used during a production deployment as config should be
+ * set via environment variables which will be read in by the Docker Compose
+ * file, as per the Twelve-Factor App.
  *
  * @return array
  */

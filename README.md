@@ -2,8 +2,8 @@
 
 **Disclaimer** This is just a personal hobbyist project to experiment with
 creating a PHP application with a simple structure without the use of bloated
-frameworks and Dockerizing it. It will likely always be Work-In-Progress, so
-don't expect too much from it :P
+frameworks and Dockerizing it. It will likely always be Work-In-Progress and
+may have breaking changes, so caveat emptor :P
 
 Simple Dockerized PHP application that uses
 [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol)
@@ -16,9 +16,10 @@ of the repository. Shell commands are all run from the root of the repository.
 ## Sections
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Application Design](#application-design)
 
 ## Requirements
-- [PHP](https://www.php.net/) >= 8.1
+- [PHP](https://www.php.net/) >= 8.0
 - [Composer](https://getcomposer.org/) >= 2.4.4
 - [Docker Engine](https://docs.docker.com/engine/release-notes/) >= 20.10.7
     + Using Ubuntu together with Docker on a Windows machine via
@@ -44,8 +45,8 @@ of the repository. Shell commands are all run from the root of the repository.
   read by Docker Compose and the application. The file `.env` will not be
   committed to the repository.
 - Copy `config/zenith.local.php.dist` to `config/zenith.local.php` to override
-  the application configuration locally. The file `config/zenith.local.php`
-  will not be committed to the repository.
+  the application configuration locally during development. The file
+  `config/zenith.local.php` will not be committed to the repository.
 - Run `composer install`.
 - To run the application locally:
     + For consistency with production environment, the application should be run
@@ -117,3 +118,16 @@ of the repository. Shell commands are all run from the root of the repository.
         * See `GETMAIL_PORT_*` env vars for port settings.
 - Additional stuff:
     + Run `composer lint` to do linting checks.
+
+## Application Design
+- Basic guiding principles:
+    + [3Cs for Coding – Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
+    + [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework).
+    + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
+    + Adherence to [The Twelve-Factor App](https://12factor.net/) as much as
+      possible, especially with regards to config.
+- Modules:
+    + App: Application-wide classes.
+    + Api: Classes handling requests to API endpoints.
+    + Web: Classes handling requests to web pages.
+- Deployment environments: production, staging, feature, testing, local.
