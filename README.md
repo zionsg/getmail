@@ -17,6 +17,7 @@ of the repository. Shell commands are all run from the root of the repository.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Application Design](#application-design)
+- [To-do](#to-do)
 
 ## Requirements
 - [PHP](https://www.php.net/) >= 8.0
@@ -132,3 +133,6 @@ of the repository. Shell commands are all run from the root of the repository.
     + Api: Classes handling requests to API endpoints.
     + Web: Classes handling requests to web pages.
 - Deployment environments: production, staging, feature, testing, local.
+
+## To-do
+- Refactor `Api\Response` and `Web\Response` to conform to `Psr\Http\Message\ResponseInterface`.
