@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Config;
 use App\Logger;
+use Laminas\Diactoros\ServerRequestFactory;
 
 /**
  * Router class
@@ -16,6 +18,20 @@ class Router
      */
     public const LITERAL = 'literal';
     public const REGEX = 'regex';
+
+    /**
+     * Application config
+     *
+     * @var Config
+     */
+    protected $config = null;
+
+    /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $logger = null;
 
     /**
      * @var string
@@ -54,10 +70,16 @@ class Router
     /**
      * Constructor
      *
-     * @param array $options
+     * @param Config $config Application config.
+     * @param Logger $logger Logger.
+     * @return void
      */
-    public function __construct(array $options)
+    public function __construct(Config $config, Logger $logger)
     {
+        $this->config = $config;
+        $this->logger = $logger;
+
+        $options = $this->config->get('router');
         $this->errorController = $options['error_controller'];
         $this->errorAction = $options['error_action'];
         $this->routes = $options['routes'] ?? [];
@@ -84,7 +106,7 @@ class Router
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $uri = $_SERVER['REQUEST_URI'];
         $queryPos = strpos($uri, '?');
@@ -94,8 +116,9 @@ class Router
         $controller = $routeOptions['controller'] ?? $this->errorController;
         $action = $routeOptions['action'] ?? $this->errorAction;
 
-        $handler = new $controller();
-        $handler->$action();
+        $request = ServerRequestFactory::fromGlobals();
+        $handler = new $controller($this->config, $this->logger);
+        $handler->$action($request);
     }
 
     /**
@@ -105,7 +128,7 @@ class Router
      * @param array $routes
      * @return array Route options. Empty array returned if no match is found.
      */
-    protected function matchRoute(string $path, array $routes)
+    protected function matchRoute(string $path, array $routes): array
     {
         foreach ($routes as $route => $routeOptions) {
             $type = $routeOptions['type'];

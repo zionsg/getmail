@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Routes configuration
+ * Router configuration
  *
  * @var array
  */
@@ -15,7 +15,7 @@ return [
         'error_controller' => \App\Controller\IndexController::class,
 
         /** @property string Name of method in all controllers for handling errors. */
-        'error_action' => 'error',
+        'error_action' => 'errorAction',
 
         /**
          * @property array Routes. Key-value pairs where key is route name and value is array of options for route.
@@ -26,13 +26,13 @@ return [
                 'type' => Router::LITERAL,
                 'route' => '/api',
                 'controller' => \Api\Controller\IndexController::class,
-                'action' => 'index',
+                'action' => 'indexAction',
                 'child_routes' => [
                     'healthcheck' => [
                         'type' => Router::LITERAL,
                         'route' => '/healthcheck',
                         'controller' => \Api\Controller\SystemController::class,
-                        'action' => 'healthcheck',
+                        'action' => 'healthcheckAction',
                     ],
                 ],
             ],
@@ -41,14 +41,14 @@ return [
                 'type' => Router::LITERAL,
                 'route' => '/web',
                 'controller' => \Web\Controller\IndexController::class,
-                'action' => 'index',
+                'action' => 'indexAction',
             ],
 
             'root' => [ // this should be the last route as it is a fallback and that "/" matches everything
                 'type' => Router::LITERAL,
                 'route' => '/',
                 'controller' => \App\Controller\IndexController::class,
-                'action' => 'index',
+                'action' => 'indexAction',
             ],
         ],
     ],

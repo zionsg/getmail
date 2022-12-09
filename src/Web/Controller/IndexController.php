@@ -2,24 +2,37 @@
 
 namespace Web\Controller;
 
-use App\Config;
+use App\Controller\AbstractController;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Web\Response;
 use Web\Form\IndexForm;
 
-class IndexController
+class IndexController extends AbstractController
 {
-    public function error()
+    /**
+     * Error action
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function errorAction(ServerRequestInterface $request)
     {
-        $response = new Response(404, 'error.phtml', [
+        $response = new Response($this->config, 404, 'error.phtml', [
             'message' => 'Page not found.',
         ]);
         $response->send();
     }
 
-    public function index()
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function indexAction(ServerRequestInterface $request)
     {
-        $form = new IndexForm();
+        $form = new IndexForm($this->config);
         $response = new Response(
+            $this->config,
             200,
             'index.phtml',
             [
@@ -46,10 +59,10 @@ class IndexController
         }
 
         // Open connection to specific mailbox
-        $host = Config::get('mail_imap_host');
-        $port = Config::get('mail_imap_port');
-        $user = Config::get('mail_username');
-        $pass = Config::get('mail_password');
+        $host = $this->config->get('mail_imap_host');
+        $port = $this->config->get('mail_imap_port');
+        $user = $this->config->get('mail_username');
+        $pass = $this->config->get('mail_password');
         $mailbox = 'INBOX';
         $conn = imap_open(
             "{{$host}:{$port}/imap/ssl}{$mailbox}", // e.g. {imap.gmail.com:993/imap/ssl}INBOX

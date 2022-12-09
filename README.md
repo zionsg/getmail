@@ -126,6 +126,7 @@ of the repository. Shell commands are all run from the root of the repository.
     + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
     + Adherence to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
+    + No custom static classes except for `App\Utils`.
 - Modules:
     + App: Application-wide classes.
     + Api: Classes handling requests to API endpoints.

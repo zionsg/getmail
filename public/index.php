@@ -5,8 +5,6 @@
  */
 
 use App\Application;
-use App\Config;
-use App\Logger;
 
 // Make our life easier when dealing with paths. Everything is relative to the application root via getcwd() now.
 chdir(dirname(__DIR__));
@@ -14,7 +12,8 @@ chdir(dirname(__DIR__));
 // Set handler for fatal errors before loading PHP files - should not depend on any dependencies as much as possible
 register_shutdown_function(function () {
     $error = error_get_last();
-    if (! $error || $error['type'] !== E_ERROR) { // skip if no error or not fatal error
+    $fatalErrorTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR];
+    if (! $error || ! in_array($error['type'], $fatalErrorTypes)) { // skip if no error or not fatal error
         return;
     }
 
@@ -27,12 +26,8 @@ try {
     // Composer autoloading
     require 'vendor/autoload.php';
 
-    // Init config and logger
-    Config::init(getcwd() . DIRECTORY_SEPARATOR . 'config');
-    Logger::init();
-
     // Run the application
-    $app = new Application();
+    $app = new Application(getcwd() . DIRECTORY_SEPARATOR . 'config');
     $app->run();
 } catch (Throwable $t) {
     handleFatalError($t->__toString());
@@ -45,7 +40,7 @@ try {
  */
 function handleFatalError($message)
 {
-    $utcDate = new DateTime('now', new DateTimeZone('UTC'));
+    $utcDate = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
     $fileHandle = fopen('php://stdout', 'w');
     fwrite(

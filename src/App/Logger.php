@@ -3,44 +3,26 @@
 namespace App;
 
 use App\Config;
-use App\Helper;
+use App\Utils;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LogLevel;
 
 /**
  * Logger class
- *
- * Logging methods can also be called statically via "<log level>Log" methods,
- * e.g. Logger::infoLog() which calls (new Logger())->log('info'), so that no
- * instantiation is needed to use them. A singleton instance is used internally
- * for these static methods so that its destructor can be used to close the
- * file handle.
  *
  * Logs are written to php://stdout so that they can appear in Docker container
  * logs.
  *
  * @link See https://www.php-fig.org/psr/psr-3/ on signature of logging methods.
  */
-class Logger
+class Logger extends AbstractLogger
 {
     /**
-     * Log levels as per Psr\Log\LogLevel in PSR-3
+     * Application config
      *
-     * @var string
+     * @var Config
      */
-    public const EMERGENCY = 'emergency';
-    public const ALERT = 'alert';
-    public const CRITICAL = 'critical';
-    public const ERROR = 'error';
-    public const WARNING = 'warning';
-    public const NOTICE = 'notice';
-    public const INFO = 'info';
-    public const DEBUG = 'debug';
-
-    /**
-     * Singleton instance
-     *
-     * @var Logger
-     */
-    protected static $instance = null;
+    protected $config = null;
 
     /**
      * Application name
@@ -84,62 +66,28 @@ class Logger
      * @var array
      */
     protected $logLevelPriorities = [
-        self::EMERGENCY => 0,
-        self::ALERT => 1,
-        self::CRITICAL => 2,
-        self::ERROR => 3,
-        self::WARNING => 4,
-        self::NOTICE => 5,
-        self::INFO => 6,
-        self::DEBUG => 7,
+        LogLevel::EMERGENCY => 0,
+        LogLevel::ALERT => 1,
+        LogLevel::CRITICAL => 2,
+        LogLevel::ERROR => 3,
+        LogLevel::WARNING => 4,
+        LogLevel::NOTICE => 5,
+        LogLevel::INFO => 6,
+        LogLevel::DEBUG => 7,
     ];
 
     /**
-     * Initialize static class - this must be called right at the start
-     *
-     * @return void
-     */
-    public static function init()
-    {
-        self::$instance = new Logger();
-    }
-
-    /**
-     * Magic method for calling logging methods statically
-     *
-     * Static methods cannot have the same names as instance methods, hence
-     * the "Log" suffix.
-     *
-     * @param string $name Name of method being called.
-     * @param array $arguments Arguments to be passed to method.
-     * @return void
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        if (substr($name, -3, 3) !== 'Log') {
-            return;
-        }
-
-        $logLevel = substr($name, 0, strlen($name) - 3);
-        if (defined(__CLASS__ . '::' . strtoupper($logLevel))) { // check if log level exists
-            // Calling log() instead of the instance method associated with the log level,
-            // e.g. info(), so that same stack frame in debug_backtrace() can be used to
-            // retrieve the caller, i.e. check debug_backtrace()[2] to get caller for
-            // Logger::infoLog() or (new Logger())->info().
-            array_unshift($arguments, $logLevel);
-            call_user_func_array([self::$instance, 'log'], $arguments);
-        }
-    }
-
-    /**
      * Constructor
+     *
+     * @param Config $config Application config.
      */
-    public function __construct()
+    public function __construct(Config $config)
     {
-        $this->appName = Config::getApplicationName();
-        $this->env = Config::getDeploymentEnvironment();
-        $this->version = Config::getVersion();
-        $this->logLevelPriority = $this->logLevelPriorities[Config::get('log_level')] ?? 0;
+        $this->config = $config;
+        $this->appName = $this->config->getApplicationName();
+        $this->env = $this->config->getDeploymentEnvironment();
+        $this->version = $this->config->getVersion();
+        $this->logLevelPriority = $this->logLevelPriorities[$this->config->get('log_level')] ?? 0;
         $this->fileHandle = fopen('php://stdout', 'w');
     }
 
@@ -152,121 +100,16 @@ class Logger
     }
 
     /**
-     * System is unusable.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function emergency($message, array $context = [])
-    {
-        $this->log(self::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function alert($message, array $context = [])
-    {
-        $this->log(self::ALERT, $message, $context);
-    }
-
-    /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function critical($message, array $context = [])
-    {
-        $this->log(self::CRITICAL, $message, $context);
-    }
-
-    /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function error($message, array $context = [])
-    {
-        $this->log(self::ERROR, $message, $context);
-    }
-
-    /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function warning($message, array $context = [])
-    {
-        $this->log(self::WARNING, $message, $context);
-    }
-
-    /**
-     * Normal but significant events.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function notice($message, array $context = [])
-    {
-        $this->log(self::NOTICE, $message, $context);
-    }
-
-    /**
-     * Interesting events.
-     *
-     * Example: User logs in, SQL logs.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function info($message, array $context = [])
-    {
-        $this->log(self::INFO, $message, $context);
-    }
-
-    /**
-     * Detailed debug information.
-     *
-     * @param string $message
-     * @param array $context
-     * @return void
-     */
-    public function debug($message, array $context = [])
-    {
-        $this->log(self::DEBUG, $message, $context);
-    }
-
-    /**
      * Logs with an arbitrary level.
      *
-     * @param mixed $level
-     * @param string $message
-     * @param array $context
+     * @see AbstractLogger::log()
+     * @param mixed  $level
+     * @param string|\Stringable $message
+     * @param array  $context
      * @return void
+     * @throws \Psr\Log\InvalidArgumentException
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         // Do not log if priority of this message's log level is lower than the priority of the configured log level
         $priority = $this->logLevelPriorities[$level] ?? 0;
@@ -280,6 +123,9 @@ class Logger
         $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
+        // Current request if any
+        $request = $context['request'] ?? null;
+
         // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs.
         // Application name is used to differentiate logs from different apps, especially when aggregated together.
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
@@ -289,25 +135,24 @@ class Logger
         //             1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69]
         //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
-            '[%s] [%s] [%s] [%s:%s] [MSG %s] [CTX %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
-            Helper::getCurrentTimestamp(true),
+            '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
+            Utils::utcNow(true),
             strtoupper($level),
-            $this->appName ?: 'no-app-name',
+            $this->appName,
             $caller['file'] ?? 'no-file',
             $caller['line'] ?? 0,
             $message,
-            json_encode($context),
             $_SERVER['REMOTE_ADDR'],
             $_SERVER['REMOTE_PORT'],
             $_SERVER['REQUEST_METHOD'],
             ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type'),
             $_SERVER['REQUEST_URI'],
             ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent'),
-            Helper::getRequestId(),
+            Utils::getRequestId(),
             $_SERVER['SERVER_ADDR'],
             $_SERVER['SERVER_PORT'],
-            $this->env ?: 'no-env',
-            $this->version ?: 'no-version'
+            $this->env,
+            $this->version
         ));
 
         // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for

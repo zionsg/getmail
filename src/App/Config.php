@@ -2,54 +2,41 @@
 
 namespace App;
 
-use DateTime;
-use DateTimeZone;
-
 /**
- * Centralized configuration class
- *
- * This is the 1st class to be loaded, hence it should not depend on any other
- * classes, e.g. it should not use App\Logger to log messages.
+ * Application configuration class
  */
 class Config
 {
     /**
-     * Application configuration
+     * Merged application configuration array
      *
      * @var array
      */
-    protected static $config = [];
-
-    /**
-     * Environment variable prefix
-     *
-     * @var string
-     */
-    protected static $envVarPrefix = '';
+    protected $config = [];
 
     /**
      * Application name
      *
      * @var string
      */
-    protected static $applicationName = '';
+    protected $applicationName = '';
 
     /**
      * Deployment environment
      *
      * @var string
      */
-    protected static $deploymentEnvironment = '';
+    protected $deploymentEnvironment = '';
 
     /**
      * Application version
      *
      * @var string
      */
-    protected static $version = '';
+    protected $version = '';
 
     /**
-     * Initialize static class - this must be called right at the start
+     * Constructor
      *
      * This merges all the PHP files in $configPath in alphabetical order,
      * ignoring subdirectories, ideally with application.config.php being the
@@ -59,51 +46,40 @@ class Config
      *     configuration files.
      * @return void
      */
-    public static function init(string $configPath)
+    public function __construct(string $configPath)
     {
         foreach (glob("{$configPath}/*.php") as $configFile) {
-            self::$config = array_merge(
-                self::$config,
+            $this->config = array_merge(
+                $this->config,
                 (include $configFile) ?: []
             );
         }
 
-        // Save commonly used config vars
-        self::$envVarPrefix = self::get('env_var_prefix'); // this must be first as resolveEnvVar() depends on it
-        self::$applicationName = self::get('app_name');
-        self::$deploymentEnvironment = self::get('env');
-        self::$version = self::get('version');
+        // Save frequently used config vars
+        $this->applicationName = $this->get('app_name');
+        $this->deploymentEnvironment = $this->get('deployment_environment');
+        $this->version = $this->get('version');
     }
 
     /**
      * Get value of configuration key
      *
-     * Application config is checked first, followed by environment variables.
-     *
      * @param string $configKey Configuration key, typically in snake_case.
      * @param mixed $default=null Default value to return if key is not found.
      * @return mixed
      */
-    public static function get(string $configKey, mixed $default = null)
+    public function get(string $configKey, mixed $default = null)
     {
         $key = trim(strval($configKey));
         if (! $key) {
             return $default;
         }
 
-        // Check application config
         // Cannot use ?? with $default cos key may exist with value of null
-        if (array_key_exists($key, self::$config)) {
-            return self::$config[$key];
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
         }
 
-        // Check environment variables
-        $value = getenv(self::resolveEnvVar($key));
-        if (false === $value) { // env var not found
-            return $default;
-        }
-
-        // Note that values of env vars are always strings
         return $value;
     }
 
@@ -112,9 +88,9 @@ class Config
      *
      * @return string
      */
-    public static function getApplicationName()
+    public function getApplicationName(): string
     {
-        return self::$applicationName;
+        return $this->applicationName;
     }
 
     /**
@@ -124,9 +100,9 @@ class Config
      *
      * @return string
      */
-    public static function getDeploymentEnvironment()
+    public function getDeploymentEnvironment(): string
     {
-        return self::$deploymentEnvironment;
+        return $this->deploymentEnvironment;
     }
 
     /**
@@ -134,20 +110,8 @@ class Config
      *
      * @return string
      */
-    public static function getVersion()
+    public function getVersion(): string
     {
-        return self::$version;
-    }
-
-    /**
-     * Resolve name of environment variable with prefix
-     *
-     * @param string $name
-     * @return string
-     */
-    protected static function resolveEnvVar(string $name)
-    {
-        // Name of env var is always in uppercase
-        return (self::$envVarPrefix . strtoupper($name));
+        return $this->version;
     }
 }

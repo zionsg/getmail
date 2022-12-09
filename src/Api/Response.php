@@ -3,7 +3,7 @@
 namespace Api;
 
 use App\Config;
-use App\Helper;
+use App\Utils;
 
 /**
  * Standardized format for JSON responses from API endpoints
@@ -42,14 +42,23 @@ class Response
     public $isError = false;
 
     /**
+     * Application config
+     *
+     * @var Config
+     */
+    protected $config = null;
+
+    /**
      * Constructor
      *
+     * @param Config $config Application config.
      * @param int $statusCode HTTP status code.
      * @param string $errorMessage="" Error message if error response.
      * @param array $data=[] Key-value pairs to return if success response.
      */
-    public function __construct(int $statusCode, string $errorMessage = '', array $data = [])
+    public function __construct(Config $config, int $statusCode, string $errorMessage = '', array $data = [])
     {
+        $this->config = $config;
         $this->statusCode = intval($statusCode);
         $this->errorMessage = strval($errorMessage);
         $this->data = $data;
@@ -70,9 +79,9 @@ class Response
                     'message' => $this->errorMessage,
                 ],
                 'meta' => [
-                    'request_id' => Helper::getRequestId(),
+                    'request_id' => Utils::getRequestId(),
                     'status_code' => $this->statusCode,
-                    'version' => Config::getVersion(),
+                    'version' => $this->config->getVersion(),
                 ],
             ]
         );
@@ -83,7 +92,7 @@ class Response
      *
      * @return void
      */
-    public function send()
+    public function send(): void
     {
         http_response_code($this->statusCode);
         foreach ($this->headers as $header) {

@@ -12,11 +12,37 @@ use App\Router;
 class Application
 {
     /**
-     * Constructor
+     * Application config
+     *
+     * @var Config
      */
-    public function __construct()
+    protected $config = null;
+
+    /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $logger = null;
+
+    /**
+     * Router
+     *
+     * @var Router
+     */
+    protected $router = null;
+
+    /**
+     * Constructor
+     *
+     * @param string $configPath Absolute path to directory containing
+     *     configuration files.
+     */
+    public function __construct(string $configPath)
     {
-        Logger::infoLog('Application started.');
+        $this->config = new Config($configPath);
+        $this->logger = new Logger($this->config);
+        $this->router = new Router($this->config, $this->logger);
     }
 
     /**
@@ -24,9 +50,8 @@ class Application
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $router = new Router(Config::get('router', []));
-        $router->handle();
+        $this->router->handle();
     }
 }

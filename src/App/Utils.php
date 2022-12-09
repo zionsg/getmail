@@ -2,13 +2,13 @@
 
 namespace App;
 
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 
 /**
- * Helper functions
+ * Utility functions
  */
-class Helper
+class Utils
 {
     /**
      * @var string
@@ -16,15 +16,15 @@ class Helper
     protected static $requestId = '';
 
     /**
-     * Get current timestamp
+     * Get current timestamp in UTC timezone
      *
      * @param boolean $returnAsString=false Whether to return as string.
      *     If true, timestamp is returned in ISO 8601 format with microseconds.
-     * @return DateTime|string Timestamp will always be in UTC timezone.
+     * @return DateTimeImmutable|string
      */
-    public static function getCurrentTimestamp(bool $returnAsString = false)
+    public static function utcNow(bool $returnAsString = false): DateTimeImmutable|string
     {
-        $utcDate = new DateTime('now', new DateTimeZone('UTC')); // always in UTC timezone
+        $utcDate = new DateTimeImmutable('now', new DateTimeZone('UTC')); // always in UTC timezone
 
         return ($returnAsString ? $utcDate->format('Y-m-d\TH:i:s.up') : $utcDate);
     }
@@ -34,7 +34,7 @@ class Helper
      *
      * @return string See makeUniqueId() on format.
      */
-    public static function getRequestId()
+    public static function getRequestId(): string
     {
         if (! self::$requestId) { // can't populate during declaration cos no request to refer to
             self::$requestId = self::makeUniqueId($_SERVER['REQUEST_TIME_FLOAT']);
@@ -47,14 +47,14 @@ class Helper
      * Generate/make unique identifier
      *
      * The result not meant to be cryptographically secure.
-     * Method name uses "make" as "generate" is too long.
+     * Method name uses "make" instead of "generate" for brevity.
      *
      * @param float $timestampInMicroseconds=0 Timestamp in microseconds to be
      *     used instead of current timestamp, e.g. 1669947544.547348.
      * @return string Format: <UNIX timestamp in microseconds>-<UUID v4>,
      *     e.g. 1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69.
      */
-    public static function makeUniqueId(float $timestampInMicroseconds = 0.0)
+    public static function makeUniqueId(float $timestampInMicroseconds = 0.0): string
     {
         // Adapted from UUID::v4() in https://www.php.net/manual/en/function.uniqid.php#94959
         // See also uuid_generate_random() in https://github.com/symfony/polyfill-uuid/blob/main/Uuid.php

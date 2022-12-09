@@ -3,7 +3,7 @@
 namespace Web;
 
 use App\Config;
-use App\Helper;
+use App\Utils;
 
 /**
  * Standardized format for HTML responses from Web endpoints
@@ -45,8 +45,16 @@ class Response
     public $isError = false;
 
     /**
+     * Application config
+     *
+     * @var Config
+     */
+    protected $config = null;
+
+    /**
      * Constructor
      *
+     * @param Config $config Application config.
      * @param int $statusCode HTTP status code.
      * @param string $viewPath="" Path to view template file used for
      *     rendering HTML response, relative to src/Web/view. E.g. layout.phtml.
@@ -54,8 +62,14 @@ class Response
      * @param bool $wrapInLayout=true Whether to wrap the rendered HTML for the
      *     view in the layout template.
      */
-    public function __construct(int $statusCode, string $viewPath = '', array $viewData = [], bool $wrapInLayout = true)
-    {
+    public function __construct(
+        Config $config,
+        int $statusCode,
+        string $viewPath = '',
+        array $viewData = [],
+        bool $wrapInLayout = true
+    ) {
+        $this->config = $config;
         $this->statusCode = intval($statusCode);
         $this->viewPath = getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath;
         $this->viewData = $viewData;
@@ -75,10 +89,10 @@ class Response
     {
         $sharedViewData = [
             /** @var string Application version. */
-            'version' => Config::getVersion(),
+            'version' => $this->config->getVersion(),
 
             /** @var string Unique identifier for HTML "data-render-id" attribute. */
-            'renderId' => Helper::makeUniqueId(),
+            'renderId' => Utils::makeUniqueId(),
         ];
 
         // Import template variables as PHP variables so that they can be
@@ -112,7 +126,7 @@ class Response
         );
         extract($layoutViewData);
         ob_start();
-        include Config::get('web_layout_path');
+        include $this->config->get('web_layout_path');
         $layoutHtml = ob_get_clean();
 
         return $layoutHtml;
@@ -123,7 +137,7 @@ class Response
      *
      * @return void
      */
-    public function send()
+    public function send(): void
     {
         http_response_code($this->statusCode);
         foreach ($this->headers as $header) {
