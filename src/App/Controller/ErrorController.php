@@ -18,7 +18,7 @@ class ErrorController extends AbstractController
     {
         // Ultimately, this is a web application, hence return HTML response for error
         return new WebResponse($this->config, $this->logger, $request, 404, '', [ // skip view template
-            'errorMessage' => 'Invalid page.', // use different error message from \Web\Controller\IndexController
+            'errorMessage' => 'Invalid URL.', // different message from \Web\Controller\IndexController::errorAction()
         ]);
     }
 }
