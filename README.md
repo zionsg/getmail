@@ -161,7 +161,7 @@ of the repository. Shell commands are all run from the root of the repository.
         |   |   `-- ApiResponse.php  # Standardized JSON response for API endpoints
         |   |-- App             # API module
         |   |   |-- Controller  # Controllers for handling requests application-wide
-        |   |   |   |-- AbstractController.php  # Base controller class, implements PSR-15 RequestHandlerInterface
+        |   |   |   |-- AbstractController.php  # Base controller class
         |   |   |   |-- ErrorController.php     # Application-wide error handler
         |   |   |   `-- IndexController.php     # Handles requests to index page
         |   |   |-- Application.php  # Main application class
@@ -179,12 +179,12 @@ of the repository. Shell commands are all run from the root of the repository.
         |       |-- view              # View templates
         |       |   |-- error.phtml   # Common view template for error pages
         |       |   |-- index.phtml   # View template for home page
-        |       |   `-- layout.phtml  # Layout template in which rendered HTML for views are wrapped in
+        |       |   `-- layout.phtml  # Layout template in which rendered HTML for views are wrapped
         |       `-- WebResponse.php   # Standardized HTML response for API endpoints
         |-- test         # Tests
         |   `-- ApiTest  # Tests for API module
         |-- .dockerignore
-        |-- .env.example    # List of all environment variables for application, to be copied to .env
+        |-- .env.example    # List of all environment variables, to be copied to .env
         |-- .gitattributes
         |-- .gitignore
         |-- Dockerfile
