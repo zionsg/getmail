@@ -3,8 +3,11 @@
 namespace App;
 
 use App\Config;
+use App\Constants;
 use App\Logger;
 use App\Router;
+use App\Controller\IndexController;
+use Laminas\Diactoros\ServerRequestFactory;
 
 /**
  * Main application class
@@ -52,6 +55,13 @@ class Application
      */
     public function run(): void
     {
-        $this->router->handle();
+        $request = ServerRequestFactory::fromGlobals();
+        $request = $request->withHeader(
+            Constants::HEADER_REQUEST_ID,
+            Utils::generateId(($request->getServerParams())['REQUEST_TIME_FLOAT'] ?? 0)
+        );
+
+        $defaultHandler = new IndexController($this->config, $this->logger);
+        $this->router->process($request, $defaultHandler);
     }
 }

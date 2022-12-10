@@ -4,15 +4,16 @@ namespace App;
 
 use RuntimeException;
 use App\Config;
-use App\Constants;
 use App\Logger;
-use Laminas\Diactoros\ServerRequestFactory;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Router class
  */
-class Router
+class Router implements MiddlewareInterface
 {
     /**
      * Route types
@@ -105,30 +106,37 @@ class Router
     }
 
     /**
-     * Handle request
+     * Process an incoming server request
      *
-     * @return void
+     * Processes an incoming server request in order to produce a response.
+     * If unable to produce the response itself, it may delegate to the provided
+     * request handler to do so.
+     *
+     * @see MiddlewareInterface::process()
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
-    public function handle(): void
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $uri = $_SERVER['REQUEST_URI'];
         $queryPos = strpos($uri, '?');
         $path = (false === $queryPos) ? $uri : substr($uri, 0, $queryPos); // remove query string portion if any
 
         $routeOptions = $this->matchRoute($path, $this->routes);
-        $controller = $routeOptions['controller'] ?? $this->errorController;
+        $controllerClass = $routeOptions['controller'] ?? $this->errorController;
         $action = $routeOptions['action'] ?? $this->errorAction;
 
-        $request = ServerRequestFactory::fromGlobals();
-        $request = $request->withHeader(
-            Constants::HEADER_REQUEST_ID,
-            Utils::generateId(($request->getServerParams())['REQUEST_TIME_FLOAT'] ?? 0)
-        );
+        $controller = new $controllerClass($this->config, $this->logger);
+        $response = $controller->$action($request);
 
-        $handler = new $controller($this->config, $this->logger);
-        $response = $handler->$action($request);
+        if ($response) {
+            $this->send($response);
+        } elseif ($handler) {
+            $response = $handler($request);
+        }
 
-        $this->send($response);
+        return $response;
     }
 
     /**

@@ -7,11 +7,12 @@ use App\Logger;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Base controller class
  */
-abstract class AbstractController
+abstract class AbstractController implements RequestHandlerInterface
 {
     /**
      * Application config
@@ -43,10 +44,28 @@ abstract class AbstractController
     /**
      * Error action
      *
+     * @see RequestHandlerInterface::handle() for method signature of
+     *     controller actions.
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function errorAction(ServerRequestInterface $request): ResponseInterface
+    {
+        return new Response();
+    }
+
+    /**
+     * Handles a request and produces a response.
+     *
+     * May call other collaborating code to generate the response.
+     *
+     * Default action if not specified.
+     *
+     * @see RequestHandlerInterface::handle()
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new Response();
     }
