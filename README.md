@@ -200,4 +200,65 @@ of the repository. Shell commands are all run from the root of the repository.
 - Move logic for retrieving mail to an API endpoint and have the Web controller action call
   that API endpoint internally. This allows it to be called as an API endpoint as well as being
   accessed as a webpage, without duplicating the logic.
+    + Separate plaintext and HTML parts in output.
+- Write tests, especially for API endpoints.
+- Generate API documentation.
+- Add write-up on how this can be used with https://uilicious.com/ in retrieving emails
+  for OTP from mailboxes other than https://inboxkitten.com/ while making it easy to retrieve
+  mail body (no iframes) and not storing actual mail credentials with them.
+    + Sample login test script that uses InboxKitten:
 
+            // Go to Login Page
+            I.goTo(DATA.SITE_DOMAIN + '/web/login')
+            I.fill('Email', DATA.LOGIN_USERNAME)
+            I.fill('Password', DATA.LOGIN_PASSWORD)
+            I.click('Request OTP')
+            I.see('OTP Verification Code')
+
+            // Get OTP from mail and fill it in
+            let mailBody = getMailBody('One-Time Password', 'Your one-time password')
+            let matches = mailBody.match(/password is (\d+)/i)
+            let otp = matches[1] || '000000'
+            I.fill('otp', otp)
+            I.click('Login')
+
+            // See dashboard and then logout
+            I.see('Dashboard')
+            I.wait(3)
+            I.goTo(DATA.SITE_DOMAIN + '/web/logout')
+
+            function getMailBody(mailSubject, mailBodyHintText) {
+                let waitForMailSecs = 5
+                let url = ''
+                let body = ''
+
+                if ('inboxkitten.com' === DATA.MAIL_HOST) {
+                    // Go to mail inbox page in new tab
+                    url = 'https://inboxkitten.com/inbox/' + DATA.MAIL_USERNAME + '/list'
+                    I.goTo(url, {
+                        newTab: true
+                    })
+
+                    // Wait a while for mail to arrive
+                    I.wait(waitForMailSecs)
+                    I.see('@inboxkitten')
+                    I.see(mailSubject)
+                    I.click(mailSubject)
+
+                    // Target iframe in mailbox
+                    UI.context('#message-content', () => {
+                        // I.see is critical in ensuring that I.getText is done AFTER the email is loaded
+                        // hence use of hint text to check if email body has loaded
+                        I.see(mailBodyHintText)
+
+                        // I.getText targets an element and extracts its text
+                        // XPath '//body' is used if it is a plaintext email and not an HTML email
+                        body = I.getText('//body')
+                    })
+
+                    // Close current tab and switch back to previous tab
+                    I.closeTab()
+                }
+
+                return body
+            }
