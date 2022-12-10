@@ -122,17 +122,22 @@ of the repository. Shell commands are all run from the root of the repository.
 
 ## Application Design
 - Basic guiding principles:
-    + [3Cs for Coding – Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
-    + [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework).
+    + [3Cs for Coding - Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
+    + [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework),
+      [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python).
     + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
-    + Adherence to [The Twelve-Factor App](https://12factor.net/) as much as
+    + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
-    + No custom static classes except for `App\Utils`.
+    + No custom static classes/methods except for `App\Constants`
+      and `App\Utils`.
+    + At most 1 level of inheritance to prevent going down a rabbit hole, e.g.
+
+            class A {}
+            class B extends A {} // allowed
+            class C extends B {} // not allowed
+
 - Modules:
     + App: Application-wide classes.
     + Api: Classes handling requests to API endpoints.
-    + Web: Classes handling requests to web pages.
+    + Web: Classes handling requests for web pages.
 - Deployment environments: production, staging, feature, testing, local.
-
-## To-do
-- Refactor `Api\Response` and `Web\Response` to conform to `Psr\Http\Message\ResponseInterface`.

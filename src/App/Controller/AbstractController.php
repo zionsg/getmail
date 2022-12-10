@@ -46,7 +46,7 @@ abstract class AbstractController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function errorAction(ServerRequestInterface $request)
+    public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
         return new Response();
     }

@@ -2,7 +2,7 @@
 
 namespace Api\Controller;
 
-use Api\Response;
+use Api\ApiResponse;
 use App\Controller\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,21 +15,19 @@ class IndexController extends AbstractController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function errorAction(ServerRequestInterface $request)
+    public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response($this->config, 404, 'Endpoint not found.');
-        $response->send();
+        return new ApiResponse($this->config, $this->logger, $request, 404, 'Endpoint not found.');
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function indexAction(ServerRequestInterface $request)
+    public function indexAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response($this->config, 200, '', [
+        return new ApiResponse($this->config, $this->logger, $request, 200, '', [
             'message' => 'Hello World!',
         ]);
-        $response->send();
     }
 }

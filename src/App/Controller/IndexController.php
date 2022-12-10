@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Controller\AbstractController;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Web\Response;
+use Web\WebResponse;
 
 class IndexController extends AbstractController
 {
@@ -15,22 +16,19 @@ class IndexController extends AbstractController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function errorAction(ServerRequestInterface $request)
+    public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new \Web\Response($this->config, 404, '', [ // deliberate skipping of view template
+        return new WebResponse($this->config, $this->logger, $request, 404, '', [ // skip view template
             'errorMessage' => 'Invalid page.', // use different error message from \Web\Controller\IndexController
         ]);
-        $response->send();
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function indexAction(ServerRequestInterface $request)
+    public function indexAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response($this->config, 302);
-        $response->headers[] = 'Location: /web';
-        $response->send();
+        return new RedirectResponse('/web', 302);
     }
 }

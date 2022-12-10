@@ -3,47 +3,17 @@
 namespace Web;
 
 use App\Config;
+use App\Constants;
+use App\Logger;
 use App\Utils;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Standardized format for HTML responses from Web endpoints
  */
-class Response
+class WebResponse extends HtmlResponse
 {
-    /**
-     * @var string[]
-     */
-    public $headers = [
-        'Content-Type: text/html; charset=utf-8',
-    ];
-
-    /**
-     * @var int
-     */
-    public $statusCode = 0;
-
-    /**
-     * @var string
-     */
-    public $viewPath = '';
-
-    /**
-     * @var array
-     */
-    public $viewData = [];
-
-    /**
-     * @var bool
-     */
-    public $wrapInLayout = true;
-
-    /**
-     * Whether this is an error response
-     *
-     * @var bool
-     */
-    public $isError = false;
-
     /**
      * Application config
      *
@@ -52,47 +22,100 @@ class Response
     protected $config = null;
 
     /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $logger = null;
+
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request = null;
+
+    /**
+     * @var string
+     */
+    protected $viewPath = '';
+
+    /**
+     * @var array
+     */
+    protected $viewData = [];
+
+    /**
+     * @var bool
+     */
+    protected $wrapInLayout = true;
+
+    /**
      * Constructor
      *
      * @param Config $config Application config.
-     * @param int $statusCode HTTP status code.
+     * @param Logger $logger Logger.
+     * @param ServerRequestInterface $request Request.
+     * @param int $status=200 HTTP status code.
      * @param string $viewPath="" Path to view template file used for
      *     rendering HTML response, relative to src/Web/view. E.g. layout.phtml.
      * @param array $viewData=[] Key-value pairs to pass to view template file.
      * @param bool $wrapInLayout=true Whether to wrap the rendered HTML for the
      *     view in the layout template.
+     * @param array $headers=[] Key-value pairs for additional headers if any.
      */
     public function __construct(
         Config $config,
-        int $statusCode,
+        Logger $logger,
+        ServerRequestInterface $request,
+        int $status = 200,
         string $viewPath = '',
         array $viewData = [],
-        bool $wrapInLayout = true
+        bool $wrapInLayout = true,
+        array $headers = []
     ) {
         $this->config = $config;
-        $this->statusCode = intval($statusCode);
-        $this->viewPath = getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath;
+        $this->logger = $logger;
+
+        $this->request = $request;
+        $this->viewPath = $viewPath
+            ? getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath
+            : '';
         $this->viewData = $viewData;
         $this->wrapInLayout = $wrapInLayout;
-        $this->isError = ($this->statusCode >= 400);
+
+        $body = $this->render();
+        parent::__construct($body, $status, $headers);
     }
 
     /**
-     * Output of instance as string
+     * Update view data
      *
-     * View will be rendered and wrapped in layout template.
+     * This will re-render the body of the response.
+     *
+     * @param array $viewData=[] Key-value pairs to pass to view template file.
+     * @return void
+     */
+    public function updateViewData(array $viewData = []): void
+    {
+        $this->viewData = array_merge($this->viewData, $viewData);
+
+        $body = $this->render();
+        $this->getBody()->write($body);
+    }
+
+    /**
+     * Render HTML body
+     *
+     * View will be rendered and optionally wrapped in layout template.
      *
      * @link Adapted from render() in https://github.com/zionsg/simple-ui-templating/blob/master/src/functions.php
      * @return string
      */
-    public function __toString()
+    protected function render(): string
     {
         $sharedViewData = [
-            /** @var string Application version. */
-            'version' => $this->config->getVersion(),
-
-            /** @var string Unique identifier for HTML "data-render-id" attribute. */
-            'renderId' => Utils::makeUniqueId(),
+            'renderId' => Utils::generateId(), // unique identifier for HTML "data-render-id" attribute
+            'requestId' => $this->request->getHeaderLine(Constants::HEADER_REQUEST_ID), // request ID
+            'version' => $this->config->getVersion(), // application version
         ];
 
         // Import template variables as PHP variables so that they can be
@@ -130,22 +153,5 @@ class Response
         $layoutHtml = ob_get_clean();
 
         return $layoutHtml;
-    }
-
-    /**
-     * Send out response
-     *
-     * @return void
-     */
-    public function send(): void
-    {
-        http_response_code($this->statusCode);
-        foreach ($this->headers as $header) {
-            header($header);
-        }
-        echo $this->__toString();
-
-        // Must exit for response to be written properly
-        exit;
     }
 }

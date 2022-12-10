@@ -2,7 +2,7 @@
 
 namespace Api\Controller;
 
-use Api\Response;
+use Api\ApiResponse;
 use App\Controller\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,11 +13,10 @@ class SystemController extends AbstractController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function healthcheckAction(ServerRequestInterface $request)
+    public function healthcheckAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response($this->config, 200, '', [
+        return new ApiResponse($this->config, $this->logger, $request, 200, '', [
             'message' => 'OK',
         ]);
-        $response->send();
     }
 }

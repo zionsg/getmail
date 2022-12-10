@@ -5,7 +5,7 @@ namespace Web\Controller;
 use App\Controller\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Web\Response;
+use Web\WebResponse;
 use Web\Form\IndexForm;
 
 class IndexController extends AbstractController
@@ -16,23 +16,24 @@ class IndexController extends AbstractController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function errorAction(ServerRequestInterface $request)
+    public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response($this->config, 404, 'error.phtml', [
+        return new WebResponse($this->config, $this->logger, $request, 404, 'error.phtml', [
             'message' => 'Page not found.',
         ]);
-        $response->send();
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function indexAction(ServerRequestInterface $request)
+    public function indexAction(ServerRequestInterface $request): ResponseInterface
     {
         $form = new IndexForm($this->config);
-        $response = new Response(
+        $response = new WebResponse(
             $this->config,
+            $this->logger,
+            $request,
             200,
             'index.phtml',
             [
@@ -42,9 +43,7 @@ class IndexController extends AbstractController
         );
 
         if ('GET' === $_SERVER['REQUEST_METHOD']) {
-            $response->send();
-
-            return;
+            return $response;
         }
 
         // POST
@@ -53,9 +52,11 @@ class IndexController extends AbstractController
 
         // Return invalid form
         if (! $form->isValid) {
-            $response->send();
+            $response->updateViewData([
+                'form' => $form,
+            ]);
 
-            return;
+            return $response;
         }
 
         // Open connection to specific mailbox
@@ -95,8 +96,12 @@ class IndexController extends AbstractController
 
         // Return response
         $form->setData(); // clear form
-        $response->viewData['mailOverview'] = json_encode($mailOverview, JSON_PRETTY_PRINT);
-        $response->viewData['mailBody'] = $mailBody;
-        $response->send();
+        $response->updateViewData([
+            'form' => $form,
+            'mailBody' => $mailBody,
+            'mailOverview' => json_encode($mailOverview, JSON_PRETTY_PRINT),
+        ]);
+
+        return $response;
     }
 }

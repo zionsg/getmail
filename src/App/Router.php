@@ -2,9 +2,12 @@
 
 namespace App;
 
+use RuntimeException;
 use App\Config;
+use App\Constants;
 use App\Logger;
 use Laminas\Diactoros\ServerRequestFactory;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Router class
@@ -117,8 +120,15 @@ class Router
         $action = $routeOptions['action'] ?? $this->errorAction;
 
         $request = ServerRequestFactory::fromGlobals();
+        $request = $request->withHeader(
+            Constants::HEADER_REQUEST_ID,
+            Utils::generateId(($request->getServerParams())['REQUEST_TIME_FLOAT'] ?? 0)
+        );
+
         $handler = new $controller($this->config, $this->logger);
-        $handler->$action($request);
+        $response = $handler->$action($request);
+
+        $this->send($response);
     }
 
     /**
@@ -168,5 +178,31 @@ class Router
         }
 
         return []; // no match found
+    }
+
+    /**
+     * Send out response to client
+     *
+     * @param ResponseInterface
+     * @return void
+     * @throws RuntimeException if headers already sent.
+     */
+    protected function send(ResponseInterface $response)
+    {
+        if (headers_sent()) {
+            throw new RuntimeException('Headers already sent, response could not be emitted.');
+        }
+
+        http_response_code($response->getStatusCode());
+
+        foreach ($response->getHeaders() as $name => $values) {
+            header(
+                sprintf('%s: %s', $name, $response->getHeaderLine($name)),
+                false // header doesn't replace a previous similar header
+            );
+        }
+
+        echo $response->getBody();
+        exit(); // must exit for response to be written properly
     }
 }
