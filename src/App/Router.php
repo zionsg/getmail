@@ -119,17 +119,14 @@ class Router implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $uri = $_SERVER['REQUEST_URI'];
-        $queryPos = strpos($uri, '?');
-        $path = (false === $queryPos) ? $uri : substr($uri, 0, $queryPos); // remove query string portion if any
-
+        $path = $request->getUri()->getPath();
         $routeOptions = $this->matchRoute($path, $this->routes);
+
         $controllerClass = $routeOptions['controller'] ?? $this->errorController;
         $action = $routeOptions['action'] ?? $this->errorAction;
 
         $controller = new $controllerClass($this->config, $this->logger);
         $response = $controller->$action($request);
-
         if ($response) {
             $this->send($response);
         } elseif ($handler) {

@@ -53,6 +53,13 @@ body {
 
 
 /* BEGIN: Forms */
+form {
+  margin-bottom: 1rem;
+}
+form .field {
+  margin-bottom: 0.5rem;
+}
+
 button,
 input,
 textarea {
@@ -65,10 +72,6 @@ label {
 }
 label::after {
   content: ':';
-}
-
-form .field {
-  margin-bottom: 0.5rem;
 }
 /* CLOSE: Forms */
 

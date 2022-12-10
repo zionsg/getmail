@@ -11,8 +11,8 @@ use App\Router;
 return [
     /** @property array Router configuration. */
     'router' => [
-        /** @property string FQCN (Fully-Qualified Class Name) of controller used if no controller is specified. */
-        'error_controller' => \App\Controller\IndexController::class,
+        /** @property string FQCN (Fully-Qualified Class Name) of error controller used if no controller specified. */
+        'error_controller' => \App\Controller\ErrorController::class,
 
         /** @property string Name of method in all controllers for handling errors. */
         'error_action' => 'errorAction',
@@ -26,7 +26,7 @@ return [
                 'type' => Router::LITERAL,
                 'route' => '/api',
                 'controller' => \Api\Controller\IndexController::class,
-                'action' => 'indexAction',
+                'action' => 'handle',
                 'child_routes' => [
                     'healthcheck' => [
                         'type' => Router::LITERAL,
@@ -41,14 +41,14 @@ return [
                 'type' => Router::LITERAL,
                 'route' => '/web',
                 'controller' => \Web\Controller\IndexController::class,
-                'action' => 'indexAction',
+                'action' => 'handle',
             ],
 
             'root' => [ // this should be the last route as it is a fallback and that "/" matches everything
                 'type' => Router::LITERAL,
                 'route' => '/',
                 'controller' => \App\Controller\IndexController::class,
-                'action' => 'indexAction',
+                'action' => 'handle',
             ],
         ],
     ],

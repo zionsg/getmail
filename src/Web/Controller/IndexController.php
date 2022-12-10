@@ -11,8 +11,7 @@ use Web\Form\IndexForm;
 class IndexController extends AbstractController
 {
     /**
-     * Error action
-     *
+     * @see AbstractController::errorAction()
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
@@ -24,10 +23,11 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @see AbstractController::handle()
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function indexAction(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $form = new IndexForm($this->config);
         $response = new WebResponse(
@@ -42,12 +42,12 @@ class IndexController extends AbstractController
             true // wrap in layout
         );
 
-        if ('GET' === $_SERVER['REQUEST_METHOD']) {
+        if ('GET' === $request->getMethod()) {
             return $response;
         }
 
         // POST
-        $form->setData($_POST);
+        $form->setData($request->getParsedBody());
         $form->validate();
 
         // Return invalid form

@@ -6,7 +6,7 @@ use App\Config;
 use App\Constants;
 use App\Logger;
 use App\Router;
-use App\Controller\IndexController;
+use App\Controller\ErrorController;
 use Laminas\Diactoros\ServerRequestFactory;
 
 /**
@@ -61,7 +61,7 @@ class Application
             Utils::generateId(($request->getServerParams())['REQUEST_TIME_FLOAT'] ?? 0)
         );
 
-        $defaultHandler = new IndexController($this->config, $this->logger);
-        $this->router->process($request, $defaultHandler);
+        $fallbackHandler = new ErrorController($this->config, $this->logger);
+        $this->router->process($request, $fallbackHandler);
     }
 }

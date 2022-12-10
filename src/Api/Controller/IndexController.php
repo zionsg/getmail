@@ -10,8 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class IndexController extends AbstractController
 {
     /**
-     * Error action
-     *
+     * @see AbstractController::errorAction()
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
@@ -21,10 +20,11 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @see AbstractController::handle()
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function indexAction(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new ApiResponse($this->config, $this->logger, $request, 200, '', [
             'message' => 'Hello World!',

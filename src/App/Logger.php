@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Config;
+use App\Constants;
 use App\Utils;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -125,14 +127,20 @@ class Logger extends AbstractLogger
 
         // Current request if any
         $request = $context['request'] ?? null;
+        $requestId = ($request instanceof ServerRequestInterface)
+            ? $request->getHeaderLine(Constants::HEADER_REQUEST_ID)
+            : '';
+
+        // Server params
+        $serverParams = ($request instanceof ServerRequestInterface) ? $request->getServerParams() : $_SERVER;
 
         // Newlines should be removed else log aggregators such as AWS CloudWatch may interpret as multiple logs.
         // Application name is used to differentiate logs from different apps, especially when aggregated together.
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
         //    [2022-11-24T01:57:32.095364Z] [INFO] [APP NAME] [/var/www/html/src/App/Application.php:19]
-        //        [MSG Application started.] [CTX []]
+        //        [MSG Application started.]
         //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        //             1669950476.198900-c4cbd916-380c-4201-be3e-c1f3d9f6ca69]
+        //             1669950476.198900Z-4b340550242239.64159797]
         //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
             '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
@@ -142,15 +150,15 @@ class Logger extends AbstractLogger
             $caller['file'] ?? 'no-file',
             $caller['line'] ?? 0,
             $message,
-            $_SERVER['REMOTE_ADDR'],
-            $_SERVER['REMOTE_PORT'],
-            $_SERVER['REQUEST_METHOD'],
-            ($_SERVER['CONTENT_TYPE'] ?: 'no-content-type'),
-            $_SERVER['REQUEST_URI'],
-            ($_SERVER['HTTP_USER_AGENT'] ?: 'no-user-agent'),
-            Utils::getRequestId(),
-            $_SERVER['SERVER_ADDR'],
-            $_SERVER['SERVER_PORT'],
+            $serverParams['REMOTE_ADDR'],
+            $serverParams['REMOTE_PORT'],
+            $serverParams['REQUEST_METHOD'],
+            ($serverParams['CONTENT_TYPE'] ?: 'no-content-type'),
+            $serverParams['REQUEST_URI'],
+            ($serverParams['HTTP_USER_AGENT'] ?: 'no-user-agent'),
+            $requestId ?: 'no-request-id',
+            $serverParams['SERVER_ADDR'],
+            $serverParams['SERVER_PORT'],
             $this->env,
             $this->version
         ));

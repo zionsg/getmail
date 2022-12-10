@@ -44,8 +44,7 @@ abstract class AbstractController implements RequestHandlerInterface
     /**
      * Error action
      *
-     * @see RequestHandlerInterface::handle() for method signature of
-     *     controller actions.
+     * @see RequestHandlerInterface::handle()
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
@@ -59,7 +58,7 @@ abstract class AbstractController implements RequestHandlerInterface
      *
      * May call other collaborating code to generate the response.
      *
-     * Default action if not specified.
+     * Default action. All controller actions follow this method signature.
      *
      * @see RequestHandlerInterface::handle()
      * @param ServerRequestInterface $request
