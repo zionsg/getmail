@@ -225,6 +225,7 @@ of the repository. Shell commands are all run from the root of the repository.
   accessed as a webpage, without duplicating the logic.
     + Separate plaintext and HTML parts in output.
 - Implement CSRF token for forms.
+- Add `debug` query param to trigger debug logs and document in `src/Web/view/layout.phtml`.
 - Write tests, especially for API endpoints.
 - Generate API documentation.
 - Add write-up on how this can be used with https://uilicious.com/ in retrieving emails
