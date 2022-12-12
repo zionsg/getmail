@@ -140,7 +140,9 @@ of the repository. Shell commands are all run from the root of the repository.
       parameters without conflicting with the parent class, as parent
       constructors are not called implicitly and that `__construct()` is
       exempt from the usual signature compatibility rules when being extended.
-      (see https://www.php.net/manual/en/language.oop5.decon.php).
+      (see https://www.php.net/manual/en/language.oop5.decon.php). This can
+      be used by extending classes to simplify instantiation especially if
+      internal functionality of the parent class does not need to be changed.
 
         ```
         use Laminas\Diactoros\Response;
