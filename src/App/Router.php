@@ -133,6 +133,7 @@ class Router implements MiddlewareInterface
             $response = $handler($request);
         }
 
+        // Must return response even if it has been sent out as caller may use it, e.g. for logging purposes
         return $response;
     }
 
