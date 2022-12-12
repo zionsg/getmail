@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Config;
-use App\Constants;
 use App\Logger;
 use App\Router;
 use App\Controller\ErrorController;
@@ -55,13 +54,17 @@ class Application
      */
     public function run(): void
     {
+        // Generate unique 42-character ID for each request, e.g. 1669950476.198900Z-4b340550242239.64159797
         $request = ServerRequestFactory::fromGlobals();
-        $request = $request->withHeader(
-            Constants::HEADER_REQUEST_ID,
-            Utils::generateId(($request->getServerParams())['REQUEST_TIME_FLOAT'] ?? 0)
+        $request = $request->withAttribute(
+            'request_id',
+            uniqid(
+                str_pad(microtime(true), 17, '0', STR_PAD_RIGHT) . 'Z-', // ensure 6-digit microseconds
+                true
+            )
         );
 
-        $fallbackHandler = new ErrorController($this->config, $this->logger);
+        $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);
         $this->router->process($request, $fallbackHandler);
     }
 }

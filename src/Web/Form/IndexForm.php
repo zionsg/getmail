@@ -41,12 +41,15 @@ class IndexForm extends AbstractForm
     ];
 
     /**
-     * Additional initialization
+     * Constructor
      *
-     * @return void
+     * @param Config $config
      */
-    public function init(): void
+    public function __construct(Config $config)
     {
+        parent::__construct($config);
+
+        // Additional validation
         // Don't let hacker know key/token
         $this->fields['api_key']['validateFunction'] = function ($field, $value) {
             return ($value === $this->config->get('api_key') ? '' : 'Invalid credentials.');

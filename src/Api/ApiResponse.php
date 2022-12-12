@@ -3,7 +3,6 @@
 namespace Api;
 
 use App\Config;
-use App\Constants;
 use App\Logger;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,7 +56,7 @@ class ApiResponse extends JsonResponse
             'data' => $isError ? null : $data,
             'error' => $isError ? ['message' => $errorMessage] : null,
             'meta' => [
-                'request_id' => $request->getHeaderLine(Constants::HEADER_REQUEST_ID),
+                'request_id' => $request->getAttribute('request_id'),
                 'status' => $status,
                 'version' => $this->config->getVersion(),
             ],

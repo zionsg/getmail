@@ -2,9 +2,9 @@
 
 namespace App;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use App\Config;
-use App\Constants;
-use App\Utils;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
@@ -119,17 +119,14 @@ class Logger extends AbstractLogger
             return;
         }
 
-        // The caller typically calls a static method or instance method in this
-        // class, e.g. Logger::infoLog() or (new Logger())->info(), which then
-        // calls this method, hence checking 3rd stack frame in the backtrace.
+        // The caller typically calls a instance method in this class, e.g. (new Logger())->info(),
+        // which then calls this method, hence checking 3rd stack frame in the backtrace.
         $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
         // Current request if any
         $request = $context['request'] ?? null;
-        $requestId = ($request instanceof ServerRequestInterface)
-            ? $request->getHeaderLine(Constants::HEADER_REQUEST_ID)
-            : '';
+        $requestId = ($request instanceof ServerRequestInterface) ? $request->getAttribute('request_id') : '';
 
         // Server params
         $serverParams = ($request instanceof ServerRequestInterface) ? $request->getServerParams() : $_SERVER;
@@ -144,7 +141,7 @@ class Logger extends AbstractLogger
         //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
             '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
-            Utils::utcNow(true),
+            $this->utcNow(true),
             strtoupper($level),
             $this->appName,
             $caller['file'] ?? 'no-file',
@@ -166,5 +163,19 @@ class Logger extends AbstractLogger
         // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for
         // security reasons, hence the use of a file handle
         fwrite($this->fileHandle, $text . PHP_EOL); // must end with newline as next fwrite() will append to this
+    }
+
+    /**
+     * Get current timestamp in UTC timezone
+     *
+     * @param boolean $returnAsString=false Whether to return as string.
+     *     If true, timestamp is returned in ISO 8601 format with microseconds.
+     * @return DateTimeImmutable|string
+     */
+    protected function utcNow(bool $returnAsString = false): DateTimeImmutable|string
+    {
+        $utcDate = new DateTimeImmutable('now', new DateTimeZone('UTC')); // always in UTC timezone
+
+        return ($returnAsString ? $utcDate->format('Y-m-d\TH:i:s.up') : $utcDate);
     }
 }

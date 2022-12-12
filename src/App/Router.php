@@ -125,7 +125,7 @@ class Router implements MiddlewareInterface
         $controllerClass = $routeOptions['controller'] ?? $this->errorController;
         $action = $routeOptions['action'] ?? $this->errorAction;
 
-        $controller = new $controllerClass($this->config, $this->logger);
+        $controller = new $controllerClass($this->config, $this->logger, $this); // pass in this Router as last arg
         $response = $controller->$action($request);
         if ($response) {
             $this->send($response);

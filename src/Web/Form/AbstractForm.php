@@ -82,8 +82,6 @@ abstract class AbstractForm
         foreach ($this->fields as $field => $info) {
             $this->fields[$field] = array_merge($this->fieldDefaults, $info);
         }
-
-        $this->init();
     }
 
     /**
@@ -152,11 +150,4 @@ abstract class AbstractForm
 
         return true;
     }
-
-    /**
-     * Additional initialization, e.g. custom validation functions for specific fields
-     *
-     * @return void
-     */
-    abstract public function init(): void;
 }

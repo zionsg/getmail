@@ -83,7 +83,7 @@ of the repository. Shell commands are all run from the root of the repository.
                     source: /mnt/c/Users/Zion/localhost/www/getmail/VERSION.txt # application version
                     target: /var/www/html/VERSION.txt
                   - type: bind
-                    source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # application entrypoint
+                    source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # app entrypoint
                     target: /var/www/html/public/index.php
                   - type: bind
                     source: /mnt/c/Users/Me/localhost/www/getmail/config
@@ -128,14 +128,30 @@ of the repository. Shell commands are all run from the root of the repository.
     + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
-    + No custom static classes/methods except for `App\Constants`
-      and `App\Utils`.
-    + At most 1 level of inheritance to prevent going down a rabbit hole, e.g.
+    + No static classes/methods. This does not apply to vendor packages.
+    + Constructor dependency injection. All dependencies should either be passed
+      in via the constructor or instantiated in the class itself. In this
+      regard, the application config and logger are passed in as the 1st two
+      arguments for all classes.
+    + At most 1 level of inheritance to prevent going down a rabbit hole. This
+      does not apply to vendor classes. It is useful to note that in PHP,
+      constructors of extending classes can define completely different
+      parameters without conflicting with the parent class, as parent
+      constructors are not called implicitly and that `__construct()` is
+      exempt from the usual signature compatibility rules when being extended.
+      (see https://www.php.net/manual/en/language.oop5.decon.php).
 
         ```
+        use Laminas\Diactoros\Response;
+        use Laminas\Diactoros\Response\JsonResponse; // extends Response
+
         class A {}
         class B extends A {} // allowed
         class C extends B {} // not allowed
+
+        // Allowed even though JsonResponse extends Response cos both are vendor classes
+        class ApiResponse extends JsonResponse {}
+        class ExternalApiResponse extends ApiResponse {} // not allowed, should extend JsonResponse
         ```
 
 - Deployment environments: production, staging, feature, testing, local.
@@ -179,7 +195,7 @@ of the repository. Shell commands are all run from the root of the repository.
     |       |-- Form                  # Forms
     |       |   |-- AbstractForm.php  # Base form class, handles fields and validation
     |       |   `-- IndexForm.php
-    |       |-- view              # View templates
+    |       |-- view              # View templates, add subfolders if needed
     |       |   |-- error.phtml   # Common view template for error pages
     |       |   |-- index.phtml   # View template for home page
     |       |   `-- layout.phtml  # Layout template in which rendered HTML for views are wrapped

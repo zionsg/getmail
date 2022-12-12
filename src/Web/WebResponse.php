@@ -3,9 +3,7 @@
 namespace Web;
 
 use App\Config;
-use App\Constants;
 use App\Logger;
-use App\Utils;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -113,8 +111,8 @@ class WebResponse extends HtmlResponse
     protected function render(): string
     {
         $sharedViewData = [
-            'renderId' => Utils::generateId(), // unique identifier for HTML "data-render-id" attribute
-            'requestId' => $this->request->getHeaderLine(Constants::HEADER_REQUEST_ID), // request ID
+            'renderId' => uniqid(microtime(true) . '-', true), // unique identifier for HTML "data-render-id" attribute
+            'requestId' => $this->request->getAttribute('request_id'),
             'version' => $this->config->getVersion(), // application version
         ];
 
