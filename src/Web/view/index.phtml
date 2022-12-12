@@ -1,4 +1,4 @@
-<form method="POST" action="">
+<form method="POST" action="" class="js-getmail-form" data-render-id="<?= $renderId ?>">
     <?php if ($form->errorMessage) : ?>
         <div class="error"><?= $form->errorMessage ?></div>
     <?php endif; ?>
@@ -29,3 +29,7 @@
     <b>Mail Body:</b>
     <pre class="mail-body"><?= $mailBody ?></pre>
 <?php endif; ?>
+
+<script src="/assets/js/index.js?ver=<?= $version ?>"
+  data-render-selector=".js-getmail-form[data-render-id='<?= $renderId ?>']"
+  data-csrf-token="<?= $csrfToken ?>"></script>

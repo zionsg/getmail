@@ -94,8 +94,7 @@ class IndexController extends AbstractController
         // Close connection
         imap_close($conn);
 
-        // @todo Find a way to prevent resubmission of form if user refreshes browser but may
-        //       require storing results in session. See https://en.wikipedia.org/wiki/Post/Redirect/Get for details.
+        // Return response
         $form->setData(); // clear form
         $response->updateViewData([
             'form' => $form,
