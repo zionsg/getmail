@@ -56,7 +56,7 @@ class ApiResponse extends JsonResponse
             'data' => $isError ? null : $data,
             'error' => $isError ? ['message' => $errorMessage] : null,
             'meta' => [
-                'request_id' => $request->getAttribute('request_id'),
+                'request_id' => $request->getAttribute('request_id'), // attribute set in App\Application
                 'status' => $status,
                 'version' => $this->config->getVersion(),
             ],

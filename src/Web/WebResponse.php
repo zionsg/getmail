@@ -56,8 +56,6 @@ class WebResponse extends HtmlResponse
      * @param string $viewPath="" Path to view template file used for
      *     rendering HTML response, relative to src/Web/view. E.g. layout.phtml.
      * @param array $viewData=[] Key-value pairs to pass to view template file.
-     * @param bool $wrapInLayout=true Whether to wrap the rendered HTML for the
-     *     view in the layout template.
      * @param array $headers=[] Key-value pairs for additional headers if any.
      */
     public function __construct(
@@ -67,7 +65,6 @@ class WebResponse extends HtmlResponse
         int $status = 200,
         string $viewPath = '',
         array $viewData = [],
-        bool $wrapInLayout = true,
         array $headers = []
     ) {
         $this->config = $config;
@@ -78,7 +75,9 @@ class WebResponse extends HtmlResponse
             ? getcwd() . DIRECTORY_SEPARATOR . 'src/Web/view' . DIRECTORY_SEPARATOR . $viewPath
             : '';
         $this->viewData = $viewData;
-        $this->wrapInLayout = $wrapInLayout;
+
+        // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
+        $this->wrapInLayout = (1 === $request->getAttribute('layout', 1)); // attribute set in App\Application
 
         $body = $this->render();
         parent::__construct($body, $status, $headers);
@@ -115,7 +114,7 @@ class WebResponse extends HtmlResponse
         // especially when they are loaded via an client-side AJAX call.
         $sharedViewData = [
             'renderId' => uniqid(microtime(true) . '-', true), // unique identifier for HTML "data-render-id" attribute
-            'requestId' => $this->request->getAttribute('request_id'),
+            'requestId' => $this->request->getAttribute('request_id'), // attribute set in App\Application
             'version' => $this->config->getVersion(), // version to be appended to public assets for cache busting
         ];
 

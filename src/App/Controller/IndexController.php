@@ -17,6 +17,8 @@ class IndexController extends AbstractController
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new RedirectResponse('/web', 302);
+        $uri = $request->getUri()->withPath('/web'); // alter path but retain querystring
+
+        return new RedirectResponse($uri, 302);
     }
 }

@@ -124,7 +124,7 @@ class Logger extends AbstractLogger
         $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
-        // Current request if any
+        // Current request if any. The request_id attribute is set in App\Application.
         $request = $context['request'] ?? null;
         $requestId = ($request instanceof ServerRequestInterface) ? $request->getAttribute('request_id') : '';
 

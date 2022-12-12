@@ -12,6 +12,10 @@
      *   - Linting checks can be done easily on the JavaScript code using ESLint.
      *   - Less content in layout/view template files to process server-side.
      *   - Compliance to Content Security Policy (CSP) usually disallow inline stylesheets/scripts.
+     *
+     * Querystring params:
+     *   - layout: Indicate whether to wrap HTML for view in layout template, 0=false, 1=true (default). Useful in
+     *     client-side AJAX calls that populate part of a page in which the base stylesheets/scripts are already loaded.
      */
     ?>
     <head>

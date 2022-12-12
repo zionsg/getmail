@@ -38,8 +38,7 @@ class IndexController extends AbstractController
             'index.phtml',
             [
                 'form' => $form,
-            ],
-            true // wrap in layout
+            ]
         );
 
         if ('GET' === $request->getMethod()) {
