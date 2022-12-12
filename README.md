@@ -69,41 +69,41 @@ of the repository. Shell commands are all run from the root of the repository.
           container when changes are made to the source code on a Windows host
           machine.
 
-          ```
-          # docker-compose.override.yml in root of repository
-          version: "3.7" # this is the version for the compose file config, not the app
-          services:
-            getmail-app:
-              image: getmail:dev
-              volumes:
-                # Cannot use the shortform "- ./src/:/var/www/html/src" else Windows permission error
-                # Use the vendor folder inside the container and not the host
-                # cos packages may use Linux native libraries and not work on host platform
-                - type: bind
-                  source: /mnt/c/Users/Zion/localhost/www/getmail/VERSION.txt # application version
-                  target: /var/www/html/VERSION.txt
-                - type: bind
-                  source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # application entrypoint
-                  target: /var/www/html/public/index.php
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/config
-                  target: /var/www/html/config
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/src
-                  target: /var/www/html/src
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/css
-                  target: /var/www/html/public/assets/css
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/images
-                  target: /var/www/html/public/assets/images
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/js
-                  target: /var/www/html/public/assets/js
-                - type: bind
-                  source: /mnt/c/Users/Me/localhost/www/getmail/tmp
-                  target: /var/www/html/tmp
-          ```
+            ```
+            # docker-compose.override.yml in root of repository
+            version: "3.7" # this is the version for the compose file config, not the app
+            services:
+              getmail-app:
+                image: getmail:dev
+                volumes:
+                  # Cannot use the shortform "- ./src/:/var/www/html/src" else Windows permission error
+                  # Use the vendor folder inside the container and not the host
+                  # cos packages may use Linux native libraries and not work on host platform
+                  - type: bind
+                    source: /mnt/c/Users/Zion/localhost/www/getmail/VERSION.txt # application version
+                    target: /var/www/html/VERSION.txt
+                  - type: bind
+                    source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # application entrypoint
+                    target: /var/www/html/public/index.php
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/config
+                    target: /var/www/html/config
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/src
+                    target: /var/www/html/src
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/css
+                    target: /var/www/html/public/assets/css
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/images
+                    target: /var/www/html/public/assets/images
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/public/assets/js
+                    target: /var/www/html/public/assets/js
+                  - type: bind
+                    source: /mnt/c/Users/Me/localhost/www/getmail/tmp
+                    target: /var/www/html/tmp
+            ```
 
     + Run `composer build` first to build the Docker image with "dev" tag.
         * `docker` is used instead of `docker-compose` to build the image to
@@ -132,9 +132,11 @@ of the repository. Shell commands are all run from the root of the repository.
       and `App\Utils`.
     + At most 1 level of inheritance to prevent going down a rabbit hole, e.g.
 
-            class A {}
-            class B extends A {} // allowed
-            class C extends B {} // not allowed
+        ```
+        class A {}
+        class B extends A {} // allowed
+        class C extends B {} // not allowed
+        ```
 
 - Deployment environments: production, staging, feature, testing, local.
 - Modules:
@@ -143,58 +145,60 @@ of the repository. Shell commands are all run from the root of the repository.
     + Web: Classes handling requests for web pages.
 - Directory structure (using `tree --charset unicode --dirsfirst -a -n`):
 
-        Root of repository
-        |-- config  # Configuration files
-        |-- public  # Publicly hosted assets used by webpages in <link>, <script>, <img>
-        |   |-- assets
-        |   |   |-- css     # Stylesheets
-        |   |   |-- images  # Images
-        |   |   `-- js      # JavaScript files
-        |   `-- index.php   # Application entrypoint
-        |-- scripts         # Helper shell scripts
-        |   `-- version.sh  # Script for generating application version
-        |-- src  # Source code
-        |   |-- Api             # API module
-        |   |   |-- Controller  # Controllers for handling requests to API endpoints
-        |   |   |   |-- IndexController.php
-        |   |   |   `-- SystemController.php
-        |   |   `-- ApiResponse.php  # Standardized JSON response for API endpoints
-        |   |-- App             # API module
-        |   |   |-- Controller  # Controllers for handling requests application-wide
-        |   |   |   |-- AbstractController.php  # Base controller class
-        |   |   |   |-- ErrorController.php     # Application-wide error handler
-        |   |   |   `-- IndexController.php     # Handles requests to index page
-        |   |   |-- Application.php  # Main application class
-        |   |   |-- Config.php       # Application configuration
-        |   |   |-- Constants.php    # Application constants
-        |   |   |-- Logger.php       # Logger
-        |   |   |-- Router.php       # Router
-        |   |   `-- Utils.php        # Common utility functions
-        |   `-- Web             # Web module
-        |       |-- Controller  # Controllers for handling requests for web pages
-        |       |   `-- IndexController.php  # Handles request to home page
-        |       |-- Form                  # Forms
-        |       |   |-- AbstractForm.php  # Base form class, handles fields and validation
-        |       |   `-- IndexForm.php
-        |       |-- view              # View templates
-        |       |   |-- error.phtml   # Common view template for error pages
-        |       |   |-- index.phtml   # View template for home page
-        |       |   `-- layout.phtml  # Layout template in which rendered HTML for views are wrapped
-        |       `-- WebResponse.php   # Standardized HTML response for API endpoints
-        |-- test         # Tests
-        |   `-- ApiTest  # Tests for API module
-        |-- .dockerignore
-        |-- .env.example    # List of all environment variables, to be copied to .env
-        |-- .gitattributes
-        |-- .gitignore
-        |-- Dockerfile
-        |-- LICENSE.md
-        |-- README.md
-        |-- VERSION.txt     # Generated by scripts/version.sh, not committed to repository
-        |-- composer.json
-        |-- composer.lock
-        |-- docker-compose.yml
-        `-- phpcs.xml
+    ```
+    Root of repository
+    |-- config  # Configuration files
+    |-- public  # Publicly hosted assets used by webpages in <link>, <script>, <img>
+    |   |-- assets
+    |   |   |-- css     # Stylesheets
+    |   |   |-- images  # Images
+    |   |   `-- js      # JavaScript files
+    |   `-- index.php   # Application entrypoint
+    |-- scripts         # Helper shell scripts
+    |   `-- version.sh  # Script for generating application version
+    |-- src  # Source code
+    |   |-- Api             # API module
+    |   |   |-- Controller  # Controllers for handling requests to API endpoints
+    |   |   |   |-- IndexController.php
+    |   |   |   `-- SystemController.php
+    |   |   `-- ApiResponse.php  # Standardized JSON response for API endpoints
+    |   |-- App             # API module
+    |   |   |-- Controller  # Controllers for handling requests application-wide
+    |   |   |   |-- AbstractController.php  # Base controller class
+    |   |   |   |-- ErrorController.php     # Application-wide error handler
+    |   |   |   `-- IndexController.php     # Handles requests to index page
+    |   |   |-- Application.php  # Main application class
+    |   |   |-- Config.php       # Application configuration
+    |   |   |-- Constants.php    # Application constants
+    |   |   |-- Logger.php       # Logger
+    |   |   |-- Router.php       # Router
+    |   |   `-- Utils.php        # Common utility functions
+    |   `-- Web             # Web module
+    |       |-- Controller  # Controllers for handling requests for web pages
+    |       |   `-- IndexController.php  # Handles request to home page
+    |       |-- Form                  # Forms
+    |       |   |-- AbstractForm.php  # Base form class, handles fields and validation
+    |       |   `-- IndexForm.php
+    |       |-- view              # View templates
+    |       |   |-- error.phtml   # Common view template for error pages
+    |       |   |-- index.phtml   # View template for home page
+    |       |   `-- layout.phtml  # Layout template in which rendered HTML for views are wrapped
+    |       `-- WebResponse.php   # Standardized HTML response for API endpoints
+    |-- test         # Tests
+    |   `-- ApiTest  # Tests for API module
+    |-- .dockerignore
+    |-- .env.example    # List of all environment variables, to be copied to .env
+    |-- .gitattributes
+    |-- .gitignore
+    |-- Dockerfile
+    |-- LICENSE.md
+    |-- README.md
+    |-- VERSION.txt     # Generated by scripts/version.sh, not committed to repository
+    |-- composer.json
+    |-- composer.lock
+    |-- docker-compose.yml
+    `-- phpcs.xml
+    ```
 
 ## To-do
 - Move logic for retrieving mail to an API endpoint and have the Web controller action call
@@ -208,57 +212,59 @@ of the repository. Shell commands are all run from the root of the repository.
   mail body (no iframes) and not storing actual mail credentials with them.
     + Sample login test script that uses InboxKitten:
 
-            // Go to Login Page
-            I.goTo(DATA.SITE_DOMAIN + '/web/login')
-            I.fill('Email', DATA.LOGIN_USERNAME)
-            I.fill('Password', DATA.LOGIN_PASSWORD)
-            I.click('Request OTP')
-            I.see('OTP Verification Code')
+        ```
+        // Go to Login Page
+        I.goTo(DATA.SITE_DOMAIN + '/web/login')
+        I.fill('Email', DATA.LOGIN_USERNAME)
+        I.fill('Password', DATA.LOGIN_PASSWORD)
+        I.click('Request OTP')
+        I.see('OTP Verification Code')
 
-            // Get OTP from mail and fill it in
-            let mailBody = getMailBody('One-Time Password', 'Your one-time password')
-            let matches = mailBody.match(/password is (\d+)/i)
-            let otp = matches[1] || '000000'
-            I.fill('otp', otp)
-            I.click('Login')
+        // Get OTP from mail and fill it in
+        let mailBody = getMailBody('One-Time Password', 'Your one-time password')
+        let matches = mailBody.match(/password is (\d+)/i)
+        let otp = matches[1] || '000000'
+        I.fill('otp', otp)
+        I.click('Login')
 
-            // See dashboard and then logout
-            I.see('Dashboard')
-            I.wait(3)
-            I.goTo(DATA.SITE_DOMAIN + '/web/logout')
+        // See dashboard and then logout
+        I.see('Dashboard')
+        I.wait(3)
+        I.goTo(DATA.SITE_DOMAIN + '/web/logout')
 
-            function getMailBody(mailSubject, mailBodyHintText) {
-                let waitForMailSecs = 5
-                let url = ''
-                let body = ''
+        function getMailBody(mailSubject, mailBodyHintText) {
+            let waitForMailSecs = 5
+            let url = ''
+            let body = ''
 
-                if ('inboxkitten.com' === DATA.MAIL_HOST) {
-                    // Go to mail inbox page in new tab
-                    url = 'https://inboxkitten.com/inbox/' + DATA.MAIL_USERNAME + '/list'
-                    I.goTo(url, {
-                        newTab: true
-                    })
+            if ('inboxkitten.com' === DATA.MAIL_HOST) {
+                // Go to mail inbox page in new tab
+                url = 'https://inboxkitten.com/inbox/' + DATA.MAIL_USERNAME + '/list'
+                I.goTo(url, {
+                    newTab: true
+                })
 
-                    // Wait a while for mail to arrive
-                    I.wait(waitForMailSecs)
-                    I.see('@inboxkitten')
-                    I.see(mailSubject)
-                    I.click(mailSubject)
+                // Wait a while for mail to arrive
+                I.wait(waitForMailSecs)
+                I.see('@inboxkitten')
+                I.see(mailSubject)
+                I.click(mailSubject)
 
-                    // Target iframe in mailbox
-                    UI.context('#message-content', () => {
-                        // I.see is critical in ensuring that I.getText is done AFTER the email is loaded
-                        // hence use of hint text to check if email body has loaded
-                        I.see(mailBodyHintText)
+                // Target iframe in mailbox
+                UI.context('#message-content', () => {
+                    // I.see is critical in ensuring that I.getText is done AFTER the email is loaded
+                    // hence use of hint text to check if email body has loaded
+                    I.see(mailBodyHintText)
 
-                        // I.getText targets an element and extracts its text
-                        // XPath '//body' is used if it is a plaintext email and not an HTML email
-                        body = I.getText('//body')
-                    })
+                    // I.getText targets an element and extracts its text
+                    // XPath '//body' is used if it is a plaintext email and not an HTML email
+                    body = I.getText('//body')
+                })
 
-                    // Close current tab and switch back to previous tab
-                    I.closeTab()
-                }
-
-                return body
+                // Close current tab and switch back to previous tab
+                I.closeTab()
             }
+
+            return body
+        }
+        ```
