@@ -14,7 +14,7 @@ const layout = (function (currentScript) { // not using `var` so that there will
     // Initialization
     (function init() {
         window.addEventListener('getmail.layout.ready', (event) => {
-            console.log('Layout script ready.');
+            console.log('Layout script ready.'); // eslint-disable-line no-console
         });
 
         // Emit layout ready event - view scripts should listen for this event

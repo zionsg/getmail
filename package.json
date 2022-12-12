@@ -1,0 +1,131 @@
+{
+  "name": "getmail",
+  "version": "0.1.0",
+  "scripts": {
+    "//": [
+      "ignorePatterns key in ESLint does not seem to work hence arguments passed to CLI command in NPM script."
+    ],
+    "lint": "eslint '**/*.js' --ignore-pattern 'docs/' --ignore-pattern 'node_modules/' --ignore-pattern 'src/' --ignore-pattern 'test/' --ignore-pattern 'tmp/' --ignore-pattern 'vendor/' --ignore-pattern '*.min.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zionsg/getmail.git"
+  },
+  "dependencies": {
+    "eslint": "^8.29.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true,
+      "browser": true
+    },
+    "globals": {
+      "Atomics": "readonly",
+      "Buffer": "readonly",
+      "SharedArrayBuffer": "readonly",
+      "__dirname": true,
+      "__filename": true,
+      "exports": true,
+      "global": true,
+      "module": false,
+      "process": false,
+      "require": false
+    },
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "ecmaFeatures": {
+        "globalReturn": true
+      }
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "no-async-promise-executor": "off",
+      "no-console": "error",
+      "no-inner-declarations": "off",
+      "no-tabs": "error",
+      "no-trailing-spaces": "error",
+      "no-unused-vars": "off",
+      "no-useless-escape": "off",
+      "no-param-reassign": [
+        "off",
+        {
+          "props": true
+        }
+      ],
+      "default-case": "error",
+      "brace-style": [
+        "error",
+        "1tbs"
+      ],
+      "indent": [
+        "error",
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 120,
+          "ignoreComments": true,
+          "ignoreStrings": true
+        }
+      ],
+      "one-var": [
+        "error",
+        "never"
+      ],
+      "operator-linebreak": [
+        "error",
+        "before",
+        {
+          "overrides": {
+            "=": "after",
+            "+=": "after",
+            "-=": "after"
+          }
+        }
+      ],
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true,
+          "allowTemplateLiterals": false
+        }
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "space-before-blocks": [
+        "error",
+        "always"
+      ],
+      "space-before-function-paren": [
+        "error",
+        {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always"
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "test/**/*.js"
+        ],
+        "rules": {
+          "no-restricted-syntax": "off"
+        }
+      }
+    ]
+  }
+}

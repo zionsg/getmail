@@ -119,6 +119,10 @@ of the repository. Shell commands are all run from the root of the repository.
         * See `GETMAIL_PORT_*` env vars for port settings.
 - Additional stuff:
     + Run `composer lint` to do linting checks.
+    + To do linting checks on JavaScript files:
+        + Node.js and NPM need to be installed.
+        + Run `npm install` to install ESLint.
+        + Run `npm run lint` to do linting checks.
 
 ## Application Design
 - Basic guiding principles:

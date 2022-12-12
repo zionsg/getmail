@@ -20,13 +20,14 @@ if [ ! -d "scripts" ]; then
 fi
 
 # Check for project config file in root of repo
+# package.json may exist in a PHP/Python project due to use of apiDoc/ESLint hence checked last
 PROJECT_CONFIG_FILE=""
 if test -f "composer.json"; then
     PROJECT_CONFIG_FILE=composer.json
-elif test -f "package.json"; then
-    PROJECT_CONFIG_FILE=package.json
 elif test -f "pyproject.toml"; then
     PROJECT_CONFIG_FILE=pyproject.toml
+elif test -f "package.json"; then
+    PROJECT_CONFIG_FILE=package.json
 fi
 
 # For project version, take the 1st line in the project config file containing the word "version"

@@ -4,8 +4,14 @@
     /**
      * Layout template
      *
-     * See $sharedViewData in src/Web/WebResponse::render() on variables that
-     * are passed to layout and view templates.
+     * Layout/view templates are plaintext files with .phtml extension
+     * containing a mix of PHP and HTML code. See $sharedViewData in
+     * src/Web/WebResponse::render() on variables that are passed to templates.
+     *
+     * Always use external scripts instead of inline scripts:
+     *   - Linting checks can be done easily on the JavaScript code using ESLint.
+     *   - Less content in layout/view template files to process server-side.
+     *   - Compliance to Content Security Policy (CSP) usually disallow inline stylesheets/scripts.
      */
     ?>
     <head>
