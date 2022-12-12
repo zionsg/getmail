@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "//": [
+      "This file exists solely to run ESLint for now.",
       "ignorePatterns key in ESLint does not seem to work hence arguments passed to CLI command in NPM script."
     ],
     "lint": "eslint '**/*.js' --ignore-pattern 'docs/' --ignore-pattern 'node_modules/' --ignore-pattern 'src/' --ignore-pattern 'test/' --ignore-pattern 'tmp/' --ignore-pattern 'vendor/' --ignore-pattern '*.min.js'"
