@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+    <?php
+    /**
+     * Layout template
+     *
+     * See $sharedViewData in src/Web/WebResponse::render() on variables that
+     * are passed to layout and view templates.
+     */
+    ?>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +20,7 @@
     </head>
 
     <body>
-        <div class="getmail-container" data-render-id="<?= $renderId ?>">
+        <div class="getmail-container">
             <?php if ($errorMessage) : ?>
                 <div class="error"><?= $errorMessage?></div>
             <?php endif; ?>

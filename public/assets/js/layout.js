@@ -8,7 +8,7 @@
  * @param {HTMLElement} currentScript - Script element that this script is loaded in, e.g. <script src="x.js"></script>.
  */
 const layout = (function (currentScript) { // not using `var` so that there will be error if it's loaded more than once
-    /** @type {object} Self reference - all public properties/methods are stored here & returned as public interface. */
+    /** @type {Object} Self reference - all public properties/methods are stored here & returned as public interface. */
     const self = {}; // methods attached to this are ordered alphabetically
 
     // Initialization

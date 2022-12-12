@@ -221,6 +221,7 @@ of the repository. Shell commands are all run from the root of the repository.
   that API endpoint internally. This allows it to be called as an API endpoint as well as being
   accessed as a webpage, without duplicating the logic.
     + Separate plaintext and HTML parts in output.
+- Implement CSRF token for forms.
 - Write tests, especially for API endpoints.
 - Generate API documentation.
 - Add write-up on how this can be used with https://uilicious.com/ in retrieving emails

@@ -110,10 +110,13 @@ class WebResponse extends HtmlResponse
      */
     protected function render(): string
     {
+        // Variables that are passed to layout and view templates
+        // $renderId is useful in uniquely identifying HTML elements in scripts,
+        // especially when they are loaded via an client-side AJAX call.
         $sharedViewData = [
             'renderId' => uniqid(microtime(true) . '-', true), // unique identifier for HTML "data-render-id" attribute
             'requestId' => $this->request->getAttribute('request_id'),
-            'version' => $this->config->getVersion(), // application version
+            'version' => $this->config->getVersion(), // version to be appended to public assets for cache busting
         ];
 
         // Import template variables as PHP variables so that they can be
