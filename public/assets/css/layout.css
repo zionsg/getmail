@@ -18,6 +18,17 @@
  *     especially for typography. See
  *     https://chiamakaikeanyi.dev/sizing-in-css-px-vs-em-vs-rem/ for details.
  *
+ * As much as possible, CSS selectors that are used as JavaScript hooks should
+ * be prefixed with `js-` and not mixed with CSS selectors used for styling,
+ * e.g. `<div class="site-navigation js-site-navigation">`. This prevents
+ * designers and developers from accidentally breaking the JavaScript codebase
+ * when removing or renaming CSS classes,
+ * e.g. `let nav = document.querySelector('.site-navigation');` breaks if
+ * someone renames `site-navigation` to `page-nav`. Hence CSS selectors with
+ * `js-` prefixes should not be trivially removed/renamed. This also means that
+ * CSS selectors prefixed with `js-` should not be used for styling and should
+ * not appear in stylesheets.
+ *
  * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax
  * @link https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
  * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
