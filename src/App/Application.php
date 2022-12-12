@@ -60,12 +60,9 @@ class Application
         $query = $request->getQueryParams();
         $request = $request
             ->withAttribute(
-                // Generate unique 42-character ID for each request, e.g. 1669950476.198900Z-4b340550242239.64159797
+                // Generate unique 50-char ID for each request, e.g. 1670837243.176900-47cde7c7fead438b9a5ec2c6e961e740
                 'request_id',
-                uniqid(
-                    str_pad(microtime(true), 17, '0', STR_PAD_RIGHT) . 'Z-', // ensure 6-digit microseconds
-                    true
-                )
+                str_pad(microtime(true), 17, '0', STR_PAD_RIGHT) . '-' . bin2hex(random_bytes(16)) // ensure 6-digit μs
             )
             ->withAttribute(
                 // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
