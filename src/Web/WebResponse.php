@@ -95,6 +95,9 @@ class WebResponse extends HtmlResponse
     {
         $this->viewData = array_merge($this->viewData, $viewData);
 
+        // Note that when instantiating HtmlResponse, its Stream is created using fopen() with
+        // write mode not append mode and rewind() is called after writing the body initially,
+        // hence this will overwrite the body instead of appending to it.
         $body = $this->render();
         $this->getBody()->write($body);
     }
