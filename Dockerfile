@@ -1,5 +1,17 @@
 ##
 # Dockerfile
+#
+# If there is a need to clone or install packages from private code repositories in this Dockerfile:
+#   - Start the SSH agent on the host machine where the Docker image is being built and add the SSH key,
+#     e.g. `eval $(ssh-agent) && ssh-add ~/.ssh/key-used-for-cloning-private-repository.id_rsa`
+#   - Forward the SSH agent from the host machine when building the Docker image,
+#     e.g. `docker compose build --ssh default=$HOME/.ssh/key-used-for-cloning-private-repository.id_rsa`.
+#   - Install SSH client and Git in this Dockerfile, e.g. `apt-get install --yes openssh-client git`
+#   - Add github.com to known_hosts in this Dockerfile to avoid prompt to authenticate the domain when downloading the
+#     private repos via SSH, e.g. `RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts`
+#   - Mount the SSH agent for RUN commands in this Dockerfile when installing dependencies or cloning the private repos,
+#     e.g. `RUN --mount=type=ssh composer install --no-dev`
+#     or `RUN --mount=type=ssh git clone git@github.com:zionsg/test-private-package.git`
 ##
 
 # Base image from https://github.com/serversideup/docker-php - Production-ready Docker images for PHP

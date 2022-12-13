@@ -27,16 +27,12 @@ of the repository. Shell commands are all run from the root of the repository.
       Windows Subsystem for Linux (WSL), without requiring dual boot.
         * [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
         * [Install Docker in WSL 2 without Docker Desktop](https://nickjanetakis.com/blog/install-docker-in-wsl-2-without-docker-desktop)
-- [Docker Compose](https://docs.docker.com/compose/release-notes/) >= 1.29.0
-    + Note that Docker Compose v1 uses the `docker-compose` command whereas
-      Docker Compose v2 uses the `docker compose` command (without hyphen) via
-      the Compose plugin for Docker.
-        * [Install Docker Compose v1 on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
+- [Docker Compose](https://docs.docker.com/compose/release-notes/) >= 2.14.0
+    + Note that Docker Compose v2 uses the `docker compose` command (without
+      hyphen) via the Compose plugin for Docker whereas Docker Compose v1 uses
+      the `docker-compose` command (with hyphen).
         * [Install Docker Compose v2 plugin on Ubuntu 22.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-22-04)
-    + `depends_on` condition in Docker Compose file to wait for successful
-      service completion added in Docker Compose v1.29.0 onwards. See
-      https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on
-      for details.
+        * [Install Docker Compose v1 on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
     + Version 3.7 is currently used for the Compose file format.
 
 ## Installation
@@ -103,11 +99,6 @@ of the repository. Shell commands are all run from the root of the repository.
             ```
 
     + Run `composer build` first to build the Docker image with "dev" tag.
-        * `docker` is used instead of `docker-compose` to build the image to
-          cater for use of SSH agent forwarding in the future (if there is a
-          need to install packages from a private GitHub repository),
-          i.e. `docker build --ssh default`, which `docker-compose`
-          does not support yet.
     + Run `composer start` to start the Docker container.
     + Run `composer stop` to stop the Docker container or just press `Ctrl+C`.
       However, the former should be used as it will properly shut down the

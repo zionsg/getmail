@@ -37,7 +37,7 @@
     ],
     "build": "scripts/version.sh && DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS=plain docker build --tag getmail:dev --tag getmail:$(cat VERSION.txt) --no-cache .",
     "lint": "phpcs",
-    "start": "docker-compose up --no-build &",
-    "stop": "docker-compose down"
+    "start": "docker compose up --no-build &",
+    "stop": "docker compose down"
   }
 }

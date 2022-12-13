@@ -14,7 +14,7 @@ networks:
 # See https://github.com/compose-spec/compose-spec/blob/master/spec.md#depends_on for depends_on conditions
 services:
   getmail-app: # application
-    # On localhost, build the image first before running docker-compose
+    # On localhost, build the image first before running Docker Compose
     image: getmail:prod
     container_name: getmail-app
     ports:
