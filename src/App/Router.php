@@ -2,7 +2,6 @@
 
 namespace App;
 
-use RuntimeException;
 use App\Config;
 use App\Logger;
 use Psr\Http\Message\ResponseInterface;
@@ -20,8 +19,8 @@ class Router implements MiddlewareInterface
      *
      * @var string
      */
-    public const LITERAL = 'literal';
-    public const REGEX = 'regex';
+    public const ROUTE_LITERAL = 'literal';
+    public const ROUTE_REGEX = 'regex';
 
     /**
      * Application config
@@ -56,15 +55,15 @@ class Router implements MiddlewareInterface
      * Defaults for route options
      *
      * @var array
-     * @property string type="literal" Route type as per class constants.
-     * @property string route="" String or pattern for route to match.
+     * @property string type="literal" Route type as per ROUTE_* constants.
+     * @property string route="" Path string or pattern for route to match.
      * @property string controller="" FQCN (Fully-Qualified Class Name) of controller used for handling route.
      * @property string action="" Name of method in controller for handling route.
      * @property array child_routes=[] Key-value pairs where key is route name and value is array of options for route.
      *     If controller or action is not specified, it will be inherited from the parent route.
      */
     protected $routeDefaults = [
-        'type' => self::LITERAL,
+        'type' => self::ROUTE_LITERAL,
         'route' => '',
         'controller' => '',
         'action' => '',
@@ -89,15 +88,15 @@ class Router implements MiddlewareInterface
         $this->routes = $options['routes'] ?? [];
 
         // Ensure defaults are set. Max 2 levels for routes.
-        foreach ($this->routes as $route => $routeOptions) {
-            $this->routes[$route] = array_merge($this->routeDefaults, $routeOptions);
+        foreach ($this->routes as $routeName => $routeOptions) {
+            $this->routes[$routeName] = array_merge($this->routeDefaults, $routeOptions);
 
-            foreach ($this->routes[$route]['child_routes'] as $childRoute => $childRouteOptions) {
-                $this->routes[$route]['child_routes'][$childRoute] = array_merge(
+            foreach ($this->routes[$routeName]['child_routes'] as $childRouteName => $childRouteOptions) {
+                $this->routes[$routeName]['child_routes'][$childRouteName] = array_merge(
                     $this->routeDefaults,
                     [
-                        'controller' => $this->routes[$route]['controller'],
-                        'action' => $this->routes[$route]['action'],
+                        'controller' => $this->routes[$routeName]['controller'],
+                        'action' => $this->routes[$routeName]['action'],
                     ],
                     $childRouteOptions
                 );
@@ -127,22 +126,64 @@ class Router implements MiddlewareInterface
 
         $controller = new $controllerClass($this->config, $this->logger, $this); // pass in this Router as last arg
         $response = $controller->$action($request);
-        if ($response) {
-            $this->send($response);
-        } elseif ($handler) {
+        if (! $response) {
             $response = $handler($request);
         }
 
-        // Must return response even if it has been sent out as caller may use it, e.g. for logging purposes
+        // Cannot send out response to client here (which will terminate the current script) as
+        // controller actions may call this method via route() to get response from internal routes.
+        // Let the caller of this method be responsible for the sending.
         return $response;
+    }
+
+    /**
+     * Call route
+     *
+     * This is used by controller actions to call other internal routes,
+     * e.g. controller action for /web/login route (the caller) uses this method
+     * to call /api/authenticate route (the callee) internally to verify
+     * credentials instead of duplicating the verification logic. It also saves
+     * the hassle of the controller action having to create a new request and
+     * calling process().
+     *
+     * @param ServerRequestInterface $callerRequest Request passed to handler
+     *     for caller.
+     * @param string $path Path relative to domain name without querystring,
+     *     e.g. /api/healthcheck.
+     * @param string $method="GET" HTTP method, either GET or POST.
+     * @param array $data=[] Body to send to callee, typically for POST.
+     * @returns ResponseInterface
+     */
+    public function route(
+        ServerRequestInterface $callerRequest,
+        string $path,
+        string $method = 'GET',
+        array $data = []
+    ) {
+        // Clone request and change path, allowing original client info such as
+        // request ID to be carried over and help to group the requests in an
+        // audit trail.
+        $uri = $callerRequest->getUri()->withPath($path);
+        $request = $callerRequest
+            ->withUri($uri)
+            ->withMethod($method)
+            ->withParsedBody($data)
+            ->withAttribute('proxy', 1); // indicate that this is a proxy request
+
+        // Pass in this Router as last arg
+        $fallbackHandler = new $this->errorController($this->config, $this->logger, $this);
+
+        return $this->process($request, $fallbackHandler);
     }
 
     /**
      * Match route
      *
-     * @param string $path Path relative to domain name without querystring.
+     * @param string $path Path relative to domain name without querystring,
+     *     e.g. /api/healthcheck.
      * @param array $routes
-     * @return array Route options. Empty array returned if no match is found.
+     * @return array Route options for matched route. Empty array is returned if
+     *     no match is found.
      */
     protected function matchRoute(string $path, array $routes): array
     {
@@ -151,7 +192,7 @@ class Router implements MiddlewareInterface
             $route = $routeOptions['route'];
             $childRoutes = $routeOptions['child_routes'];
 
-            if (self::LITERAL === $type) {
+            if (self::ROUTE_LITERAL === $type) {
                 if ($path === $route) { // e.g. path is /web, route is /web, child routes skipped cos path has ended
                     return $routeOptions;
                 }
@@ -184,31 +225,5 @@ class Router implements MiddlewareInterface
         }
 
         return []; // no match found
-    }
-
-    /**
-     * Send out response to client
-     *
-     * @param ResponseInterface
-     * @return void
-     * @throws RuntimeException if headers already sent.
-     */
-    protected function send(ResponseInterface $response)
-    {
-        if (headers_sent()) {
-            throw new RuntimeException('Headers already sent, response could not be emitted.');
-        }
-
-        http_response_code($response->getStatusCode());
-
-        foreach ($response->getHeaders() as $name => $values) {
-            header(
-                sprintf('%s: %s', $name, $response->getHeaderLine($name)),
-                false // header doesn't replace a previous similar header
-            );
-        }
-
-        echo $response->getBody();
-        exit(); // must exit for response to be written properly
     }
 }

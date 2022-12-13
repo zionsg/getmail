@@ -103,6 +103,18 @@ abstract class AbstractForm
     }
 
     /**
+     * Set form error message
+     *
+     * @param string $errorMessage
+     * @return void
+     */
+    public function setError(string $errorMessage): void
+    {
+        $this->errorMessage = $errorMessage;
+        $this->isValid = false;
+    }
+
+    /**
      * Validate form
      *
      * Remaining fields will not be checked if a field has error so as not to

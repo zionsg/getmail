@@ -23,29 +23,43 @@ return [
          */
         'routes' => [
             'api' => [
-                'type' => Router::LITERAL,
+                'type' => Router::ROUTE_LITERAL,
                 'route' => '/api',
                 'controller' => \Api\Controller\IndexController::class,
                 'action' => 'handle',
                 'child_routes' => [
                     'healthcheck' => [
-                        'type' => Router::LITERAL,
+                        'type' => Router::ROUTE_LITERAL,
                         'route' => '/healthcheck',
                         'controller' => \Api\Controller\SystemController::class,
                         'action' => 'healthcheckAction',
+                    ],
+                    'mail' => [
+                        'type' => Router::ROUTE_LITERAL,
+                        'route' => '/mail',
+                        'controller' => \Api\Controller\MailController::class,
+                        'action' => 'handle',
                     ],
                 ],
             ],
 
             'web' => [
-                'type' => Router::LITERAL,
+                'type' => Router::ROUTE_LITERAL,
                 'route' => '/web',
                 'controller' => \Web\Controller\IndexController::class,
                 'action' => 'handle',
+                'child_routes' => [
+                    'mail' => [
+                        'type' => Router::ROUTE_LITERAL,
+                        'route' => '/mail',
+                        'controller' => \Web\Controller\MailController::class,
+                        'action' => 'handle',
+                    ],
+                ],
             ],
 
             'root' => [ // this should be the last route as it is a fallback and that "/" matches everything
-                'type' => Router::LITERAL,
+                'type' => Router::ROUTE_LITERAL,
                 'route' => '/',
                 'controller' => \App\Controller\IndexController::class,
                 'action' => 'handle',

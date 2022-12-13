@@ -2,11 +2,13 @@
 
 namespace App;
 
+use RuntimeException;
 use App\Config;
 use App\Logger;
 use App\Router;
 use App\Controller\ErrorController;
 use Laminas\Diactoros\ServerRequestFactory;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Main application class
@@ -71,6 +73,34 @@ class Application
             );
 
         $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);
-        $this->router->process($request, $fallbackHandler);
+        $response = $this->router->process($request, $fallbackHandler);
+
+        $this->send($response);
+    }
+
+    /**
+     * Send out response to client
+     *
+     * @param ResponseInterface
+     * @return void
+     * @throws RuntimeException if headers already sent.
+     */
+    protected function send(ResponseInterface $response)
+    {
+        if (headers_sent()) {
+            throw new RuntimeException('Headers already sent, response could not be emitted.');
+        }
+
+        http_response_code($response->getStatusCode());
+
+        foreach ($response->getHeaders() as $name => $values) {
+            header(
+                sprintf('%s: %s', $name, $response->getHeaderLine($name)),
+                false // header doesn't replace a previous similar header
+            );
+        }
+
+        echo $response->getBody();
+        exit(); // must exit for response to be written properly
     }
 }

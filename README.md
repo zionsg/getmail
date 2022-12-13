@@ -222,10 +222,7 @@ of the repository. Shell commands are all run from the root of the repository.
     ```
 
 ## To-do
-- Move logic for retrieving mail to an API endpoint and have the Web controller action call
-  that API endpoint internally. This allows it to be called as an API endpoint as well as being
-  accessed as a webpage, without duplicating the logic.
-    + Separate plaintext and HTML parts in output.
+- Separate plaintext and HTML parts in output.
 - Implement CSRF token for forms.
 - Add `debug` query param to trigger debug logs and document in `src/Web/view/layout.phtml`.
 - Write tests, especially for API endpoints.

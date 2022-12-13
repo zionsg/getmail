@@ -13,7 +13,8 @@ use Psr\Log\LogLevel;
  * Logger class
  *
  * Logs are written to php://stdout so that they can appear in Docker container
- * logs.
+ * logs. Pass the server request via the context when calling logging methods,
+ * e.g. `$logger->info('test', ['request' => $request]);`.
  *
  * @link See https://www.php-fig.org/psr/psr-3/ on signature of logging methods.
  */

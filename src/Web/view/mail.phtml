@@ -1,0 +1,34 @@
+<form method="POST" action="" class="js-mail-form" data-render-id="<?= $renderId ?>">
+    <?php if ($form->errorMessage) : ?>
+        <div class="error"><?= $form->errorMessage ?></div>
+    <?php endif; ?>
+
+    <?php foreach ($form->fields as $field => $info) : ?>
+        <div class="field">
+            <?php if ($info['label']) : ?>
+                <label><?= $info['label'] ?></label>
+            <?php endif; ?>
+
+            <input name="<?= $field ?>" type="<?= $info['type'] ?>" placeholder="<?= $info['placeholder'] ?>"
+                value="<?= ($info['value'] ?? '') ?>">
+
+            <?php if ($info['error']) : ?>
+                <div class="error"><?= $info['error'] ?></div>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
+</form>
+
+<?php if ($form->isValid) : ?>
+    <hr>
+    <h3>Results</h3>
+
+    <b>Mail Overview:</b>
+    <pre class="mail-overview"><?= $mailOverview ?></pre>
+
+    <b>Mail Body:</b>
+    <pre class="mail-body"><?= $mailBody ?></pre>
+<?php endif; ?>
+
+<script src="/assets/js/mail.js?ver=<?= $version ?>"
+  data-render-selector=".js-mail-form[data-render-id='<?= $renderId ?>']"></script>

@@ -6,9 +6,9 @@ use App\Config;
 use Web\Form\AbstractForm;
 
 /**
- * Form for index page
+ * Form to get mail
  */
-class IndexForm extends AbstractForm
+class MailForm extends AbstractForm
 {
     /**
      * @var array
@@ -19,20 +19,21 @@ class IndexForm extends AbstractForm
             'label' => 'Subject Pattern',
             'placeholder' => 'E.g. password',
             'required' => true,
+            'validateFunction' => null, // to be init in constructor
         ],
         'api_key' => [
             'type' => 'text',
             'label' => 'API Key',
             'required' => true,
             'hide_error' => true,
-            'validateFunction' => null, // to be init in constructor
+            'validateFunction' => null,
         ],
         'api_token' => [
             'type' => 'password',
             'label' => 'API Token',
             'required' => true,
             'hide_error' => true,
-            'validateFunction' => null, // to be init in constructor
+            'validateFunction' => null,
         ],
         'submit' => [
             'type' => 'submit',
@@ -50,12 +51,8 @@ class IndexForm extends AbstractForm
         parent::__construct($config);
 
         // Additional validation
-        // Don't let hacker know key/token
-        $this->fields['api_key']['validateFunction'] = function ($field, $value) {
-            return ($value === $this->config->get('api_key') ? '' : 'Invalid credentials.');
-        };
-        $this->fields['api_token']['validateFunction'] = function ($field, $value) {
-            return ($value === $this->config->get('api_token') ? '' : 'Invalid credentials.');
+        $this->fields['subject_pattern']['validateFunction'] = function ($field, $value) {
+            return (preg_match('/[^a-z0-9 \-_]/i', $value) ? 'Invalid chars in subject pattern.' : '');
         };
     }
 }
