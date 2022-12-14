@@ -3,11 +3,11 @@
 namespace App;
 
 use App\Config;
-use App\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Router class
@@ -32,7 +32,7 @@ class Router implements MiddlewareInterface
     /**
      * Logger
      *
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger = null;
 
@@ -74,10 +74,10 @@ class Router implements MiddlewareInterface
      * Constructor
      *
      * @param Config $config Application config.
-     * @param Logger $logger Logger.
+     * @param LoggerInterface $logger Logger.
      * @return void
      */
-    public function __construct(Config $config, Logger $logger)
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->logger = $logger;

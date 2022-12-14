@@ -3,9 +3,9 @@
 namespace Web;
 
 use App\Config;
-use App\Logger;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Standardized format for HTML responses from Web endpoints
@@ -22,7 +22,7 @@ class WebResponse extends HtmlResponse
     /**
      * Logger
      *
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger = null;
 
@@ -50,7 +50,7 @@ class WebResponse extends HtmlResponse
      * Constructor
      *
      * @param Config $config Application config.
-     * @param Logger $logger Logger.
+     * @param LoggerInterface $logger Logger.
      * @param ServerRequestInterface $request Request.
      * @param int $status=200 HTTP status code.
      * @param string $viewPath="" Path to view template file used for
@@ -60,7 +60,7 @@ class WebResponse extends HtmlResponse
      */
     public function __construct(
         Config $config,
-        Logger $logger,
+        LoggerInterface $logger,
         ServerRequestInterface $request,
         int $status = 200,
         string $viewPath = '',

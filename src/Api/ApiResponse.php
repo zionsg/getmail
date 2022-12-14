@@ -3,9 +3,9 @@
 namespace Api;
 
 use App\Config;
-use App\Logger;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Standardized format for JSON responses from API endpoints
@@ -24,7 +24,7 @@ class ApiResponse extends JsonResponse
     /**
      * Logger
      *
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger = null;
 
@@ -32,7 +32,7 @@ class ApiResponse extends JsonResponse
      * Constructor
      *
      * @param Config $config Application config.
-     * @param Logger $logger Logger.
+     * @param LoggerInterface $logger Logger.
      * @param ServerRequestInterface $request Request.
      * @param int $status=200 HTTP status code.
      * @param string $errorMessage="" Error message if error response.
@@ -41,7 +41,7 @@ class ApiResponse extends JsonResponse
      */
     public function __construct(
         Config $config,
-        Logger $logger,
+        LoggerInterface $logger,
         ServerRequestInterface $request,
         int $status = 200,
         string $errorMessage = '',

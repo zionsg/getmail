@@ -3,7 +3,7 @@
 namespace Web\Form;
 
 use App\Config;
-use App\Logger;
+use Psr\Log\LoggerInterface;
 use Web\Form\AbstractForm;
 
 /**
@@ -46,9 +46,9 @@ class MailForm extends AbstractForm
      * Constructor
      *
      * @param Config $config
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(Config $config, Logger $logger)
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         parent::__construct($config, $logger);
 

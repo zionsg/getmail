@@ -3,7 +3,7 @@
 namespace Web\Form;
 
 use App\Config;
-use App\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base form class
@@ -35,7 +35,7 @@ abstract class AbstractForm
     /**
      * Logger
      *
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger = null;
 
@@ -81,9 +81,9 @@ abstract class AbstractForm
      * Constructor
      *
      * @param Config $config
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(Config $config, Logger $logger)
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->logger = $logger;

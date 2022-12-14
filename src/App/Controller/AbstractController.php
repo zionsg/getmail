@@ -3,12 +3,12 @@
 namespace App\Controller;
 
 use App\Config;
-use App\Logger;
 use App\Router;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base controller class
@@ -25,7 +25,7 @@ abstract class AbstractController implements RequestHandlerInterface
     /**
      * Logger
      *
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger = null;
 
@@ -40,11 +40,11 @@ abstract class AbstractController implements RequestHandlerInterface
      * Constructor
      *
      * @param Config $config Application config.
-     * @param Logger $logger Logger.
+     * @param LoggerInterface $logger Logger.
      * @param Router $router Router. This can be used to call internal routes.
      * @return void
      */
-    public function __construct(Config $config, Logger $logger, Router $router)
+    public function __construct(Config $config, LoggerInterface $logger, Router $router)
     {
         $this->config = $config;
         $this->logger = $logger;
