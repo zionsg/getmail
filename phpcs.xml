@@ -35,6 +35,7 @@
     </rule>
 
     <!-- Paths to check: modified from original -->
+    <file>config</file>
     <file>src</file>
     <file>test</file>
     <file>public/index.php</file>
