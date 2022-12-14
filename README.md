@@ -124,7 +124,8 @@ of the repository. Shell commands are all run from the root of the repository.
     + Constructor dependency injection. All dependencies should either be passed
       in via the constructor or instantiated in the class itself. In this
       regard, the application config and logger are passed in as the 1st two
-      arguments for all classes.
+      arguments for all classes. Also see
+      https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator for example.
     + At most 1 level of inheritance to prevent going down a rabbit hole. This
       does not apply to vendor classes. It is useful to note that in PHP,
       constructors of extending classes can define completely different
