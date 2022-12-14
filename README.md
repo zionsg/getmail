@@ -113,7 +113,7 @@ of the repository. Shell commands are all run from the root of the repository.
         + Run `npm run lint` to do linting checks.
 
 ## Application Design
-- Basic guiding principles:
+- 7 basic guiding principles:
     + [3Cs for Coding - Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
     + [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework),
       [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python).
@@ -124,7 +124,7 @@ of the repository. Shell commands are all run from the root of the repository.
     + Constructor dependency injection. All dependencies should either be passed
       in via the constructor or instantiated in the class itself. In this
       regard, the application config and logger are passed in as the 1st two
-      arguments for all classes. Also see
+      arguments for all classes. That said, try to cap arguments to 7. Also see
       https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator for example.
     + At most 1 level of inheritance to prevent going down a rabbit hole. This
       does not apply to vendor classes. It is useful to note that in PHP,
