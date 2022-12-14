@@ -17,7 +17,7 @@ class MailController extends AbstractController
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new MailForm($this->config);
+        $form = new MailForm($this->config, $this->logger);
         $response = new WebResponse(
             $this->config,
             $this->logger,

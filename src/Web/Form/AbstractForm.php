@@ -3,6 +3,7 @@
 namespace Web\Form;
 
 use App\Config;
+use App\Logger;
 
 /**
  * Base form class
@@ -30,6 +31,13 @@ abstract class AbstractForm
      * @var Config
      */
     protected $config = null;
+
+    /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $logger = null;
 
     /**
      * Default properties for a form field in $fields
@@ -73,10 +81,12 @@ abstract class AbstractForm
      * Constructor
      *
      * @param Config $config
+     * @param Logger $logger
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, Logger $logger)
     {
         $this->config = $config;
+        $this->logger = $logger;
 
         // Ensure defaults are set for each field
         foreach ($this->fields as $field => $info) {

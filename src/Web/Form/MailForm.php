@@ -3,6 +3,7 @@
 namespace Web\Form;
 
 use App\Config;
+use App\Logger;
 use Web\Form\AbstractForm;
 
 /**
@@ -45,10 +46,11 @@ class MailForm extends AbstractForm
      * Constructor
      *
      * @param Config $config
+     * @param Logger $logger
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, Logger $logger)
     {
-        parent::__construct($config);
+        parent::__construct($config, $logger);
 
         // Additional validation
         $this->fields['subject_pattern']['validateFunction'] = function ($field, $value) {
