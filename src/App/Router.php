@@ -193,7 +193,7 @@ class Router implements MiddlewareInterface
             $childRoutes = $routeOptions['child_routes'];
 
             if (self::ROUTE_LITERAL === $type) {
-                if ($path === $route) { // e.g. path is /web, route is /web, child routes skipped cos path has ended
+                if ($path === $route) { // e.g. path is /web, route is /web, child routes skipped as path has ended
                     return $routeOptions;
                 }
 

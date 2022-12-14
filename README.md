@@ -74,7 +74,7 @@ of the repository. Shell commands are all run from the root of the repository.
                 volumes:
                   # Cannot use the shortform "- ./src/:/var/www/html/src" else Windows permission error
                   # Use the vendor folder inside the container and not the host
-                  # cos packages may use Linux native libraries and not work on host platform
+                  # as packages may use Linux native libraries and not work on host platform
                   - type: bind
                     source: /mnt/c/Users/Zion/localhost/www/getmail/public/index.php # app entrypoint
                     target: /var/www/html/public/index.php
@@ -144,7 +144,7 @@ of the repository. Shell commands are all run from the root of the repository.
         class B extends A {} // allowed
         class C extends B {} // not allowed
 
-        // Allowed even though JsonResponse extends Response cos both are vendor classes
+        // Allowed even though JsonResponse extends Response as both are vendor classes
         class ApiResponse extends JsonResponse {}
         class ExternalApiResponse extends ApiResponse {} // not allowed, should extend JsonResponse
         ```

@@ -69,7 +69,7 @@ class Application
             ->withAttribute(
                 // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
                 'layout',
-                intval($query['layout'] ?? 1) // cannot use || cos value may be 0
+                intval($query['layout'] ?? 1) // cannot use || as value may be 0
             );
 
         $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);

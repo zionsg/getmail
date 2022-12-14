@@ -75,7 +75,7 @@ class Config
             return $default;
         }
 
-        // Cannot use ?? with $default cos key may exist with value of null
+        // Cannot use ?? with $default as key may exist with value of null
         if (array_key_exists($key, $this->config)) {
             return $this->config[$key];
         }

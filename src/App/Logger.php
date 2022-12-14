@@ -161,7 +161,7 @@ class Logger extends AbstractLogger
             $this->version
         ));
 
-        // Cannot use `file_put_contents('php://stdout', $text);` cos `allow_url_fopen` may be set to false for
+        // Cannot use `file_put_contents('php://stdout', $text);` as `allow_url_fopen` may be set to false for
         // security reasons, hence the use of a file handle
         fwrite($this->fileHandle, $text . PHP_EOL); // must end with newline as next fwrite() will append to this
     }
