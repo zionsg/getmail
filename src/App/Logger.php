@@ -143,9 +143,14 @@ class Logger extends AbstractLogger
         // Sample log entry (split into many lines here for easier reading but will be output as 1 line when logged):
         //    [2022-11-24T01:57:32.095364Z] [INFO] [APP NAME] [/var/www/html/src/App/Application.php:19]
         //        [MSG Application started.]
-        //        [REQ 172.18.0.1:54112 GET text/html /web "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        //        [REQ 10.0.0.1:54112 GET text/html http://localhost:8080/web?getmail=debug "Mozilla/5.0 (Windows; x64)"
         //             1669950476.198900Z-4b340550242239.64159797]
-        //        [SVR 172.18.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
+        //        [SVR 10.0.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
+        // Log entry format (output as 1 line):
+        //     [<ISO 8601 timestamp in UTC timezone>] [<log level>] [<application name>] [<caller method/file/line>]
+        //         [MSG <message>]
+        //         [REQ <client IP> <method> <content type> <full url with querystring> "<useragent>" <request ID>]
+        //         [SVR <server IP and port> <deployment environment> <Docker container name if any> <version>]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
             '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
             $this->utcNow(true),
@@ -158,7 +163,7 @@ class Logger extends AbstractLogger
             $serverParams['REMOTE_PORT'],
             $serverParams['REQUEST_METHOD'],
             ($serverParams['CONTENT_TYPE'] ?: 'no-content-type'),
-            $serverParams['REQUEST_URI'],
+            "{$serverParams['REQUEST_SCHEME']}://{$serverParams['HTTP_HOST']}{$serverParams['REQUEST_URI']}",
             ($serverParams['HTTP_USER_AGENT'] ?: 'no-user-agent'),
             $requestId ?: 'no-request-id',
             $serverParams['SERVER_ADDR'],
