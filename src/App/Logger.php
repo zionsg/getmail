@@ -145,7 +145,7 @@ class Logger extends AbstractLogger
         //        [MSG Application started.]
         //        [REQ 10.0.0.1:54112 GET text/html http://localhost:8080/web?getmail=debug "Mozilla/5.0 (Windows; x64)"
         //             1669950476.198900Z-4b340550242239.64159797]
-        //        [SVR 10.0.0.2:80 production v0.1.0-master-5ba4945-20221123T0600Z]
+        //        [SVR 10.0.0.2:80 production getmail-app v0.1.0-master-5ba4945-20221123T0600Z]
         // Log entry format (output as 1 line):
         //     [<ISO 8601 timestamp in UTC timezone>] [<log level>] [<application name>] [<caller method/file/line>]
         //         [MSG <message>]
