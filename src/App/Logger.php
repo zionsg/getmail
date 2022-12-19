@@ -16,6 +16,12 @@ use Psr\Log\LogLevel;
  * logs. Pass the server request via the context when calling logging methods,
  * e.g. `$logger->info('test', ['request' => $request]);`.
  *
+ * Note that if the message is more than 1024 characters, it will be split
+ * into multiple lines for the Docker container logs. See occurrences of 1024:
+ *   - `NewLogEntryEncoder` in https://github.com/moby/moby/blob/master/api/types/plugins/logdriver/io.go
+ *   - `bufferSize` in https://github.com/moby/moby/blob/master/daemon/events/events.go
+ *   - `readSize` in https://github.com/moby/moby/blob/master/daemon/logger/copier.go
+ *
  * @link See https://www.php-fig.org/psr/psr-3/ on signature of logging methods.
  */
 class Logger extends AbstractLogger
