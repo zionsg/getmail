@@ -15,8 +15,10 @@ networks:
 services:
   getmail-app: # application
     # On localhost, build the image first before running Docker Compose
+    # Using container_name & hostname to differentiate multiple containers running the same application on same machine
     image: getmail:prod
     container_name: getmail-app
+    hostname: getmail-app # for consistency, use the same value for this and container_name
     ports:
       # Publish ports - external:internal
       # The base image in Dockerfile exposes ports 80, 443, 9000

@@ -150,9 +150,9 @@ class Logger extends AbstractLogger
         //     [<ISO 8601 timestamp in UTC timezone>] [<log level>] [<application name>] [<caller method/file/line>]
         //         [MSG <message>]
         //         [REQ <client IP> <method> <content type> <full url with querystring> "<useragent>" <request ID>]
-        //         [SVR <server IP and port> <deployment environment> <Docker container name if any> <version>]
+        //         [SVR <server IP and port> <deployment environment> <Docker container name or hostname> <version>]
         $text = str_replace(["\n", "\r", "\t"], ' ', sprintf(
-            '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s]',
+            '[%s] [%s] [%s] [%s:%s] [MSG %s] [REQ %s:%s %s %s %s "%s" %s] [SVR %s:%s %s %s %s]',
             $this->utcNow(true),
             strtoupper($level),
             $this->appName,
@@ -169,6 +169,7 @@ class Logger extends AbstractLogger
             $serverParams['SERVER_ADDR'],
             $serverParams['SERVER_PORT'],
             $this->env,
+            ($serverParams['HOSTNAME'] ?: 'no-hostname'),
             $this->version
         ));
 
