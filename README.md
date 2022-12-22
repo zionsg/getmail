@@ -127,9 +127,8 @@ of the repository. Shell commands are all run from the root of the repository.
       are always required. That said, try to cap arguments to 7. Also see
       https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator on bad example.
     + An instance object should either expose public properties or public
-      methods, not both, as it will be hard to remember which to use if both
-      public properties and methods are available. This does not apply to class
-      constants.
+      methods, not both, as it will be hard to remember which to use for each
+      scenario. This does not apply to class constants.
 
         ```
         class Point // allowed
@@ -148,7 +147,7 @@ of the repository. Shell commands are all run from the root of the repository.
             }
         }
 
-        class Point // not allowed
+        class Point // not allowed - use property in some cases, use method in some cases
         {
             public $x;
             protected $y;
