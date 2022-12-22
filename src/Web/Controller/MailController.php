@@ -17,20 +17,20 @@ class MailController extends AbstractController
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $viewPath = 'mail.phtml';
         $form = new MailForm($this->config, $this->logger);
-        $response = new WebResponse(
-            $this->config,
-            $this->logger,
-            $request,
-            200,
-            'mail.phtml',
-            [
-                'form' => $form,
-            ]
-        );
 
         if ('GET' === $request->getMethod()) {
-            return $response;
+            return new WebResponse(
+                $this->config,
+                $this->logger,
+                $request,
+                200,
+                $viewPath,
+                [
+                    'form' => $form,
+                ]
+            );
         }
 
         // POST
@@ -40,35 +40,52 @@ class MailController extends AbstractController
 
         // Return invalid form
         if (! $form->isValid) {
-            $response->updateViewData([
-                'form' => $form,
-            ]);
-
-            return $response;
+            return new WebResponse(
+                $this->config,
+                $this->logger,
+                $request,
+                400,
+                $viewPath,
+                [
+                    'form' => $form,
+                ]
+            );
         }
 
         // Call API endpoint
         // Though the API endpoint will validate the submission as well, the form should still do
-        // some preliminary validation to catch basic errors and preventing a wasted trip
+        // some preliminary validation to catch basic errors and prevent a wasted trip
         $res = $this->router->route($request, '/api/mail', 'POST', $body);
         $resBody = json_decode($res->getBody(), true) ?: [];
         if ($resBody['error']) {
             $form->setError($resBody['error']['message'] ?? 'Error retrieving mail.');
-            $response->updateViewData([
-                'form' => $form,
-            ]);
 
-            return $response;
+            return new WebResponse(
+                $this->config,
+                $this->logger,
+                $request,
+                200,
+                $viewPath,
+                [
+                    'form' => $form,
+                ]
+            );
         }
 
-        // Return response
-        $form->setData(); // clear form
-        $response->updateViewData([
-            'form' => $form,
-            'mailBody' => $resBody['data']['mail_body'],
-            'mailOverview' => json_encode($resBody['data']['mail_overview'], JSON_PRETTY_PRINT),
-        ]);
+        // Clear form
+        $form->setData();
 
-        return $response;
+        return new WebResponse(
+            $this->config,
+            $this->logger,
+            $request,
+            200,
+            $viewPath,
+            [
+                'form' => $form,
+                'mailBody' => $resBody['data']['mail_body'],
+                'mailOverview' => json_encode($resBody['data']['mail_overview'], JSON_PRETTY_PRINT),
+            ]
+        );
     }
 }

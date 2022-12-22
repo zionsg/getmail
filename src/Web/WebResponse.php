@@ -84,25 +84,6 @@ class WebResponse extends HtmlResponse
     }
 
     /**
-     * Update view data
-     *
-     * This will re-render the body of the response.
-     *
-     * @param array $viewData=[] Key-value pairs to pass to view template file.
-     * @return void
-     */
-    public function updateViewData(array $viewData = []): void
-    {
-        $this->viewData = array_merge($this->viewData, $viewData);
-
-        // Note that when instantiating HtmlResponse, its Stream is created using fopen() with
-        // write mode not append mode and rewind() is called after writing the body initially,
-        // hence this will overwrite the body instead of appending to it.
-        $body = $this->render();
-        $this->getBody()->write($body);
-    }
-
-    /**
      * Render HTML body
      *
      * View will be rendered and optionally wrapped in layout template.
