@@ -17,8 +17,9 @@ class ErrorController extends AbstractController
     public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
         // Ultimately, this is a web application, hence return HTML response for error
-        return new WebResponse($this->config, $this->logger, $request, 404, '', [ // skip view template
-            'errorMessage' => 'Invalid URL.', // different message from \Web\Controller\IndexController::errorAction()
+        return new WebResponse($this->config, $this->logger, $request, 404, 'error.phtml', [
+            // Use different message from \Web\Controller\IndexController::errorAction()
+            'message' => 'Invalid URL.',
         ]);
     }
 }
