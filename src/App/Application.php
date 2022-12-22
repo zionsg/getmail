@@ -59,6 +59,8 @@ class Application
         $request = ServerRequestFactory::fromGlobals();
 
         // Add custom attributes
+        // All should be set here with defaults to serve as a form of documentation, even if not used by all routes,
+        // e.g. `layout` attribute is not used by /api routes but is still documented here.
         $query = $request->getQueryParams();
         $request = $request
             ->withAttribute(
@@ -70,6 +72,11 @@ class Application
                 // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
                 'layout',
                 intval($query['layout'] ?? 1) // cannot use || as value may be 0
+            )
+            ->withAttribute(
+                // Whether this is a proxy/internal request. See \App\Router::route().
+                'proxy',
+                0
             );
 
         $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);
