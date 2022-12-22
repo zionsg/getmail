@@ -11,21 +11,6 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractForm
 {
     /**
-     * @var array
-     */
-    public $fields = [];
-
-    /**
-     * @var string
-     */
-    public $errorMessage = '';
-
-    /**
-     * @var bool
-     */
-    public $isValid = false;
-
-    /**
      * Application config
      *
      * @var Config
@@ -38,6 +23,27 @@ abstract class AbstractForm
      * @var LoggerInterface
      */
     protected $logger = null;
+
+    /**
+     * Key-value pairs where key is the name of field and value is field info as per $fieldDefaults.
+     *
+     * @var array
+     */
+    protected $fields = [];
+
+    /**
+     * Overall form error message if any
+     *
+     * @var string
+     */
+    protected $error = '';
+
+    /**
+     * Form may not have an overall error message, hence a separate variable to keep track of this
+     *
+     * @var bool
+     */
+    protected $isValid = false;
 
     /**
      * Default properties for a form field in $fields
@@ -95,6 +101,37 @@ abstract class AbstractForm
     }
 
     /**
+     * Get form error message
+     *
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
+
+    /**
+     * Get form fields
+     *
+     * @return array Key-value pairs where key is name of field and value
+     *     is field info as per $fieldDefaults.
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Check if form is valid
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return $this->isValid;
+    }
+
+    /**
      * Set form data
      *
      * @param array $formData=[] Field-value pairs. Set to [] to clear form.
@@ -115,12 +152,12 @@ abstract class AbstractForm
     /**
      * Set form error message
      *
-     * @param string $errorMessage
+     * @param string $error
      * @return void
      */
-    public function setError(string $errorMessage): void
+    public function setError(string $error): void
     {
-        $this->errorMessage = $errorMessage;
+        $this->error = $error;
         $this->isValid = false;
     }
 
@@ -158,7 +195,7 @@ abstract class AbstractForm
 
                     // Do not set error if it is meant to be hidden, else view template may accidentally render it
                     if ($info['hide_error']) {
-                        $this->errorMessage = $error; // set as overall form error message
+                        $this->error = $error; // set as overall form error message
                     } else {
                         $this->fields[$field]['error'] = $error;
                     }

@@ -1,9 +1,7 @@
 <form method="POST" action="" class="js-mail-form" data-render-id="<?= $renderId ?>">
-    <?php if ($form->errorMessage) : ?>
-        <div class="error"><?= $form->errorMessage ?></div>
-    <?php endif; ?>
+    <div class="error"><?= $form->getError() ?></div>
 
-    <?php foreach ($form->fields as $field => $info) : ?>
+    <?php foreach ($form->getFields() as $field => $info) : ?>
         <div class="field">
             <?php if ($info['label']) : ?>
                 <label><?= $info['label'] ?></label>
@@ -12,14 +10,12 @@
             <input name="<?= $field ?>" type="<?= $info['type'] ?>" placeholder="<?= $info['placeholder'] ?>"
                 value="<?= ($info['value'] ?? '') ?>">
 
-            <?php if ($info['error']) : ?>
-                <div class="error"><?= $info['error'] ?></div>
-            <?php endif; ?>
+            <div class="error"><?= $info['error'] ?></div>
         </div>
     <?php endforeach; ?>
 </form>
 
-<?php if ($form->isValid) : ?>
+<?php if ($form->isValid()) : ?>
     <hr>
     <h3>Results</h3>
 

@@ -39,7 +39,7 @@ class MailController extends AbstractController
         $form->validate();
 
         // Return invalid form
-        if (! $form->isValid) {
+        if (! $form->isValid()) {
             return new WebResponse(
                 $this->config,
                 $this->logger,

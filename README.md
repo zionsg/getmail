@@ -120,13 +120,43 @@ of the repository. Shell commands are all run from the root of the repository.
     + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
-    + No static classes/methods. This does not apply to vendor packages.
     + Constructor dependency injection. All dependencies should be passed in
       via the constructor, instead of retrieving indirectly from static
       classes/methods or objects. In this regard, the application config
       and logger are passed in as the 1st two arguments for all classes as they
       are always required. That said, try to cap arguments to 7. Also see
       https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator on bad example.
+    + An instance object should either expose public properties or public
+      methods, not both, as it will be hard to remember which to use if both
+      public properties and methods are available.
+
+        ```
+        class Point // allowed
+        {
+            public $x;
+        }
+
+        class Point // allowed
+        {
+            protected $x;
+
+            public function getX()
+            {
+                return $this->x;
+            }
+        }
+
+        class Point // not allowed
+        {
+            public $x;
+
+            public function getX()
+            {
+                return $this->x;
+            }
+        }
+        ```
+
     + At most 1 level of inheritance to prevent going down a rabbit hole. This
       does not apply to vendor classes. It is useful to note that in PHP,
       constructors of extending classes can define completely different

@@ -14,7 +14,7 @@ class MailForm extends AbstractForm
     /**
      * @var array
      */
-    public $fields = [
+    protected $fields = [
         'subject_pattern' => [
             'type' => 'text',
             'label' => 'Subject Pattern',
