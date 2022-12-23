@@ -70,6 +70,14 @@ class Application
     {
         $request = ServerRequestFactory::fromGlobals();
 
+        // Body parsing
+        // $request->getParsedBody() returns empty array if Content-Type is application/json,
+        // as $_POST is only populated for form submissions, hence this, so that API route handlers
+        // need not worry about decoding the JSON payload.
+        if (stripos($request->getHeaderLine('Content-Type'), 'application/json') !== false) {
+            $request = $request->withParsedBody(json_decode($request->getBody(), true) ?: []);
+        }
+
         // Add custom attributes
         // All should be set here with defaults to serve as a form of documentation, even if not used by all routes,
         // e.g. `layout` attribute is not used by /api routes but is still documented here.
