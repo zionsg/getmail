@@ -251,7 +251,8 @@ of the repository. Shell commands are all run from the root of the repository.
 - Implement CSRF token for forms.
 - Add `debug` query param to trigger debug logs and document in `src/Web/view/layout.phtml`.
 - Write tests, especially for API endpoints.
-- Generate API documentation.
+- Generate API documentation. API docblocks are probably best placed at the controller action
+  method.
 - Add write-up on how this can be used with https://uilicious.com/ in retrieving emails
   for OTP from mailboxes other than https://inboxkitten.com/ while making it easy to retrieve
   mail body (no iframes) and not storing actual mail credentials with them.
