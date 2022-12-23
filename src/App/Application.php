@@ -16,6 +16,18 @@ use Psr\Http\Message\ResponseInterface;
 class Application
 {
     /**
+     * Constants to refer to custom request attributes
+     *
+     * Having them as class constants gives a hint to where the request was
+     * created and where its custom attributes were added.
+     *
+     * @var string
+     */
+    public const ATTR_LAYOUT = 'layout';
+    public const ATTR_PROXY = 'proxy';
+    public const ATTR_REQUEST_ID = 'request_id';
+
+    /**
      * Application config
      *
      * @var Config
@@ -65,17 +77,17 @@ class Application
         $request = $request
             ->withAttribute(
                 // Generate unique 50-char ID for each request, e.g. 1670837243.176900-47cde7c7fead438b9a5ec2c6e961e740
-                'request_id',
+                self::ATTR_REQUEST_ID,
                 str_pad(microtime(true), 17, '0', STR_PAD_RIGHT) . '-' . bin2hex(random_bytes(16)) // ensure 6-digit μs
             )
             ->withAttribute(
                 // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
-                'layout',
+                self::ATTR_LAYOUT,
                 intval($query['layout'] ?? 1) // cannot use || as value may be 0
             )
             ->withAttribute(
                 // Whether this is a proxy/internal request. See \App\Router::route().
-                'proxy',
+                self::ATTR_PROXY,
                 0
             );
 

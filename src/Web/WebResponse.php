@@ -2,6 +2,7 @@
 
 namespace Web;
 
+use App\Application;
 use App\Config;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface;
@@ -77,7 +78,7 @@ class WebResponse extends HtmlResponse
         $this->viewData = $viewData;
 
         // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
-        $this->wrapInLayout = (1 === $request->getAttribute('layout', 1)); // attribute set in App\Application
+        $this->wrapInLayout = (1 === $request->getAttribute(Application::ATTR_LAYOUT, 1));
 
         $body = $this->render();
         parent::__construct($body, $status, $headers);
@@ -98,7 +99,7 @@ class WebResponse extends HtmlResponse
         // they are loaded via an client-side AJAX call (not so strict on collisions hence uniqid).
         $sharedViewData = [
             'renderId' => uniqid(microtime(true) . '-', true), // unique identifier for HTML "data-render-id" attribute
-            'requestId' => $this->request->getAttribute('request_id'), // attribute set in App\Application
+            'requestId' => $this->request->getAttribute(Application::ATTR_REQUEST_ID),
             'version' => $this->config->getVersion(), // version to be appended to public assets for cache busting
         ];
 

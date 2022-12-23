@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Application;
 use App\Config;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -168,7 +169,7 @@ class Router implements MiddlewareInterface
             ->withUri($uri)
             ->withMethod($method)
             ->withParsedBody($data)
-            ->withAttribute('proxy', 1); // indicate that this is a proxy request
+            ->withAttribute(Application::ATTR_PROXY, 1); // indicate that this is a proxy request
 
         // Pass in this Router as last arg
         $fallbackHandler = new $this->errorController($this->config, $this->logger, $this);

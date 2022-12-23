@@ -4,6 +4,7 @@ namespace App;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use App\Application;
 use App\Config;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\AbstractLogger;
@@ -131,9 +132,11 @@ class Logger extends AbstractLogger
         $backtrace = debug_backtrace(2, 3); // exclude populating of object & args for backtrace hence 2 for 1st arg
         $caller = $backtrace[2] ?? []; // 3rd stack frame is array element 2
 
-        // Current request if any. The request_id attribute is set in App\Application.
+        // Current request if any
         $request = $context['request'] ?? null;
-        $requestId = ($request instanceof ServerRequestInterface) ? $request->getAttribute('request_id') : '';
+        $requestId = ($request instanceof ServerRequestInterface)
+            ? $request->getAttribute(Application::ATTR_REQUEST_ID)
+            : '';
 
         // Server params
         $serverParams = ($request instanceof ServerRequestInterface) ? $request->getServerParams() : $_SERVER;

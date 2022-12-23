@@ -2,6 +2,7 @@
 
 namespace Api;
 
+use App\Application;
 use App\Config;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,7 +57,7 @@ class ApiResponse extends JsonResponse
             'data' => $isError ? null : $data,
             'error' => $isError ? ['message' => $errorMessage] : null,
             'meta' => [
-                'request_id' => $request->getAttribute('request_id'), // attribute set in App\Application
+                'request_id' => $request->getAttribute(Application::ATTR_REQUEST_ID),
                 'status' => $status,
                 'version' => $this->config->getVersion(),
             ],
