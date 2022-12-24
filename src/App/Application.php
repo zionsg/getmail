@@ -6,9 +6,11 @@ use RuntimeException;
 use App\Config;
 use App\Logger;
 use App\Router;
+use App\Session;
 use App\Controller\ErrorController;
 use Laminas\Diactoros\ServerRequestFactory;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Main application class
@@ -26,6 +28,7 @@ class Application
     public const ATTR_LAYOUT = 'layout';
     public const ATTR_PROXY = 'proxy';
     public const ATTR_REQUEST_ID = 'request_id';
+    public const ATTR_SESSION = 'session';
 
     /**
      * Application config
@@ -68,7 +71,42 @@ class Application
      */
     public function run(): void
     {
+        $request = $this->createServerRequest();
+
+        $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);
+        $response = $this->router->process($request, $fallbackHandler);
+
+        // Set cookie headers for session in response if not found in request
+        // From https://discourse.laminas.dev/t/rfc-php-session-and-psr-7/294
+        $session = $request->getAttribute(self::ATTR_SESSION);
+        $cookies = $request->getCookieParams();
+        $session->save();
+        if (! isset($cookies[session_name()])) {
+            $response = $response->withHeader(
+                'Set-Cookie',
+                sprintf("%s=%s; path=%s", session_name(), $session->getId(), ini_get('session.cookie_path'))
+            );
+        }
+
+        $this->send($response);
+    }
+
+    /**
+     * Create server request
+     *
+     * @return ServerRequestInterface
+     */
+    protected function createServerRequest(): ServerRequestInterface
+    {
         $request = ServerRequestFactory::fromGlobals();
+
+        // Session
+        // For security, do not reuse request ID. Prepending application name cos if the session
+        // name consists of digits only, a new id is generated each time (see
+        // https://www.php.net/manual/en/function.session-name.php)
+        $cookies = $request->getCookieParams();
+        $sessionId = $cookies[session_name()]
+            ?? ($this->config->getApplicationName() . '-' . bin2hex(random_bytes(16)));
 
         // Body parsing
         // $request->getParsedBody() returns empty array if Content-Type is application/json,
@@ -89,6 +127,11 @@ class Application
                 str_pad(microtime(true), 17, '0', STR_PAD_RIGHT) . '-' . bin2hex(random_bytes(16)) // ensure 6-digit μs
             )
             ->withAttribute(
+                // Session
+                self::ATTR_SESSION,
+                new Session($sessionId)
+            )
+            ->withAttribute(
                 // Whether to wrap HTML for view in layout template, true by default. See src/Web/view/layout.phtml.
                 self::ATTR_LAYOUT,
                 intval($query['layout'] ?? 1) // cannot use || as value may be 0
@@ -99,10 +142,7 @@ class Application
                 0
             );
 
-        $fallbackHandler = new ErrorController($this->config, $this->logger, $this->router);
-        $response = $this->router->process($request, $fallbackHandler);
-
-        $this->send($response);
+        return $request;
     }
 
     /**
