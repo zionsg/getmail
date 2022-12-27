@@ -8,7 +8,7 @@
  * first file to be read when merging the files in the config directory in
  * alphabetical order.
  *
- * As per Twelve-Factor App, config should be set via environment variables.
+ * As per The Twelve-Factor App, config should be set via environment variables.
  * This file is mainly for reading in the env vars and putting it into a native
  * PHP array with sane defaults. For clarity and ease of search/replace, env
  * vars are spelt out fully instead of interpolating the common vendor prefix,

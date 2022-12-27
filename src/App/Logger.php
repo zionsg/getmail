@@ -17,6 +17,10 @@ use Psr\Log\LogLevel;
  * logs. Pass the server request via the context when calling logging methods,
  * e.g. `$logger->info('test', ['request' => $request]);`.
  *
+ * As per The Twelve-Factor App, the application should not attempt to write to
+ * or manage logfiles. Instead, each running process writes its event stream,
+ * unbuffered, to stdout.
+ *
  * Note that if the message is more than 1024 characters, it will be split
  * into multiple lines for the Docker container logs. See occurrences of 1024:
  *   - `NewLogEntryEncoder` in https://github.com/moby/moby/blob/master/api/types/plugins/logdriver/io.go
