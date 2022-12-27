@@ -116,11 +116,11 @@ of the repository. Shell commands are all run from the root of the repository.
 - 7 basic guiding principles:
     + [3Cs for Coding - Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
         * This includes [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework)
-          and [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python) which are
+          and [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python), which are
           mentioned in the article.
     + [Robustness Principle](https://en.wikipedia.org/wiki/Robustness_principle):
-      Be conservative in what you send, be liberal in what you accept
-      (i.e. [trust no one](https://en.wikipedia.org/wiki/Trust_no_one_(Internet_security))).
+      Be conservative in what you send, be liberal in what you accept,
+      i.e. [trust no one](https://en.wikipedia.org/wiki/Trust_no_one_(Internet_security)).
     + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
