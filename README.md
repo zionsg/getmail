@@ -125,8 +125,8 @@ of the repository. Shell commands are all run from the root of the repository.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
     + Constructor dependency injection. All dependencies should be passed in
-      via the constructor, instead of retrieving indirectly from static
-      classes/methods or objects. In this regard, the application config
+      via the constructor, instead of retrieving indirectly from instance
+      objects or static classes/methods. In this regard, the application config
       and logger are passed in as the 1st two arguments for all classes as they
       are always required. That said, try to cap arguments to 7. Also see
       https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator on bad example.
