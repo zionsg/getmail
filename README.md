@@ -123,7 +123,7 @@ of the repository. Shell commands are all run from the root of the repository.
       i.e. [trust no one](https://en.wikipedia.org/wiki/Trust_no_one_(Internet_security)).
     + Adherence to [PSR (PHP Standards Recommendations)](https://www.php-fig.org/psr/) wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
-      possible, especially with regards to config.
+      possible, especially with regards to config and logging.
     + Constructor dependency injection. All dependencies should be passed in
       via the constructor, instead of retrieving indirectly from instance
       objects or static classes/methods. In this regard, the application config
