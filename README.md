@@ -121,7 +121,7 @@ of the repository. Shell commands are all run from the root of the repository.
     + [Robustness Principle](https://en.wikipedia.org/wiki/Robustness_principle):
       Be conservative in what you send, be liberal in what you accept,
       i.e. [trust no one](https://en.wikipedia.org/wiki/Trust_no_one_(Internet_security)).
-    + Adherence to [PSR](https://www.php-fig.org/psr/) wherever applicable.
+    + Adherence to [PSR (PHP Standards Recommendations)](https://www.php-fig.org/psr/) wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config.
     + Constructor dependency injection. All dependencies should be passed in
