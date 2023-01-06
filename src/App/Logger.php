@@ -155,7 +155,7 @@ class Logger extends AbstractLogger
         //    [2022-11-24T01:57:32.095364Z] [INFO] [APP NAME] [/var/www/html/src/App/Application.php:19]
         //        [MSG Application started.]
         //        [REQ 10.0.0.1:54112 GET text/html http://localhost:8080/web?flag=debug "Mozilla/5.0 (Windows; x64)"
-        //             1669950476.198900Z-4b340550242239.64159797]
+        //             1670837243.176900-47cde7c7fead438b9a5ec2c6e961e740]
         //        [SVR 10.0.0.2:80 production getmail-app v0.1.0-master-5ba4945-20221123T0600Z]
         // Log entry format (output as 1 line):
         //     [<ISO 8601 timestamp in UTC timezone>] [<log level>] [<application name>] [<caller method/file/line>]
