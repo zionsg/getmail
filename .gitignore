@@ -4,6 +4,7 @@
 # Directories
 **/.terraform/*
 .idea/
+.vscode/
 __pycache__/
 dist/
 node_modules/
