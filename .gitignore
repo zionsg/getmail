@@ -27,6 +27,7 @@ venv/
 *.tfvars
 *.tfvars.json
 *.tgz
+*.tmp
 *.zip
 *_override.tf
 *_override.tf.json
