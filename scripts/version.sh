@@ -31,13 +31,13 @@ elif test -f "package.json"; then
 fi
 
 # For project version, take the 1st line in the project config file containing the word "version"
-# Branch name may be used as Docker tag hence remove invalid chars such as /
 PROJECT_VERSION=$(cat ${PROJECT_CONFIG_FILE} | grep 'version' | awk 'NR==1{ print $0 }' | sed 's/version//i')
-PROJECT_VERSION=$(echo "${PROJECT_VERSION}" | sed 's/[^a-z0-9\.\+\-]//g') # allows 1.0.0-alpha+001 as per semver.org
-GIT_BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD | sed 's/[^a-z0-9\.\+\-]//g')
+GIT_BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 GIT_COMMIT=$(git rev-parse --short HEAD) # short commit reference is sufficient
-TIMESTAMP=$(date --utc --iso-8601=minutes | sed 's/[-: ]//g' | sed 's/+0000/Z/g') # use UTC for easier comparison
+TIMESTAMP=$(date --utc --iso-8601=minutes | sed 's/+00:00/Z/' | sed 's/[-: ]//g') # use UTC for easier comparison
 
 # Application version must start with "v" to prevent accidental treatment as a primitive number if starting with a digit
+# Application version may be used as Docker tag hence only allow letters, digits, underscores, periods and hyphens
 APPLICATION_VERSION="v${PROJECT_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${TIMESTAMP}"
+APPLICATION_VERSION=$(echo "${APPLICATION_VERSION}" | sed 's/[^a-z0-9_\.\-]//gi')
 echo "${APPLICATION_VERSION}" > VERSION.txt
