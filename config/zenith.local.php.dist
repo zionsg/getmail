@@ -3,10 +3,10 @@
 /**
  * Local configuration override during development
  *
- * To use, rename to zenith.local.php and override config keys accordingly. The
+ * To use, copy to zenith.local.php and override config keys accordingly. The
  * file zenith.local.php will be not be committed to the repository.
  *
- * Named zenith.local.php and not local.php so as to explicitly indicate
+ * Filename uses zenith.local.php and not local.php so as to explicitly indicate
  * that this overrides all previous configurations locally, and that it will
  * ideally be the last file to be read when merging the files in the config
  * directory in alphabetical order.
