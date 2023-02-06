@@ -10,8 +10,11 @@
  *
  * As per The Twelve-Factor App, config should be set via environment variables.
  * This file is mainly for reading in the env vars and putting it into a native
- * PHP array with sane defaults. For clarity and ease of search/replace, env
- * vars are spelt out fully instead of interpolating the common vendor prefix,
+ * PHP array with sane defaults. The application should read from this PHP
+ * array instead of directly from env vars.
+ *
+ * For clarity and ease of search/replace, env vars are spelt out fully instead
+ * of interpolating the common vendor prefix,
  * i.e. getenv('VENDOR_COMPONENT_VARIABLE') instead of
  * getenv("{$vendorPrefix}COMPONENT_VARIABLE"). Note that values of env vars
  * are always strings, hence defaults are of string type.
