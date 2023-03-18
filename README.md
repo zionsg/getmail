@@ -109,6 +109,8 @@ of the repository. Shell commands are all run from the root of the repository.
       container, else it may have problems restarting later.
     + The application can be accessed via `http://localhost:8080`.
         * See `GETMAIL_PORT_*` env vars for port settings.
+        * Try `http://localhost:8080/file/thumb01.png` to see example for
+          serving of private static assets.
 - Additional stuff:
     + Run `composer lint` to do linting checks.
     + To do linting checks on JavaScript files:
