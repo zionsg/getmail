@@ -96,6 +96,7 @@ of the repository. Shell commands are all run from the root of the repository.
                   - type: bind
                     source: /mnt/c/Users/Me/localhost/www/getmail/tmp
                     target: /var/www/html/tmp
+
             ```
 
     + Run `composer build` first to build the Docker image with "dev" tag.
