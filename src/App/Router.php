@@ -125,6 +125,14 @@ class Router implements MiddlewareInterface
         $controllerClass = $routeOptions['controller'] ?? $this->errorController;
         $action = $routeOptions['action'] ?? $this->errorAction;
 
+        // Inject parsed route params, if any, as request attributes
+        $routeParams = $routeOptions['params'] ?? [];
+        if ($routeParams) {
+            foreach ($routeParams as $key => $value) {
+                $request = $request->withAttribute($key, $value);
+            }
+        }
+
         $controller = new $controllerClass($this->config, $this->logger, $this); // pass in this Router as last arg
         $response = $controller->$action($request);
         if (! $response) {
@@ -183,7 +191,8 @@ class Router implements MiddlewareInterface
      * @param string $path Path relative to domain name without querystring,
      *     e.g. /api/healthcheck.
      * @param array $routes
-     * @return array Route options for matched route. Empty array is returned if
+     * @return array Route options for matched route, with added `params` option
+     *     for parsed route params if any. Empty array is returned if
      *     no match is found.
      */
     protected function matchRoute(string $path, array $routes): array
@@ -221,6 +230,18 @@ class Router implements MiddlewareInterface
                             ]
                         );
                     }
+                }
+            } elseif (self::ROUTE_REGEX === $type) {
+                // Use ~ to start/end regex as route contains /
+                $pattern = '~^' . $route . '~';  // ^ to ensure path starts with route, not contain it
+                $matches = [];
+
+                if (preg_match($pattern, $path, $matches)) {
+                    return array_merge($routeOptions, [
+                        'params' => [
+                            'matches' => $matches,
+                        ],
+                    ]);
                 }
             }
         }

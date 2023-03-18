@@ -45,6 +45,9 @@ of the repository. Shell commands are all run from the root of the repository.
   the application configuration locally during development. The file
   `config/zenith.local.php` will not be committed to the repository.
 - Run `composer install`.
+    + If new sub-namespaces are added in code, e.g. via `src/NewSubNamespace`
+      folder, update `autoload` and `autoload-dev` keys in `composer.json`
+      accordingly first.
 - To run the application locally:
     + For consistency with production environment, the application should be run
       using Docker during local development (which settles all dependencies)
@@ -191,6 +194,8 @@ of the repository. Shell commands are all run from the root of the repository.
 - Modules:
     + App: Application-wide classes.
     + Api: Classes handling requests to API endpoints.
+    + File: Classes handling requests for files served from other locations
+      other than `public` folder.
     + Web: Classes handling requests for web pages.
 - Directory structure (using `tree --charset unicode --dirsfirst -a -n`):
 
@@ -222,6 +227,10 @@ of the repository. Shell commands are all run from the root of the repository.
     |   |   |-- Logger.php       # Logger
     |   |   |-- Router.php       # Router
     |   |   `-- Utils.php        # Common utility functions
+    |   |-- File            # File module
+    |   |   |-- Controller  # Controllers for handling requests to serve files
+    |   |   |   `-- IndexController.php
+    |   |   `-- FileResponse.php  # Standardized response for static files
     |   `-- Web             # Web module
     |       |-- Controller  # Controllers for handling requests for web pages
     |       |   `-- IndexController.php  # Handles request to home page

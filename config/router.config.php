@@ -43,6 +43,13 @@ return [
                 ],
             ],
 
+            'file' => [
+                'type' => Router::ROUTE_REGEX,
+                'route' => '/file/([a-z0-9\-]+\.[a-z]+)',
+                'controller' => \File\Controller\IndexController::class,
+                'action' => 'handle',
+            ],
+
             'web' => [
                 'type' => Router::ROUTE_LITERAL,
                 'route' => '/web',
