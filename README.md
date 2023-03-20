@@ -263,7 +263,6 @@ of the repository. Shell commands are all run from the root of the repository.
     ```
 
 ## To-do
-- Separate plaintext and HTML parts in output.
 - Implement CSRF token for forms.
 - Add `debug` query param to trigger debug logs and document in `src/Web/view/layout.phtml`.
 - Write tests, especially for API endpoints.

@@ -63,15 +63,17 @@ class MailController extends AbstractController
         $subjectRegex = '/' . $subjectPattern . '/i';
         $mailOverview = null;
         $mailBody = '';
-        foreach ($emailOverviews as $emailOverview) {
-            if (! preg_match($subjectRegex, $emailOverview->subject)) {
+        foreach ($emailOverviews as $overview) {
+            if (! preg_match($subjectRegex, $overview->subject)) {
                 continue;
             }
 
-            $mailOverview = $emailOverview;
-            $mailBody = imap_body($conn, $emailOverview->uid, FT_UID | FT_PEEK); // do not mark email as Seen
+            $mailOverview = $overview;
             break;
         }
+
+        // Fetch plaintext body for mail
+        $mailBody = $this->getPart($conn, $mailOverview->uid, 'text/plain');
 
         // Close connection
         imap_close($conn);
@@ -80,5 +82,87 @@ class MailController extends AbstractController
             'mail_body' => $mailBody,
             'mail_overview' => $mailOverview,
         ]);
+    }
+
+    /**
+     * Get part of mail body corresponding to specified MIME type
+     *
+     * @link Adapted from https://stackoverflow.com/a/25507756
+     * @param IMAP\Connection $imap IMAP stream to mailbox.
+     * @param int $uid Message number.
+     * @param string $mimetype MIME type.
+     * @param null|stdClass Structure of message, as per return value of
+     *     imap_fetchstructure().
+     * @param int $partNumber A string of integers delimited by period
+     *     which index into a body part list as per the IMAP4 specification.
+     * @return string
+     */
+    protected function getPart(
+        \IMAP\Connection $imap,
+        int $uid,
+        string $mimetype,
+        \stdClass $structure = null,
+        string $partNumber = ''
+    ): string {
+        if (! $structure) {
+            $structure = imap_fetchstructure($imap, $uid, FT_UID);
+        }
+
+        if ($structure) {
+            if ($mimetype === $this->getMimeType($structure)) {
+                if (! $partNumber) {
+                    $partNumber = '1';
+                }
+
+                $text = imap_fetchbody($imap, $uid, $partNumber, FT_UID | FT_PEEK); // do not mark email as Seen
+                switch ($structure->encoding) {
+                    // Constants for transfer encoding as per
+                    // https://www.php.net/manual/en/function.imap-fetchstructure.php
+                    case ENCBASE64:
+                        return imap_base64($text);
+                    case ENCQUOTEDPRINTABLE:
+                        return imap_qprint($text);
+                    default:
+                        return $text;
+                }
+            }
+
+            // Multipart
+            if (TYPEMULTIPART === $structure->type) {
+                foreach ($structure->parts as $index => $subStructure) {
+                    $prefix = '';
+                    if ($partNumber) {
+                        $prefix = $partNumber . '.';
+                    }
+
+                    $data = $this->getPart($imap, $uid, $mimetype, $subStructure, $prefix . ($index + 1));
+                    if ($data) {
+                        return $data;
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Get MIME type for structure of mail body
+     *
+     * @param stdClass Structure of message, as per return value of
+     *     imap_fetchstructure().
+     * @return string
+     */
+    protected function getMimeType(\stdClass $structure): string
+    {
+        // Order as per primary body type in https://www.php.net/manual/en/function.imap-fetchstructure.php
+        $primaryBodyType = [
+            'text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'model', 'other',
+        ];
+
+        if ($structure->subtype ?? '') {
+            return strtolower($primaryBodyType[(int) $structure->type] . '/' . $structure->subtype);
+        }
+
+        return 'text/plain';
     }
 }
