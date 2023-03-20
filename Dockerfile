@@ -11,7 +11,7 @@
 #     private repos via SSH, e.g. `RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts`
 #   - Mount the SSH agent for RUN commands in this Dockerfile when installing dependencies or cloning the private repos,
 #     e.g. `RUN --mount=type=ssh composer install --no-dev`
-#     or `RUN --mount=type=ssh git clone git@github.com:zionsg/test-private-package.git`
+#     or `RUN --mount=type=ssh git clone git@github.com:testuser/test-private-package.git`
 ##
 
 # Base image from https://github.com/serversideup/docker-php - Production-ready Docker images for PHP
