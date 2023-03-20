@@ -1,9 +1,9 @@
 # Get Mail
 
 **Disclaimer** This is just a personal hobbyist project to experiment with
-creating a PHP application with a simple structure without the use of bloated
-frameworks and Dockerizing it. It will likely always be Work-In-Progress and
-may have breaking changes, so caveat emptor :P
+creating/Dockerizing a PHP application with a simple structure without the use
+of bloated frameworks. It will likely always be Work-In-Progress and may have
+breaking changes, so caveat emptor :P
 
 Simple Dockerized PHP application that uses
 [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol)
