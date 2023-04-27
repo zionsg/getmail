@@ -34,7 +34,7 @@ fi
 PROJECT_VERSION=$(cat ${PROJECT_CONFIG_FILE} | grep 'version' | awk 'NR==1{ print $0 }' | sed 's/version//i')
 GIT_BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 GIT_COMMIT=$(git rev-parse --short HEAD) # short commit reference is sufficient
-TIMESTAMP=$(date --utc --iso-8601=minutes | sed 's/+00:00/Z/' | sed 's/[-: ]//g') # use UTC for easier comparison
+TIMESTAMP=$(date -u +%Y%m%dT%H%MZ) # use UTC for easier comparison, runs on Linux and macOS, no symbols
 
 # Application version must start with "v" to prevent accidental treatment as a primitive number if starting with a digit
 # Application version may be used as Docker tag hence only allow letters, digits, underscores, periods and hyphens
