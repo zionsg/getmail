@@ -13,6 +13,8 @@ vendor/
 venv/
 
 # Wildcard files
+# Files ending with :Zone.Identifier due to copying files from Windows to Linux
+*.id_ed25519
 *.id_rsa
 *.key
 *.local.php
@@ -32,14 +34,17 @@ venv/
 *.zip
 *_override.tf
 *_override.tf.json
+*:Zone.Identifier
 tmp.*
 
-# Files
+# Hidden files
 .DS_Store
 .env
 .npmrc
 .terraformrc
 .venv
+
+# Files
 Thumbs.db
 VERSION.txt
 desktop.ini
