@@ -34,7 +34,7 @@ venv/
 *.zip
 *_override.tf
 *_override.tf.json
-*:Zone.Identifier
+*Zone.Identifier
 tmp.*
 
 # Hidden files
