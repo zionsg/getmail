@@ -43,10 +43,10 @@ return [
                 ],
             ],
 
-            'file' => [
+            'doc' => [
                 'type' => Router::ROUTE_REGEX,
-                'route' => '/file/([a-z0-9\-]+\.[a-z]+)',
-                'controller' => \File\Controller\IndexController::class,
+                'route' => '/doc/([a-z0-9\-]+\.[a-z]+)',
+                'controller' => \Doc\Controller\IndexController::class,
                 'action' => 'handle',
             ],
 

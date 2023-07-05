@@ -1,6 +1,6 @@
 <?php
 
-namespace File;
+namespace Doc;
 
 use App\Application;
 use App\Config;
@@ -10,9 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Standardized format for responses serving static file content
+ * Standardized format for responses serving static document/file content
  */
-class FileResponse extends Response
+class DocResponse extends Response
 {
     /**
      * Application config

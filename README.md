@@ -75,7 +75,7 @@ of the repository. Shell commands are all run from the root of the repository.
               getmail-app:
                 image: getmail:dev
                 volumes:
-                  # Cannot use the shortform "- ./src/:/var/www/html/src" else Windows permission error
+                  # Cannot use shortform "- ./src/:/var/www/html/src" else Windows permission error
                   # Use the vendor folder inside the container and not the host
                   # as packages may use Linux native libraries and not work on host platform
                   - type: bind
@@ -99,7 +99,6 @@ of the repository. Shell commands are all run from the root of the repository.
                   - type: bind
                     source: /mnt/c/Users/Me/localhost/www/getmail/tmp
                     target: /var/www/html/tmp
-
             ```
 
     + Run `composer build` first to build the Docker image with "dev" tag.
@@ -109,33 +108,43 @@ of the repository. Shell commands are all run from the root of the repository.
       container, else it may have problems restarting later.
     + The application can be accessed via `http://localhost:8080`.
         * See `GETMAIL_PORT_*` env vars for port settings.
-        * Try `http://localhost:8080/file/thumb01.png` to see example for
+        * Try `http://localhost:8080/doc/thumb01.png` to see example for
           serving of private static assets.
 - Additional stuff:
     + Run `composer lint` to do linting checks.
     + To do linting checks on JavaScript files:
-        + Node.js and NPM need to be installed.
-        + Run `npm install` to install ESLint.
-        + Run `npm run lint` to do linting checks.
+        * Node.js and NPM need to be installed.
+            - For development purposes, it is recommended that
+              [nvm](https://nodejs.org/en/download/package-manager/#nvm) be used
+              to install Node.js and npm as it can switch between multiple
+              versions if need be for different projects,
+              e.g. `nvm install 18.16.1` to install a specific version
+              and `nvm alias default 18.16.1` to set the default version.
+        * Run `npm install --no-progress` to install frontend dependencies,
+          which includes the ESLint linter.
+        * Run `npm run lint` to do linting checks.
 
 ## Application Design
 - 7 basic guiding principles:
     + [3Cs for Coding - Consistency, Context, Continuity](https://blog.intzone.com/3cs-for-coding-consistency-context-continuity/).
-        * This includes [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework)
-          and [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python), which are
-          mentioned in the article.
+        * This includes
+          [Configuration over Convention](https://en.wikipedia.org/wiki/Laminas#Anatomy_of_the_framework)
+          and [Explicit is better than implicit](https://peps.python.org/pep-0020/#the-zen-of-python),
+          which are mentioned in the article.
     + [Robustness Principle](https://en.wikipedia.org/wiki/Robustness_principle):
       Be conservative in what you send, be liberal in what you accept,
       i.e. [trust no one](https://en.wikipedia.org/wiki/Trust_no_one_(Internet_security)).
-    + Adherence to [PSR (PHP Standards Recommendations)](https://www.php-fig.org/psr/) wherever applicable.
+    + Adherence to [PSR (PHP Standards Recommendations)](https://www.php-fig.org/psr/)
+      wherever applicable.
     + Conformance to [The Twelve-Factor App](https://12factor.net/) as much as
       possible, especially with regards to config and logging.
     + Constructor dependency injection. All dependencies should be passed in
       via the constructor, instead of retrieving indirectly from instance
       objects or static classes/methods. In this regard, the application config
       and logger are passed in as the 1st two arguments for all classes as they
-      are always required. That said, try to cap arguments to 7. Also see
-      https://www.php-fig.org/psr/psr-11/meta/#4-recommended-usage-container-psr-and-the-service-locator on bad example.
+      are always required. That said, try to cap arguments to 7. See
+      `BadExample` class shown in https://www.php-fig.org/psr/psr-11/meta/ under
+      the "Recommended usage: Container PSR and the Service Locator" section.
     + An instance object should either expose public properties or public
       methods, not both, as it will be hard to remember which to use for each
       scenario. This does not apply to class constants.
@@ -157,7 +166,7 @@ of the repository. Shell commands are all run from the root of the repository.
             }
         }
 
-        class Point // not allowed - use property in some cases, use method in some cases
+        class Point // not allowed - using property in some cases, using method in some cases
         {
             public $x;
             protected $y;
@@ -189,22 +198,24 @@ of the repository. Shell commands are all run from the root of the repository.
 
         // Allowed even though JsonResponse extends Response as both are vendor classes
         class ApiResponse extends JsonResponse {}
-        class ExternalApiResponse extends ApiResponse {} // not allowed, should extend JsonResponse
+
+        // Not allowed, should extend JsonResponse
+        class ExternalApiResponse extends ApiResponse {}
         ```
 
 - Deployment environments: production, staging, feature, testing, local.
-- Modules:
-    + App: Application-wide classes.
+- Modules (3-letter words):
+    + App: Application-wide classes including helpers.
     + Api: Classes handling requests to API endpoints.
-    + File: Classes handling requests for files served from other locations
-      other than `public` folder.
+    + Doc: Classes handling requests for documents/files served from other
+      locations other than `public` folder.
     + Web: Classes handling requests for web pages.
 - Directory structure (using `tree --charset unicode --dirsfirst -a -n`):
 
     ```
     Root of repository
     |-- config  # Configuration files
-    |-- public  # Publicly hosted assets used by webpages in <link>, <script>, <img>
+    |-- public  # Public assets used by webpages in <link>, <script>, <img>
     |   |-- assets
     |   |   |-- css     # Stylesheets
     |   |   |-- images  # Images
@@ -229,10 +240,11 @@ of the repository. Shell commands are all run from the root of the repository.
     |   |   |-- Logger.php       # Logger
     |   |   |-- Router.php       # Router
     |   |   `-- Utils.php        # Common utility functions
-    |   |-- File            # File module
+    |   |-- Doc             # Doc module
     |   |   |-- Controller  # Controllers for handling requests to serve files
     |   |   |   `-- IndexController.php
-    |   |   `-- FileResponse.php  # Standardized response for static files
+    |   |   |-- assets           # Private assets served via /doc/*
+    |   |   `-- DocResponse.php  # Standardized response for static documents/files
     |   `-- Web             # Web module
     |       |-- Controller  # Controllers for handling requests for web pages
     |       |   `-- IndexController.php  # Handles request to home page
@@ -313,7 +325,7 @@ of the repository. Shell commands are all run from the root of the repository.
 
                 // Target iframe in mailbox
                 UI.context('#message-content', () => {
-                    // I.see is critical in ensuring that I.getText is done AFTER the email is loaded
+                    // I.see is critical to ensure that I.getText is done AFTER the email is loaded
                     // hence use of hint text to check if email body has loaded
                     I.see(mailBodyHintText)
 

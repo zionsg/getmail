@@ -1,8 +1,8 @@
 <?php
 
-namespace File\Controller;
+namespace Doc\Controller;
 
-use File\FileResponse;
+use Doc\DocResponse;
 use App\Controller\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,7 +16,7 @@ class IndexController extends AbstractController
      */
     public function errorAction(ServerRequestInterface $request): ResponseInterface
     {
-        return new FileResponse($this->config, $this->logger, $request, 404, 'File not found.');
+        return new DocResponse($this->config, $this->logger, $request, 404, 'File not found.');
     }
 
     /**
@@ -33,6 +33,6 @@ class IndexController extends AbstractController
             $matches[1] ?? 'invalid-file.xyz'
         ));
 
-        return new FileResponse($this->config, $this->logger, $request, 200, '', $filePath);
+        return new DocResponse($this->config, $this->logger, $request, 200, '', $filePath);
     }
 }
