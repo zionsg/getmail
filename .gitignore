@@ -1,5 +1,6 @@
 # This .gitignore caters for Docker, SSH, Terraform, Linux/macOS/Windows
 # operating systems and Node.js/PHP/Python programming languages.
+# Files specific to IDEs and editors should not be committed to repository
 
 # Directories
 **/.terraform/*
@@ -14,6 +15,7 @@ venv/
 
 # Wildcard files
 # Files ending with :Zone.Identifier due to copying files from Windows to Linux
+*.http
 *.id_ed25519
 *.id_rsa
 *.key
