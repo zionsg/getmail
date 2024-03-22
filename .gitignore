@@ -49,6 +49,7 @@ tmp.*
 .venv
 
 # Normal files
+# See https://github.com/zionsg/getmail/blob/master/scripts/version.sh on VERSION.txt.
 Thumbs.db
 VERSION.txt
 desktop.ini
