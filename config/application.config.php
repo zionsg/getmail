@@ -40,10 +40,10 @@ return [
     /** @property array router Router configuration. Will be replaced by config/router.config.php. */
     'router' => [],
 
-    /** @property string api_key API key. */
+    /** @property string api_key API key. This is akin to the username for login credentials. */
     'api_key' => getenv('GETMAIL_API_KEY') ?: 'none',
 
-    /** @property string api_key API key. */
+    /** @property string api_token API token. This is akin to the password for login credentials. */
     'api_token' => getenv('GETMAIL_API_TOKEN') ?: 'none',
 
     /** @property string layout_path Absolute path to layout template for Web responses. */
