@@ -110,6 +110,7 @@ of the repository. Shell commands are all run from the root of the repository.
         * See `GETMAIL_PORT_*` env vars for port settings.
         * Try `http://localhost:8080/doc/thumb01.png` to see example for
           serving of private static assets.
+        * Routes are defined in `config/router.config.php`.
 - Additional stuff:
     + Run `composer lint` to do linting checks.
     + To do linting checks on JavaScript files:
@@ -215,6 +216,9 @@ of the repository. Shell commands are all run from the root of the repository.
     ```
     Root of repository
     |-- config  # Configuration files
+    |   |-- application.config.php  # Application config
+    |   |-- router.config.php       # Routes
+    |   |-- zenith.local.php.dist   # To be copied to zenith.local.php during local development
     |-- public  # Public assets used by webpages in <link>, <script>, <img>
     |   |-- assets
     |   |   |-- css     # Stylesheets
@@ -236,10 +240,8 @@ of the repository. Shell commands are all run from the root of the repository.
     |   |   |   `-- IndexController.php     # Handles requests to index page
     |   |   |-- Application.php  # Main application class
     |   |   |-- Config.php       # Application configuration
-    |   |   |-- Constants.php    # Application constants
     |   |   |-- Logger.php       # Logger
-    |   |   |-- Router.php       # Router
-    |   |   `-- Utils.php        # Common utility functions
+    |   |   `-- Router.php       # Router
     |   |-- Doc             # Doc module
     |   |   |-- Controller  # Controllers for handling requests to serve files
     |   |   |   `-- IndexController.php
@@ -269,7 +271,7 @@ of the repository. Shell commands are all run from the root of the repository.
     |-- composer.json       # Backend dependencies
     |-- composer.lock
     |-- docker-compose.yml
-    |-- package.json        # Frontend dependencies if any, mainly for JavaScript ESLint linter
+    |-- package.json        # Frontend dependencies, mainly for JavaScript ESLint linter
     |-- package-lock.json
     `-- phpcs.xml           # Configuration for PHP CodeSniffer linter
     ```
