@@ -5,6 +5,7 @@
 # Directories
 **/.terraform/*
 .idea/
+.venv/
 .vscode/
 __pycache__/
 dist/
