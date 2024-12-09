@@ -1,6 +1,7 @@
 # Ignore these for security and also that Docker will take very long to read all
 # the files inside the folders during build as they are in the context directory
 .git/
+.venv/
 node_modules/
 vendor/
 .dockerignore
