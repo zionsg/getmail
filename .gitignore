@@ -12,7 +12,6 @@ dist/
 node_modules/
 tmp/
 vendor/
-venv/
 
 # Wildcard files
 # Files with :Zone.Identifier suffix due to copying files from Windows to Linux.
@@ -41,13 +40,10 @@ venv/
 tmp.*
 
 # Hidden files
-# See https://stackoverflow.com/a/54392358 on ignoring .python-version.
 .DS_Store
 .env
 .npmrc
-.python-version
 .terraformrc
-.venv
 
 # Normal files
 # See https://github.com/zionsg/getmail/blob/master/scripts/version.sh on VERSION.txt.
