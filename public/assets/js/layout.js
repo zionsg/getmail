@@ -15,7 +15,7 @@ const layout = (function (currentScript) { // not using `var` so that there will
     (function init() {
         window.addEventListener('getmail.layout.ready', (event) => {
             console.log('Layout script ready.'); // eslint-disable-line no-console
-        });
+        }, { once: true }); // once: remove listener after running once else `window` object will accumulate listeners
 
         // Emit layout ready event - view scripts should listen for this event
         // before running, especially if calling methods in this script

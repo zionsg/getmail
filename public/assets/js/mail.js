@@ -17,5 +17,5 @@
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
-    });
+    }, { once: true }); // once: remove listener after running once else `window` object will accumulate listeners
 })(document.currentScript); // pass in argument to ensure different instance each time
