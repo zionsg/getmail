@@ -1,20 +1,21 @@
+# Adapted from https://github.com/zionsg/getmail/blob/master/.gitignore
 # This .gitignore caters for Docker, SSH, Terraform, Linux/macOS/Windows
 # operating systems and Node.js/PHP/Python programming languages.
-# Files specific to IDEs and editors should not be committed to repository.
+# Files specific to IDEs and editors should not be committed to repository
 
 # Directories
 **/.terraform/*
 .idea/
-.venv/
 .vscode/
 __pycache__/
 dist/
 node_modules/
 tmp/
 vendor/
+venv/
 
 # Wildcard files
-# Files with :Zone.Identifier suffix due to copying files from Windows to Linux.
+# Files ending with :Zone.Identifier due to copying files from Windows to Linux
 *.http
 *.id_ed25519
 *.id_rsa
@@ -44,9 +45,11 @@ tmp.*
 .env
 .npmrc
 .terraformrc
+.venv
 
-# Normal files
-# See https://github.com/zionsg/getmail/blob/master/scripts/version.sh on VERSION.txt.
+# Files
+# COMBINED-VERSION.txt is used when building Docker image with application and custom code
+COMBINED-VERSION.txt
 Thumbs.db
 VERSION.txt
 desktop.ini
@@ -54,3 +57,18 @@ docker-compose.override.yml
 local.php
 override.tf
 override.tf.json
+
+# Custom code - ignore everything in custom folder except for index.js.example
+custom/*
+!custom/src
+custom/src/*
+!custom/src/index.js.example
+
+# API docs - allow vendor folder
+!docs/apidoc/vendor
+
+# Public assets - allow vendor folder but do not commit files inside except .gitkeep (cos cannot commit empty folder)
+# Files from 3rd party libraries such as Bootstrap are placed in public/vendor and not committed but the folder needs
+# to exist for copying in Dockerfile
+public/vendor/*
+!public/vendor/.gitkeep
