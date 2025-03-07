@@ -1,4 +1,3 @@
-# Adapted from https://github.com/zionsg/getmail/blob/master/.gitignore
 # This .gitignore caters for Docker, SSH, Terraform, Linux/macOS/Windows
 # operating systems and Node.js/PHP/Python programming languages.
 # Files specific to IDEs and editors should not be committed to repository
@@ -6,13 +5,13 @@
 # Directories
 **/.terraform/*
 .idea/
+.venv/
 .vscode/
 __pycache__/
 dist/
 node_modules/
 tmp/
 vendor/
-venv/
 
 # Wildcard files
 # Files ending with :Zone.Identifier due to copying files from Windows to Linux
@@ -45,7 +44,6 @@ tmp.*
 .env
 .npmrc
 .terraformrc
-.venv
 
 # Files
 # COMBINED-VERSION.txt is used when building Docker image with application and custom code
