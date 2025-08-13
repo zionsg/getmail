@@ -15,7 +15,8 @@
 ##
 
 # Base image from https://github.com/serversideup/docker-php - Production-ready Docker images for PHP
-FROM serversideup/php:8.1-fpm-nginx
+# See https://github.com/serversideup/docker-php/issues/550#issuecomment-3173147838
+FROM serversideup/php:8.1-fpm-nginx-v2.2.1
 
 # Disable PHP-FPM and Nginx logs so that they will not clutter up Docker
 # container logs and make it hard to sift out the application logs which are

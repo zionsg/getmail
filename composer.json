@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "project",
   "require": {
-    "php": "~8.0.0 || ~8.1.0",
+    "php": ">=8.1.0",
     "psr/log": "^3.0",
     "laminas/laminas-diactoros": "^2.22",
     "psr/http-server-middleware": "^1.0"
@@ -34,7 +34,7 @@
     "//": [
       "This // key is used for comments.",
       "The ext-* in require-dev are needed for php_codesniffer to work. See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Requirements for details.",
-      "To install SimpleXML PHP extension for PHP 8.1 on Ubuntu, run `sudo apt-get install php8.1-simplexml`.",
+      "To install SimpleXML/Tokenizer/XmlWriter PHP extension for PHP 8.1 on Ubuntu, run `sudo apt-get install php8.1-simplexml`.",
       "The start script uses & to start up Docker container in background else Composer will timeout while waiting for it to complete."
     ],
     "build": "scripts/version.sh && DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS=plain docker build --tag getmail:dev --tag getmail:$(cat VERSION.txt) --no-cache .",
