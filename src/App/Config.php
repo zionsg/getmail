@@ -80,7 +80,7 @@ class Config
             return $this->config[$key];
         }
 
-        return $value;
+        return $default;
     }
 
     /**
